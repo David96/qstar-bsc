@@ -57,7 +57,7 @@ private:
     std::unique_ptr<Selection> njet_sel, dijet_sel;
 
     // store the Hists collection as member variables. Again, use unique_ptr to avoid memory leaks.
-    std::unique_ptr<Hists> h_nocuts, h_cleaner, h_corrections, h_njet, h_dijet;
+    std::unique_ptr<Hists> h_nocuts, h_common, h_cleaner, h_corrections, h_njet, h_dijet;
 
     std::unique_ptr<GenParticlesPrinter> printer;
 
@@ -142,6 +142,7 @@ qstarModule::qstarModule(Context & ctx){
     h_dijet.reset(new qstarHists(ctx, "Dijet"));
     h_cleaner.reset(new qstarHists(ctx, "Cleaner"));
     h_corrections.reset(new qstarHists(ctx, "Corrections"));
+    h_common.reset(new qstarHists(ctx, "common"));
 
 
     printer.reset(new GenParticlesPrinter(ctx));
@@ -165,11 +166,15 @@ bool qstarModule::process(Event & event) {
     printer->process(event);
 #endif
 
+    h_nocuts->fill(event);
+
     // 1. run all modules other modules.
-    common->process(event);
+    if (!common->process(event)) {
+        return false;
+    }
     sdmCalc->process(event);
 
-    h_nocuts->fill(event);
+    h_common->fill(event);
 
     if (isMC) {
         jet_corrector->process(event);

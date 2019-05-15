@@ -16,7 +16,7 @@ qstarHists::qstarHists(Context & ctx, const string & dirname): Hists(ctx, dirnam
   book<TH1F>("N_jets", "N_{jets}", 20, 0, 20);
   book<TH1F>("N_PU", "N_{PU}", 100, 0, 100);
   book<TH1F>("eta_jet1", "#eta^{jet 1}", 40, -2.5, 2.5);
-  book<TH1F>("pt_jet1", "p_{T}^{jet 1}", 100, 10, 500);
+  book<TH1F>("pt_jet1", "p_{T}^{jet 1}", 100, 0, 0);
   book<TH1F>("eta_jet2", "#eta^{jet 2}", 40, -2.5, 2.5);
   book<TH1F>("eta_jet3", "#eta^{jet 3}", 40, -2.5, 2.5);
   book<TH1F>("eta_jet4", "#eta^{jet 4}", 40, -2.5, 2.5);
