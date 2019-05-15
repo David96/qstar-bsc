@@ -21,5 +21,3 @@ bool DijetSelection::passes(const Event & event){
     auto third_jet_frac = jet2.pt() / (0.5 * (jet0.pt() + jet1.pt()));
     return third_jet_frac < third_frac_max;
 }
-
-

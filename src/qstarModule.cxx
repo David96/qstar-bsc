@@ -7,12 +7,18 @@
 #include "UHH2/common/include/CleaningModules.h"
 #include "UHH2/common/include/ElectronHists.h"
 #include "UHH2/common/include/NSelections.h"
+#include "UHH2/common/include/JetCorrections.h"
 #include "UHH2/qstar/include/qstarSelections.h"
 #include "UHH2/qstar/include/qstarHists.h"
 #include "UHH2/common/include/JetHists.h"
+#include "UHH2/common/include/Utils.h"
+#include "UHH2/common/include/PrintingModules.h"
+#include "UHH2/common/include/ObjectIdUtils.h"
 
 using namespace std;
 using namespace uhh2;
+
+// #define DEBUG
 
 namespace uhh2examples {
 
@@ -28,18 +34,41 @@ public:
     virtual bool process(Event & event) override;
 
 private:
-    
+    bool isMC;
+
     std::unique_ptr<CommonModules> common;
-    
+
     std::unique_ptr<JetCleaner> jetcleaner;
     std::unique_ptr<TopJetCleaner> topJetCleaner;
-   
+
+    std::unique_ptr<TopJetCorrector> jet_corrector;
+
+    std::unique_ptr<TopJetCorrector> jet_corrector_A;
+    std::unique_ptr<TopJetCorrector> jet_corrector_B;
+    std::unique_ptr<TopJetCorrector> jet_corrector_C;
+    std::unique_ptr<TopJetCorrector> jet_corrector_D;
+
+    std::unique_ptr<GenericJetResolutionSmearer> jet_EResSmearer;
+
+    std::unique_ptr<SoftDropMassCalculator> sdmCalc;
+
     // declare the Selections to use. Use unique_ptr to ensure automatic call of delete in the destructor,
     // to avoid memory leaks.
     std::unique_ptr<Selection> njet_sel, dijet_sel;
-    
+
     // store the Hists collection as member variables. Again, use unique_ptr to avoid memory leaks.
-    std::unique_ptr<Hists> h_nocuts, h_cleaner, h_njet, h_dijet;
+    std::unique_ptr<Hists> h_nocuts, h_cleaner, h_corrections, h_njet, h_dijet;
+
+    std::unique_ptr<GenParticlesPrinter> printer;
+
+    const int runnr_2018_Ab = 315252;
+    const int runnr_2018_Ae = 316995;
+    const int runnr_2018_Bb = 317080;
+    const int runnr_2018_Be = 319310;
+    const int runnr_2018_Cb = 319337;
+    const int runnr_2018_Ce = 320065;
+    const int runnr_2018_Db = 320673;
+    const int runnr_2018_De = 325175;
 };
 
 
@@ -62,11 +91,40 @@ qstarModule::qstarModule(Context & ctx){
 
     // 1. setup other modules. CommonModules and the JetCleaner:
     common.reset(new CommonModules());
-    // TODO: configure common here, e.g. by 
+    // TODO: configure common here, e.g. by
     // calling common->set_*_id or common->disable_*
+    common->disable_jec();
+    common->disable_jersmear();
     common->init(ctx);
     jetcleaner.reset(new JetCleaner(ctx, 30.0, 2.4));
     topJetCleaner.reset(new TopJetCleaner(ctx, PtEtaCut(200., 2.4)));
+
+    const string jec_tag = "Autumn18";
+    const string jec_ver = "8";
+    const auto JER_sf  = JERSmearing::SF_13TeV_Autumn18_V4;
+    const string ResolutionFileName = "2018/Autumn18_V4_MC_PtResolution_AK8PFPuppi.txt";
+    const string jec_jet_coll_AK8puppi = "AK8PFPuppi";
+    isMC = ctx.get("dataset_type") == "MC";
+
+    std::cout << "USING "<< "?" << " MC JEC: "<< jec_tag << " V" << jec_ver << std::endl;
+    std::cout << "for the following jet collections: " << jec_jet_coll_AK8puppi << std::endl;
+    std::cout << "Smearing: " << jec_jet_coll_AK8puppi << " with "<< ResolutionFileName << std::endl;
+
+    if (isMC) {
+        jet_corrector.reset(new TopJetCorrector(ctx, JERFiles::Autumn18_V4_L123_AK8PFPuppi_MC));
+        //jet_EResSmearer.reset(new GenericJetResolutionSmearer(ctx,"jetsAk8PuppiSubstructure_SoftDropPuppi",
+        //            "gentopjets",JER_sf,ResolutionFileName));
+        jet_EResSmearer.reset(new GenericJetResolutionSmearer(ctx,"topjets","gentopjets",
+                    JERSmearing::SF_13TeV_Autumn18_V4, ResolutionFileName));
+    } else {
+        jet_corrector_A.reset(new TopJetCorrector(ctx, JERFiles::Autumn18_V4_A_L123_noRes_AK8PFPuppi_DATA));
+        jet_corrector_B.reset(new TopJetCorrector(ctx, JERFiles::Autumn18_V4_B_L123_noRes_AK8PFPuppi_DATA));
+        jet_corrector_C.reset(new TopJetCorrector(ctx, JERFiles::Autumn18_V4_C_L123_noRes_AK8PFPuppi_DATA));
+        jet_corrector_D.reset(new TopJetCorrector(ctx, JERFiles::Autumn18_V4_D_L123_noRes_AK8PFPuppi_DATA));
+    }
+
+    sdmCalc.reset(new SoftDropMassCalculator(ctx, true,
+                "../common/data/2018/puppiCorr.root", "topjets"));
 
     // note that the JetCleaner is only kept for the sake of example;
     // instead of constructing a jetcleaner explicitly,
@@ -83,6 +141,10 @@ qstarModule::qstarModule(Context & ctx){
     h_njet.reset(new qstarHists(ctx, "Njet"));
     h_dijet.reset(new qstarHists(ctx, "Dijet"));
     h_cleaner.reset(new qstarHists(ctx, "Cleaner"));
+    h_corrections.reset(new qstarHists(ctx, "Corrections"));
+
+
+    printer.reset(new GenParticlesPrinter(ctx));
 }
 
 
@@ -100,12 +162,35 @@ bool qstarModule::process(Event & event) {
 #ifdef DEBUG
     cout << "qstarModule: Starting to process event (runid, eventid) = ("
          << event.run << ", " << event.event << "); weight = " << event.weight << endl;
+    printer->process(event);
 #endif
-
-    h_nocuts->fill(event);
 
     // 1. run all modules other modules.
     common->process(event);
+    sdmCalc->process(event);
+
+    h_nocuts->fill(event);
+
+    if (isMC) {
+        jet_corrector->process(event);
+        jet_EResSmearer->process(event);
+    } else {
+        if(event.run >= runnr_2018_Ab && event.run <= runnr_2018_Ae){
+            jet_corrector_A->process(event);
+        }
+        else if(event.run >= runnr_2018_Bb && event.run <= runnr_2018_Be){
+            jet_corrector_B->process(event);
+        }
+        else if(event.run >= runnr_2018_Cb && event.run <= runnr_2018_Ce){
+            jet_corrector_C->process(event);
+        }
+        else if(event.run >= runnr_2018_Db && event.run <= runnr_2018_De){
+            jet_corrector_D->process(event);
+        }
+    }
+
+    h_corrections->fill(event);
+
     jetcleaner->process(event);
     topJetCleaner->process(event);
 

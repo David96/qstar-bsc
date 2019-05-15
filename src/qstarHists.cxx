@@ -97,20 +97,8 @@ void qstarHists::fill(const Event & event){
   if(jets.size()<1) return;
 
   if (jets.size() >= 2) {
-    const auto & jet1 = jets[0];
-    const auto & jet2 = jets[1];
-    LorentzVector subjet_sum1;
-    LorentzVector subjet_sum2;
-    for (const auto s1 : jet1.subjets()) {
-      subjet_sum1 += s1.v4();
-    }
-    auto JetSDMass1 = subjet_sum1.M();
-    for (const auto s2 : jet2.subjets()) {
-      subjet_sum2 += s2.v4();
-    }
-    auto JetSDMass2 = subjet_sum2.M();
-    hist("SoftDropMass_1")->Fill(JetSDMass1, weight);
-    hist("SoftDropMass_2")->Fill(JetSDMass2, weight);
+    hist("SoftDropMass_1")->Fill(jets[0].softdropmass(), weight);
+    hist("SoftDropMass_2")->Fill(jets[1].softdropmass(), weight);
   }
   float chf_1 = jets[0].chargedHadronEnergyFraction();
   hist("CHF_1")->Fill(chf_1, weight);
