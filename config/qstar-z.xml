@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE JobConfiguration PUBLIC "" "JobConfig.dtd"[
 
-<!ENTITY QstarToQW_M1000 SYSTEM "../../common/datasets/RunII_102X_v1/2018/QstarToQW/QstarToQW_M-1000.xml">
-<!ENTITY QstarToQW_M1200 SYSTEM "../../common/datasets/RunII_102X_v1/2018/QstarToQW/QstarToQW_M-1200.xml">
-<!ENTITY QstarToQW_M1400 SYSTEM "../../common/datasets/RunII_102X_v1/2018/QstarToQW/QstarToQW_M-1400.xml">
-<!ENTITY QstarToQW_M1600 SYSTEM "../../common/datasets/RunII_102X_v1/2018/QstarToQW/QstarToQW_M-1600.xml">
-<!ENTITY QstarToQW_M1800 SYSTEM "../../common/datasets/RunII_102X_v1/2018/QstarToQW/QstarToQW_M-1800.xml">
-<!ENTITY QstarToQW_M2000 SYSTEM "../../common/datasets/RunII_102X_v1/2018/QstarToQW/QstarToQW_M-2000.xml">
-<!ENTITY QstarToQW_M2500 SYSTEM "../../common/datasets/RunII_102X_v1/2018/QstarToQW/QstarToQW_M-2500.xml">
-<!ENTITY QstarToQW_M3000 SYSTEM "../../common/datasets/RunII_102X_v1/2018/QstarToQW/QstarToQW_M-3000.xml">
-<!ENTITY QstarToQW_M4000 SYSTEM "../../common/datasets/RunII_102X_v1/2018/QstarToQW/QstarToQW_M-4000.xml">
-<!ENTITY QstarToQW_M4500 SYSTEM "../../common/datasets/RunII_102X_v1/2018/QstarToQW/QstarToQW_M-4500.xml">
-<!ENTITY QstarToQW_M5000 SYSTEM "../../common/datasets/RunII_102X_v1/2018/QstarToQW/QstarToQW_M-5000.xml">
-<!ENTITY QstarToQW_M6000 SYSTEM "../../common/datasets/RunII_102X_v1/2018/QstarToQW/QstarToQW_M-6000.xml">
+<!ENTITY QstarToQZ_M1000 SYSTEM "../../common/datasets/RunII_102X_v1/2018/QstarToQZ/QstarToQZ_M-1000.xml">
+<!ENTITY QstarToQZ_M1200 SYSTEM "../../common/datasets/RunII_102X_v1/2018/QstarToQZ/QstarToQZ_M-1200.xml">
+<!ENTITY QstarToQZ_M1400 SYSTEM "../../common/datasets/RunII_102X_v1/2018/QstarToQZ/QstarToQZ_M-1400.xml">
+<!ENTITY QstarToQZ_M1600 SYSTEM "../../common/datasets/RunII_102X_v1/2018/QstarToQZ/QstarToQZ_M-1600.xml">
+<!ENTITY QstarToQZ_M1800 SYSTEM "../../common/datasets/RunII_102X_v1/2018/QstarToQZ/QstarToQZ_M-1800.xml">
+<!ENTITY QstarToQZ_M2000 SYSTEM "../../common/datasets/RunII_102X_v1/2018/QstarToQZ/QstarToQZ_M-2000.xml">
+<!ENTITY QstarToQZ_M2500 SYSTEM "../../common/datasets/RunII_102X_v1/2018/QstarToQZ/QstarToQZ_M-2500.xml">
+<!ENTITY QstarToQZ_M3000 SYSTEM "../../common/datasets/RunII_102X_v1/2018/QstarToQZ/QstarToQZ_M-3000.xml">
+<!ENTITY QstarToQZ_M4000 SYSTEM "../../common/datasets/RunII_102X_v1/2018/QstarToQZ/QstarToQZ_M-4000.xml">
+<!ENTITY QstarToQZ_M4500 SYSTEM "../../common/datasets/RunII_102X_v1/2018/QstarToQZ/QstarToQZ_M-4500.xml">
+<!ENTITY QstarToQZ_M5000 SYSTEM "../../common/datasets/RunII_102X_v1/2018/QstarToQZ/QstarToQZ_M-5000.xml">
+<!ENTITY QstarToQZ_M6000 SYSTEM "../../common/datasets/RunII_102X_v1/2018/QstarToQZ/QstarToQZ_M-6000.xml">
 
 ]>
 
@@ -25,16 +25,16 @@
    <!-- <Cycle Name="uhh2::AnalysisModuleRunner"  RunMode="PROOF" ProofServer="lite://"  ProofWorkDir="/nfs/dust/cms/user/ottjoc/proof-wd/" ProofNodes="2" OutputDirectory="./" PostFix="" TargetLumi="1" >  -->
 
         <!-- Verion attribute must have year in it, same as used in ntuple config, e.g. 2018, 2016v3, etc -->
-        <InputData Lumi="1" NEventsMax="-1" Type="MC" Version="qstar2TeV_2018" Cacheable="False">
-           &QstarToQW_M2000;
+        <InputData Lumi="1" NEventsMax="-1" Type="MC" Version="qstar-Z-2TeV_2018" Cacheable="False">
+           &QstarToQZ_M2000;
            <InputTree Name="AnalysisTree" />
             <!-- uncomment to write tree of selected events, i.e. of those events for which the AnalysisModule::process method  returns true
             If no OutputTree is given, no events will be written.
             You must use "AnalysisTree" as Name otherwise it will be empty. -->
             <!-- <OutputTree Name="AnalysisTree" /> -->
          </InputData>
-         <InputData Lumi="1" NEventsMax="-1" Type="MC" Version="qstar5TeV_2018" Cacheable="False">
-           &QstarToQW_M5000;
+         <InputData Lumi="1" NEventsMax="-1" Type="MC" Version="qstar-Z-5TeV_2018" Cacheable="False">
+           &QstarToQZ_M5000;
            <InputTree Name="AnalysisTree" />
             <!-- uncomment to write tree of selected events, i.e. of those events for which the AnalysisModule::process method  returns true
             If no OutputTree is given, no events will be written.
