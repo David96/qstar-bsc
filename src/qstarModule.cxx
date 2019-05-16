@@ -38,7 +38,6 @@ private:
 
     std::unique_ptr<CommonModules> common;
 
-    std::unique_ptr<JetCleaner> jetcleaner;
     std::unique_ptr<TopJetCleaner> topJetCleaner;
 
     std::unique_ptr<TopJetCorrector> jet_corrector;
@@ -91,12 +90,9 @@ qstarModule::qstarModule(Context & ctx){
 
     // 1. setup other modules. CommonModules and the JetCleaner:
     common.reset(new CommonModules());
-    // TODO: configure common here, e.g. by
-    // calling common->set_*_id or common->disable_*
     common->disable_jec();
     common->disable_jersmear();
     common->init(ctx);
-    jetcleaner.reset(new JetCleaner(ctx, 30.0, 2.4));
     topJetCleaner.reset(new TopJetCleaner(ctx, PtEtaCut(200., 2.4)));
 
     const string jec_tag = "Autumn18";
@@ -138,11 +134,11 @@ qstarModule::qstarModule(Context & ctx){
 
     // 3. Set up Hists classes:
     h_nocuts.reset(new qstarHists(ctx, "NoCuts"));
+    h_common.reset(new qstarHists(ctx, "common"));
+    h_corrections.reset(new qstarHists(ctx, "Corrections"));
+    h_cleaner.reset(new qstarHists(ctx, "Cleaner"));
     h_njet.reset(new qstarHists(ctx, "Njet"));
     h_dijet.reset(new qstarHists(ctx, "Dijet"));
-    h_cleaner.reset(new qstarHists(ctx, "Cleaner"));
-    h_corrections.reset(new qstarHists(ctx, "Corrections"));
-    h_common.reset(new qstarHists(ctx, "common"));
 
 
     printer.reset(new GenParticlesPrinter(ctx));
@@ -202,8 +198,8 @@ bool qstarModule::process(Event & event) {
 
     h_corrections->fill(event);
 
-    jetcleaner->process(event);
     topJetCleaner->process(event);
+    sort_by_pt<TopJet>(*event.topjets);
 
     h_cleaner->fill(event);
 
