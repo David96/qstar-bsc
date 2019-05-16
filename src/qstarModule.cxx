@@ -172,6 +172,11 @@ bool qstarModule::process(Event & event) {
     if (!common->process(event)) {
         return false;
     }
+    // Resort in case, after the common module changes, the first jet is no
+    // longer the one with the highest pt. Should be done after all changes that
+    // could affect that order
+    sort_by_pt<TopJet>(*event.topjets);
+
     sdmCalc->process(event);
 
     h_common->fill(event);
@@ -193,6 +198,7 @@ bool qstarModule::process(Event & event) {
             jet_corrector_D->process(event);
         }
     }
+    sort_by_pt<TopJet>(*event.topjets);
 
     h_corrections->fill(event);
 
