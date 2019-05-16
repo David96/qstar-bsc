@@ -19,17 +19,17 @@ qstarHists::qstarHists(Context & ctx, const string & dirname): Hists(ctx, dirnam
   eta_jet2 = book<TH1F>("eta_jet2", "#eta^{jet 2}", 40, -2.5, 2.5);
   eta_jet3 = book<TH1F>("eta_jet3", "#eta^{jet 3}", 40, -2.5, 2.5);
   eta_jet4 = book<TH1F>("eta_jet4", "#eta^{jet 4}", 40, -2.5, 2.5);
-  pt_jet1 = book<TH1F>("pt_jet1", "p_{T}^{jet 1}", 100, 0, 0);
-  pt_jet2 = book<TH1F>("pt_jet2", "p_{T}^{jet 2}", 100, 0, 0);
-  pt12 = book<TH1F>("pt12", "combined p_T", 100, 0, 0);
-  eta12 = book<TH1F>("eta12", "combined #eta", 40, -2.5, 2.5);
+  pt_jet1 = book<TH1F>("pt_jet1", "p_{T}^{jet 1}", 100, 150, 1600);
+  pt_jet2 = book<TH1F>("pt_jet2", "p_{T}^{jet 2}", 100, 150, 1600);
+  pt12 = book<TH1F>("pt12", "combined p_T", 100, 0, 1200);
+  eta12 = book<TH1F>("eta12", "combined #eta", 40, -3.2, 3.2);
 
   // combined jets
-  cb_pt = book<TH1F>("cb_pt", "all jets p_T", 100, 0, 0);
-  cb_eta = book<TH1F>("cb_eta", "all jets eta", 100, 0, 0);
-  cb_m = book<TH1F>("cb_m", "all jets m", 100, 0, 0);
-  cb_phi = book<TH1F>("cb_phi", "all jets phi", 100, 0, 0);
-  cb_e = book<TH1F>("cb_e", "all jets E", 100, 0, 0);
+  cb_pt = book<TH1F>("cb_pt", "all jets p_T", 100, 150, 1600);
+  cb_eta = book<TH1F>("cb_eta", "all jets eta", 100, -3.2, 3.2);
+  cb_m = book<TH1F>("cb_m", "all jets m", 100, 0, 300);
+  cb_phi = book<TH1F>("cb_phi", "all jets phi", 100, -3.2, 3.2);
+  cb_e = book<TH1F>("cb_e", "all jets E", 100, 0, 2500);
 
   // Substructure
   SoftDropMass_1 = book<TH1F>("SoftDropMass_1", "M_{1}^{SD} [GeV/c^{2}]", 50,0,300);
@@ -108,6 +108,7 @@ void qstarHists::fill(const Event & event){
     cb_eta->Fill(jet.eta(), weight);
     cb_m->Fill(jet.v4().M(), weight);
     cb_phi->Fill(jet.phi(), weight);
+    cb_e->Fill(jet.v4().E(), weight);
   }
 
   // Substructure
