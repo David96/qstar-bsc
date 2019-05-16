@@ -81,11 +81,11 @@ void qstarHists::fill(const Event & event){
     HADcharged_jet1->Fill(jets[0].chargedHadronEnergyFraction(), weight);
     HADneutral_jet1->Fill(jets[0].neutralHadronEnergyFraction(), weight);
 
-    ((TH2D*)HADcharged_vs_eta_jet1)->Fill(jets[0].eta(),jets[0].chargedHadronEnergyFraction(), weight);
-    ((TH2D*)HADneutral_vs_eta_jet1)->Fill(jets[0].eta(),jets[0].neutralHadronEnergyFraction(), weight);
+    HADcharged_vs_eta_jet1->Fill(jets[0].eta(),jets[0].chargedHadronEnergyFraction(), weight);
+    HADneutral_vs_eta_jet1->Fill(jets[0].eta(),jets[0].neutralHadronEnergyFraction(), weight);
     if(!event.isRealData){
-      ((TH2D*)HADcharged_vs_PU_jet1)->Fill(event.genInfo->pileup_TrueNumInteractions(),jets[0].chargedHadronEnergyFraction(), weight);
-      ((TH2D*)HADneutral_vs_PU_jet1)->Fill(event.genInfo->pileup_TrueNumInteractions(),jets[0].neutralHadronEnergyFraction(), weight);
+      HADcharged_vs_PU_jet1->Fill(event.genInfo->pileup_TrueNumInteractions(),jets[0].chargedHadronEnergyFraction(), weight);
+      HADneutral_vs_PU_jet1->Fill(event.genInfo->pileup_TrueNumInteractions(),jets[0].neutralHadronEnergyFraction(), weight);
     }
   }
   if(Njets>=2){
