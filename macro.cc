@@ -1,7 +1,9 @@
 #include "TROOT.h"
 #include "TFile.h"
 #include "TTree.h"
+#include "TH1.h"
 #include "TH1F.h"
+#include "TH2D.h"
 #include "TLegend.h"
 #include "TCanvas.h"
 #include "TPaveText.h"
@@ -26,19 +28,25 @@ void macro(const char *file1, const char *file2, const char *output_folder) {
             TIter next_h(dir->GetListOfKeys());
             TKey *key_h;
             while((key_h=(TKey*)next_h())) {
-                if (strncmp(key_h->GetClassName(), "TH1F", 30) == 0) {
+                if (strncmp(key_h->GetClassName(), "TH", 2) == 0) {
                     auto c1 = new TCanvas("c", "c", 900,500);
                     c1->SetBatch(kTRUE);
                     gStyle->SetOptTitle(0);
-                    TH1F *z_hist, *w_hist;
+
+                    TH1 *z_hist, *w_hist;
                     dir->GetObject(key_h->GetName(), z_hist);
                     z_hist->SetStats(kFALSE);
                     z_hist->SetTitle(file1);
+                    z_hist->SetLineColor(kBlue);
+                    z_hist->SetFillColor(kBlue);
+                    z_hist->SetMarkerColor(kBlue);
 
                     dir_w->GetObject(key_h->GetName(), w_hist);
                     w_hist->SetStats(kFALSE);
                     w_hist->SetTitle(file2);
                     w_hist->SetLineColor(kRed);
+                    w_hist->SetFillColor(kRed);
+                    w_hist->SetMarkerColor(kRed);
 
                     if (strncmp(z_hist->GetName(), "pt", 2) == 0 ||
                             strncmp(z_hist->GetName(), "cb_pt", 5) == 0 ||

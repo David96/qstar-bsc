@@ -94,19 +94,19 @@ void qstarHists::fill(const Event & event){
     HADneutral_jet1->SetYTitle("#events");
 
     HADcharged_vs_eta_jet1->Fill(jets[0].eta(),jets[0].chargedHadronEnergyFraction(), weight);
-    HADcharged_vs_eta_jet1->SetXTitle(HADcharged_vs_eta_jet1->GetTitle());
-    HADcharged_vs_eta_jet1->SetYTitle("#events");
+    HADcharged_vs_eta_jet1->SetXTitle("#eta");
+    HADcharged_vs_eta_jet1->SetYTitle("HADcharged");
 
     HADneutral_vs_eta_jet1->Fill(jets[0].eta(),jets[0].neutralHadronEnergyFraction(), weight);
-    HADneutral_vs_eta_jet1->SetXTitle(HADneutral_vs_eta_jet1->GetTitle());
-    HADneutral_vs_eta_jet1->SetYTitle("#events");
+    HADneutral_vs_eta_jet1->SetXTitle("#eta");
+    HADneutral_vs_eta_jet1->SetYTitle("HADneutral");
     if(!event.isRealData){
       HADcharged_vs_PU_jet1->Fill(event.genInfo->pileup_TrueNumInteractions(),jets[0].chargedHadronEnergyFraction(), weight);
-      HADcharged_vs_PU_jet1->SetXTitle(HADcharged_vs_PU_jet1->GetTitle());
-      HADcharged_vs_PU_jet1->SetYTitle("#events");
+      HADcharged_vs_PU_jet1->SetXTitle("Pileup");
+      HADcharged_vs_PU_jet1->SetYTitle("HADcharged");
       HADneutral_vs_PU_jet1->Fill(event.genInfo->pileup_TrueNumInteractions(),jets[0].neutralHadronEnergyFraction(), weight);
-      HADneutral_vs_PU_jet1->SetXTitle(HADneutral_vs_PU_jet1->GetTitle());
-      HADneutral_vs_PU_jet1->SetYTitle("#events");
+      HADneutral_vs_PU_jet1->SetXTitle("Pileup");
+      HADneutral_vs_PU_jet1->SetYTitle("HADneutral");
     }
 
     eta_jet1->SetXTitle(eta_jet1->GetTitle());
