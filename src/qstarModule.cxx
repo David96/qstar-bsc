@@ -6,6 +6,7 @@
 #include "UHH2/common/include/CommonModules.h"
 #include "UHH2/common/include/CleaningModules.h"
 #include "UHH2/common/include/ElectronHists.h"
+#include "UHH2/common/include/MuonHists.h"
 #include "UHH2/common/include/NSelections.h"
 #include "UHH2/common/include/JetCorrections.h"
 #include "UHH2/qstar/include/qstarSelections.h"
@@ -14,6 +15,8 @@
 #include "UHH2/common/include/Utils.h"
 #include "UHH2/common/include/PrintingModules.h"
 #include "UHH2/common/include/ObjectIdUtils.h"
+#include "UHH2/common/include/MuonIds.h"
+#include "UHH2/common/include/ElectronIds.h"
 
 using namespace std;
 using namespace uhh2;
@@ -23,13 +26,13 @@ using namespace uhh2;
 namespace uhh2examples {
 
 /** \brief Basic analysis example of an AnalysisModule (formerly 'cycle') in UHH2
- * 
+ *
  * This is the central class which calls other AnalysisModules, Hists or Selection classes.
  * This AnalysisModule, in turn, is called (via AnalysisModuleRunner) by SFrame.
  */
 class qstarModule: public AnalysisModule {
 public:
-    
+
     explicit qstarModule(Context & ctx);
     virtual bool process(Event & event) override;
 
@@ -53,10 +56,13 @@ private:
 
     // declare the Selections to use. Use unique_ptr to ensure automatic call of delete in the destructor,
     // to avoid memory leaks.
-    std::unique_ptr<Selection> njet_sel, dijet_sel;
+    std::unique_ptr<Selection> njet_sel, eta_sel, invmass_sel, muon_veto, ele_veto;
 
     // store the Hists collection as member variables. Again, use unique_ptr to avoid memory leaks.
-    std::unique_ptr<Hists> h_nocuts, h_common, h_cleaner, h_corrections, h_njet, h_dijet;
+    std::unique_ptr<Hists> h_nocuts, h_common, h_cleaner, h_corrections, h_njet,
+        h_eta, h_muon_veto, h_ele_veto, h_invmass;
+
+    std::unique_ptr<Hists> h_muon_before, h_muon_after, h_electron_before, h_electron_after;
 
     std::unique_ptr<GenParticlesPrinter> printer;
 
@@ -120,7 +126,7 @@ qstarModule::qstarModule(Context & ctx){
     }
 
     sdmCalc.reset(new SoftDropMassCalculator(ctx, true,
-                "../common/data/2018/puppiCorr.root", "topjets"));
+                "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/data/2018/puppiCorr.root", "topjets"));
 
     // note that the JetCleaner is only kept for the sake of example;
     // instead of constructing a jetcleaner explicitly,
@@ -129,21 +135,35 @@ qstarModule::qstarModule(Context & ctx){
     // before the 'common->init(ctx)' line.
 
     // 2. set up selections
-    njet_sel.reset(new NJetSelection(2)); // see common/include/NSelections.h
-    dijet_sel.reset(new DijetSelection()); // see qstarSelections
+    njet_sel.reset(new NTopJetSelection(2)); // see common/include/NSelections.h
+    eta_sel.reset(new EtaSelection()); // see qstarSelections
+    invmass_sel.reset(new InvMassSelection());
+
+    MuonId MuId  = AndId<Muon>(MuonID(Muon::CutBasedIdTight), PtEtaCut(30., 2.4), MuonID(Muon::TkIsoLoose)); //changed for 102X
+    ElectronId EleId = AndId<Electron>(ElectronID_HEEP_RunII_25ns, PtEtaCut(35., 2.5));
+
+    muon_veto.reset(new MuonVeto(0.8, MuId));
+    ele_veto.reset(new ElectronVeto(0.8, EleId));
 
     // 3. Set up Hists classes:
     h_nocuts.reset(new qstarHists(ctx, "NoCuts"));
     h_common.reset(new qstarHists(ctx, "common"));
+    h_muon_veto.reset(new qstarHists(ctx, "muon_veto"));
+    h_ele_veto.reset(new qstarHists(ctx, "ele_veto"));
     h_corrections.reset(new qstarHists(ctx, "Corrections"));
     h_cleaner.reset(new qstarHists(ctx, "Cleaner"));
     h_njet.reset(new qstarHists(ctx, "Njet"));
-    h_dijet.reset(new qstarHists(ctx, "Dijet"));
+    h_eta.reset(new qstarHists(ctx, "Dijet"));
+    h_invmass.reset(new qstarHists(ctx, "invmass"));
+
+    h_muon_before.reset(new MuonHists(ctx, "muon_before"));
+    h_muon_after.reset(new MuonHists(ctx, "muon_after"));
+    h_electron_before.reset(new ElectronHists(ctx, "electron_before"));
+    h_electron_after.reset(new ElectronHists(ctx, "electron_after"));
 
 
     printer.reset(new GenParticlesPrinter(ctx));
 }
-
 
 bool qstarModule::process(Event & event) {
     // This is the main procedure, called for each event. Typically,
@@ -172,10 +192,18 @@ bool qstarModule::process(Event & event) {
     // longer the one with the highest pt. Should be done after all changes that
     // could affect that order
     sort_by_pt<TopJet>(*event.topjets);
-
     sdmCalc->process(event);
-
     h_common->fill(event);
+
+    h_muon_before->fill(event);
+    if (!muon_veto->passes(event)) return false;
+    h_muon_veto->fill(event);
+    h_muon_after->fill(event);
+
+    h_electron_before->fill(event);
+    if (!ele_veto->passes(event)) return false;
+    h_ele_veto->fill(event);
+    h_electron_after->fill(event);
 
     if (isMC) {
         jet_corrector->process(event);
@@ -204,16 +232,17 @@ bool qstarModule::process(Event & event) {
     h_cleaner->fill(event);
 
     // 2. test selections and fill histograms
-    bool njet_selection = njet_sel->passes(event);
-    if(njet_selection){
-        h_njet->fill(event);
-    }
-    bool dijet_selection = dijet_sel->passes(event);
-    if(dijet_selection){
-        h_dijet->fill(event);
-    }
+    if (!njet_sel->passes(event)) return false;
+    h_njet->fill(event);
+
+    if (!eta_sel->passes(event)) return false;
+    h_eta->fill(event);
+
+    if(!invmass_sel->passes(event)) return false;
+    h_invmass->fill(event);
+
     // 3. decide whether or not to keep the current event in the output:
-    return njet_selection && dijet_selection;
+    return true;
 }
 
 // as we want to run the ExampleCycleNew directly with AnalysisModuleRunner,

@@ -2,21 +2,42 @@
 
 #include "UHH2/core/include/fwd.h"
 #include "UHH2/core/include/Selection.h"
+#include "UHH2/common/include/ObjectIdUtils.h"
 
 namespace uhh2examples {
-    
-/* Select events with at least two jets in which the leading two jets have deltaphi > 2.7 and the third jet pt is
- * below 20% of the average of the leading two jets, where the minimum deltaphi and
- * maximum third jet pt fraction can be changed in the constructor.
- * The jets are assumed to be sorted in pt.
- */
-class DijetSelection: public uhh2::Selection {
+
+class EtaSelection: public uhh2::Selection {
 public:
-    DijetSelection(float dphi_min = 2.7f, float third_frac_max = 0.2f);
+    EtaSelection(float deta_max = 1.3f);
     virtual bool passes(const uhh2::Event & event) override;
 private:
-    float dphi_min, third_frac_max;
+    float deta_max;
 };
 
+class InvMassSelection: public uhh2::Selection {
+public:
+    InvMassSelection(float invmass_min = 1050.f);
+    virtual bool passes(const uhh2::Event & event) override;
+private:
+    float invmass_min;
+};
+
+class MuonVeto : public uhh2::Selection {
+public:
+    MuonVeto(float deltaR_min = 0.8f, const boost::optional<MuonId> &muid = boost::none);
+    virtual bool passes(const uhh2::Event &event) override;
+private:
+    float deltaR_min;
+    boost::optional<MuonId> muid;
+};
+
+class ElectronVeto : public uhh2::Selection {
+public:
+    ElectronVeto(float deltaR_min = 0.8f, const boost::optional<ElectronId> &muid = boost::none);
+    virtual bool passes(const uhh2::Event &event) override;
+private:
+    float deltaR_min;
+    boost::optional<ElectronId> eleid;
+};
 
 }

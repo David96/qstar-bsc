@@ -1,27 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE JobConfiguration PUBLIC "" "JobConfig.dtd"[
 
-<!ENTITY QstarToQW_M1000 SYSTEM "../../common/datasets/RunII_102X_v1/2018/QstarToQW/QstarToQW_M-1000.xml">
-<!ENTITY QstarToQW_M1200 SYSTEM "../../common/datasets/RunII_102X_v1/2018/QstarToQW/QstarToQW_M-1200.xml">
-<!ENTITY QstarToQW_M1400 SYSTEM "../../common/datasets/RunII_102X_v1/2018/QstarToQW/QstarToQW_M-1400.xml">
-<!ENTITY QstarToQW_M1600 SYSTEM "../../common/datasets/RunII_102X_v1/2018/QstarToQW/QstarToQW_M-1600.xml">
-<!ENTITY QstarToQW_M1800 SYSTEM "../../common/datasets/RunII_102X_v1/2018/QstarToQW/QstarToQW_M-1800.xml">
-<!ENTITY QstarToQW_M2000 SYSTEM "../../common/datasets/RunII_102X_v1/2018/QstarToQW/QstarToQW_M-2000.xml">
-<!ENTITY QstarToQW_M2500 SYSTEM "../../common/datasets/RunII_102X_v1/2018/QstarToQW/QstarToQW_M-2500.xml">
-<!ENTITY QstarToQW_M3000 SYSTEM "../../common/datasets/RunII_102X_v1/2018/QstarToQW/QstarToQW_M-3000.xml">
-<!ENTITY QstarToQW_M4000 SYSTEM "../../common/datasets/RunII_102X_v1/2018/QstarToQW/QstarToQW_M-4000.xml">
-<!ENTITY QstarToQW_M4500 SYSTEM "../../common/datasets/RunII_102X_v1/2018/QstarToQW/QstarToQW_M-4500.xml">
-<!ENTITY QstarToQW_M5000 SYSTEM "../../common/datasets/RunII_102X_v1/2018/QstarToQW/QstarToQW_M-5000.xml">
-<!ENTITY QstarToQW_M6000 SYSTEM "../../common/datasets/RunII_102X_v1/2018/QstarToQW/QstarToQW_M-6000.xml">
+<!ENTITY QstarToQW_M1000 SYSTEM "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2018/QstarToQW/QstarToQW_M-1000.xml">
+<!ENTITY QstarToQW_M1200 SYSTEM "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2018/QstarToQW/QstarToQW_M-1200.xml">
+<!ENTITY QstarToQW_M1400 SYSTEM "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2018/QstarToQW/QstarToQW_M-1400.xml">
+<!ENTITY QstarToQW_M1600 SYSTEM "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2018/QstarToQW/QstarToQW_M-1600.xml">
+<!ENTITY QstarToQW_M1800 SYSTEM "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2018/QstarToQW/QstarToQW_M-1800.xml">
+<!ENTITY QstarToQW_M2000 SYSTEM "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2018/QstarToQW/QstarToQW_M-2000.xml">
+<!ENTITY QstarToQW_M2500 SYSTEM "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2018/QstarToQW/QstarToQW_M-2500.xml">
+<!ENTITY QstarToQW_M3000 SYSTEM "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2018/QstarToQW/QstarToQW_M-3000.xml">
+<!ENTITY QstarToQW_M4000 SYSTEM "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2018/QstarToQW/QstarToQW_M-4000.xml">
+<!ENTITY QstarToQW_M4500 SYSTEM "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2018/QstarToQW/QstarToQW_M-4500.xml">
+<!ENTITY QstarToQW_M5000 SYSTEM "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2018/QstarToQW/QstarToQW_M-5000.xml">
+<!ENTITY QstarToQW_M6000 SYSTEM "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2018/QstarToQW/QstarToQW_M-6000.xml">
 
 ]>
+
+<!--
+<ConfigParse NEventsBreak="0" FileSplit="40" />
+<ConfigSGE RAM ="8" DISK ="2" Mail="david.leppla-weber@desy.de" Notification="as" Workdir="workdir_data_qstartoV"/>
+-->
 
 <!-- OutputLevel controls which messages are printed; set to VERBOSE or DEBUG for more verbosity, to WARNING or ERROR for less -->
 <JobConfiguration JobName="ExampleCycleJob" OutputLevel="INFO">
     <Library Name="libSUHH2qstar"/>
     <Package Name="SUHH2qstar.par" />
 
-   <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="./" PostFix="" TargetLumi="59740.0" >
+    <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="./" PostFix="" TargetLumi="59740.0" >
    <!-- <Cycle Name="uhh2::AnalysisModuleRunner"  RunMode="PROOF" ProofServer="lite://"  ProofWorkDir="/nfs/dust/cms/user/ottjoc/proof-wd/" ProofNodes="2" OutputDirectory="./" PostFix="" TargetLumi="1" >  -->
 
         <!-- Verion attribute must have year in it, same as used in ntuple config, e.g. 2018, 2016v3, etc -->
