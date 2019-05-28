@@ -29,7 +29,7 @@ void macro(const char *file1, const char *file2, const char *output_folder) {
             TKey *key_h;
             while((key_h=(TKey*)next_h())) {
                 if (strncmp(key_h->GetClassName(), "TH", 2) == 0) {
-                    auto c1 = new TCanvas("c", "c", 900,500);
+                    auto c1 = new TCanvas("c", "c", 600,500);
                     c1->SetBatch(kTRUE);
                     gStyle->SetOptTitle(0);
 
@@ -48,19 +48,24 @@ void macro(const char *file1, const char *file2, const char *output_folder) {
                     w_hist->SetFillColor(kRed);
                     w_hist->SetMarkerColor(kRed);
 
-                    if (strncmp(z_hist->GetName(), "pt", 2) == 0 ||
-                            strncmp(z_hist->GetName(), "cb_pt", 5) == 0 ||
-                            strncmp(z_hist->GetName(), "invMass", 7) == 0) {
-                        c1->SetLogx();
-                    }
                     double minimum = min(z_hist->GetMinimum(), w_hist->GetMinimum());
                     z_hist->SetMinimum(minimum - minimum * 0.1);
                     double maximum = max(z_hist->GetMaximum(), w_hist->GetMaximum());
-                    z_hist->SetMaximum(maximum + 0.1 * maximum);
+                    z_hist->SetMaximum(1.1 * maximum);
+
+                    if (strncmp(z_hist->GetName(), "pt", 2) == 0 ||
+                            strncmp(z_hist->GetName(), "cb_pt", 5) == 0 ||
+                            strncmp(z_hist->GetName(), "invMass", 7) == 0) {
+                        if (z_hist->GetMinimum() <= 0) {
+                            z_hist->SetMinimum(0.1);
+                        }
+                        c1->SetLogy();
+                        z_hist->SetMaximum(10 * maximum);
+                    }
                     z_hist->Draw();
                     w_hist->Draw("same");
 
-                    c1->BuildLegend(0.7, 0.8, 0.9, 0.9);
+                    c1->BuildLegend(0.5, 0.8, 0.9, 0.9);
                     c1->SaveAs((string(output_folder) + "/" + string(key->GetName()) + "_" + string(key_h->GetName()) + ".pdf").c_str());
                     delete c1;
                     delete z_hist;
