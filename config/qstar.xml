@@ -30,7 +30,7 @@
    <!-- <Cycle Name="uhh2::AnalysisModuleRunner"  RunMode="PROOF" ProofServer="lite://"  ProofWorkDir="/nfs/dust/cms/user/ottjoc/proof-wd/" ProofNodes="2" OutputDirectory="./" PostFix="" TargetLumi="1" >  -->
 
         <!-- Verion attribute must have year in it, same as used in ntuple config, e.g. 2018, 2016v3, etc -->
-        <InputData Lumi="1" NEventsMax="-1" Type="MC" Version="qstar2TeV_2018" Cacheable="False">
+        <InputData Lumi="49938.86483" NEventsMax="-1" Type="MC" Version="qstar2TeV_2018" Cacheable="False">
            &QstarToQW_M2000;
            <InputTree Name="AnalysisTree" />
             <!-- uncomment to write tree of selected events, i.e. of those events for which the AnalysisModule::process method  returns true
@@ -38,7 +38,7 @@
             You must use "AnalysisTree" as Name otherwise it will be empty. -->
             <!-- <OutputTree Name="AnalysisTree" /> -->
          </InputData>
-         <InputData Lumi="1" NEventsMax="-1" Type="MC" Version="qstar5TeV_2018" Cacheable="False">
+         <InputData Lumi="49910.24627" NEventsMax="-1" Type="MC" Version="qstar5TeV_2018" Cacheable="False">
            &QstarToQW_M5000;
            <InputTree Name="AnalysisTree" />
             <!-- uncomment to write tree of selected events, i.e. of those events for which the AnalysisModule::process method  returns true
