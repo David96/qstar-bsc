@@ -21,6 +21,7 @@
 #include "RooGenericPdf.h"
 #include "RooDataHist.h"
 #include "RooCBShape.h"
+#include "RooGaussian.h"
 
 using namespace std;
 using namespace RooFit;
@@ -28,8 +29,8 @@ using namespace RooFit;
 
 void fit_macro(const char *bg_file, const char *bg_hist,
         const char *sig_file, const char *sig_hist) {
-    //TCanvas *c = new TCanvas("c", "c", 1720, 980);
-    c->SetLogy();
+    TCanvas *c = new TCanvas("c", "c", 1720, 980);
+    //c->SetLogy();
     TFile *bgf = new TFile(bg_file);
     TH1F *bgh;
     bgf->GetObject(bg_hist, bgh);
@@ -60,9 +61,7 @@ void fit_macro(const char *bg_file, const char *bg_hist,
 
     RooRealVar m("m", "CB_m", 1000, 3000);
     RooRealVar sigma("sigma", "CB_sigma", 100, 500);
-    RooRealVar alpha("alpha", "CB_alpha", 30, 50);
-    RooRealVar n("n", "CB_n", 0, 0.f);
-    RooCBShape sig("sig", "Crystal Ball Signal", mjj, m, sigma, alpha, n);
+    RooGaussian sig("sig", "Crystal Ball Signal", mjj, m, sigma);
 
     RooDataHist data("data", "dataset of m_{jj}", mjj, bgh);
     bg.fitTo(data);
@@ -71,9 +70,9 @@ void fit_macro(const char *bg_file, const char *bg_hist,
     sig.fitTo(signal);
 
     RooPlot *dataFrame = mjj.frame(Title("m_{jj}"));
-    data.plotOn(dataFrame);
-    bg.plotOn(dataFrame);
-    signal.plotOn(dataFrame);
-    sig.plotOn(dataFrame);
+    data.plotOn(dataFrame, MarkerColor(kBlack));
+    bg.plotOn(dataFrame, LineColor(kBlue));
+    signal.plotOn(dataFrame, MarkerColor(kRed));
+    sig.plotOn(dataFrame, LineColor(kRed));
     dataFrame->Draw();
 }
