@@ -96,6 +96,8 @@ qstarModule::qstarModule(Context & ctx){
 
     // 1. setup other modules. CommonModules and the JetCleaner:
     common.reset(new CommonModules());
+    common->switch_jetlepcleaner(false);
+    common->disable_jetpfidfilter();
     common->disable_jec();
     common->disable_jersmear();
     common->init(ctx);
@@ -153,7 +155,7 @@ qstarModule::qstarModule(Context & ctx){
     h_corrections.reset(new qstarHists(ctx, "Corrections"));
     h_cleaner.reset(new qstarHists(ctx, "Cleaner"));
     h_njet.reset(new qstarHists(ctx, "Njet"));
-    h_eta.reset(new qstarHists(ctx, "Dijet"));
+    h_eta.reset(new qstarHists(ctx, "Eta"));
     h_invmass.reset(new qstarHists(ctx, "invmass"));
 
     h_muon_before.reset(new MuonHists(ctx, "muon_before"));

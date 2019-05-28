@@ -13,7 +13,7 @@ using namespace uhh2examples;
 qstarHists::qstarHists(Context & ctx, const string & dirname): Hists(ctx, dirname){
   // book all histograms here
   // jets
-  N_jets = book<TH1F>("N_jets", "N_{jets}", 20, 0, 10);
+  N_jets = book<TH1F>("N_jets", "N_{jets}", 10, 0, 10);
   N_PU = book<TH1F>("N_PU", "N_{PU}", 100, 0, 100);
   eta_jet1 = book<TH1F>("eta_jet1", "#eta^{jet 1}", 40, -2.5, 2.5);
   eta_jet2 = book<TH1F>("eta_jet2", "#eta^{jet 2}", 40, -2.5, 2.5);
@@ -23,6 +23,7 @@ qstarHists::qstarHists(Context & ctx, const string & dirname): Hists(ctx, dirnam
   pt_jet2 = book<TH1F>("pt_jet2", "p_{T}^{jet 2} [GeV]", 100, 150, 3000);
   pt12 = book<TH1F>("pt12", "p_{T}^{1+2} [GeV]", 100, 10, 3000);
   eta12 = book<TH1F>("eta12", "#eta^{1+2}", 40, -3.2, 3.2);
+  deta = book<TH1F>("deta", "#Delta #eta^{1,2}", 40, -5, 5);
 
   // combined jets
   cb_pt = book<TH1F>("cb_pt", "p_{T} [GeV/c^{2}]", 100, 150, 3000);
@@ -45,9 +46,6 @@ qstarHists::qstarHists(Context & ctx, const string & dirname): Hists(ctx, dirnam
   Tau21_2 = book<TH1F>("Tau21_2", "#tau_{2_{2}}/#tau_{1_{2}}", 20,0,1);
 
   invMass = book<TH1F>("invMass","M_{jj}-AK8 [GeV/c^{2}]",30,1000,7000);
-
-  HADcharged_jet1 = book<TH1F>("HADcharged_jet1", "HADcharged_jet1", 100,0.0,1.0);
-  HADneutral_jet1 = book<TH1F>("HADneutral_jet1", "HADneutral_jet1", 100,0.0,1.0);
 
   HADcharged_vs_eta_jet1 = book<TH2D>("HADcharged_vs_eta_jet1","HADcharged vs #eta; #eta; HADcharged",100,-6,6,100,0.0,1.0);
   HADneutral_vs_eta_jet1 = book<TH2D>("HADneutral_vs_eta_jet1","HADneutral vs #eta; #eta; HADneutral",100,-6,6,100,0.0,1.0);
@@ -85,13 +83,6 @@ void qstarHists::fill(const Event & event){
   if(Njets>=1){
     eta_jet1->Fill(jets[0].eta(), weight);
     pt_jet1->Fill(jets[0].pt(), weight);
-    HADcharged_jet1->Fill(jets[0].chargedHadronEnergyFraction(), weight);
-    HADcharged_jet1->SetXTitle(HADcharged_jet1->GetTitle());
-    HADcharged_jet1->SetYTitle("#events");
-
-    HADneutral_jet1->Fill(jets[0].neutralHadronEnergyFraction(), weight);
-    HADneutral_jet1->SetXTitle(HADneutral_jet1->GetTitle());
-    HADneutral_jet1->SetYTitle("#events");
 
     HADcharged_vs_eta_jet1->Fill(jets[0].eta(),jets[0].chargedHadronEnergyFraction(), weight);
     HADcharged_vs_eta_jet1->SetXTitle("#eta");
@@ -120,6 +111,7 @@ void qstarHists::fill(const Event & event){
     pt_jet2->Fill(jets[1].pt(), weight);
     pt12->Fill(v4.Pt());
     eta12->Fill(v4.Eta());
+    deta->Fill(jets[0].eta() - jets[1].eta());
 
     eta_jet2->SetXTitle(eta_jet2->GetTitle());
     eta_jet2->SetYTitle("#events");
@@ -129,6 +121,8 @@ void qstarHists::fill(const Event & event){
     pt12->SetYTitle("#events");
     eta12->SetXTitle(eta12->GetTitle());
     eta12->SetYTitle("#events");
+    deta->SetXTitle(deta->GetTitle());
+    deta->SetYTitle("#events");
 
   }
   if(Njets>=3){
