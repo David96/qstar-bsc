@@ -21,7 +21,6 @@
 #include "RooGenericPdf.h"
 #include "RooDataHist.h"
 #include "RooCBShape.h"
-#include "RooGaussian.h"
 
 using namespace std;
 using namespace RooFit;
@@ -60,8 +59,10 @@ void fit_macro(const char *bg_file, const char *bg_hist,
             RooArgSet(mjj,p0,p1,p2));
 
     RooRealVar m("m", "CB_m", 1000, 3000);
-    RooRealVar sigma("sigma", "CB_sigma", 100, 500);
-    RooGaussian sig("sig", "Crystal Ball Signal", mjj, m, sigma);
+    RooRealVar sigma("sigma", "CB_sigma", 100, 1000);
+    RooRealVar alpha("alpha", "CB_alpha", 1, 10.f);
+    RooRealVar n("n", "CB_n", 100, 1000.f);
+    RooCBShape sig("sig", "Crystal Ball Signal", mjj, m, sigma, alpha, n);
 
     RooDataHist data("data", "dataset of m_{jj}", mjj, bgh);
     bg.fitTo(data);
