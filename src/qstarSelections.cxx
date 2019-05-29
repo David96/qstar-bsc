@@ -59,3 +59,21 @@ bool ElectronVeto::passes(const Event & event){
     }
     return true;
 }
+
+bool Pt1Selection::passes(const Event& event) {
+    assert(event.topjets);
+    if (event.topjets->size() == 0) return false;
+    return event.topjets->at(0).pt() > pt_min;
+}
+
+void PtCleaner::process(Event &event) {
+    using namespace std;
+    vector<TopJet> topjets;
+    vector<TopJet> &topjet_col = event.get(hndl);
+    for (const TopJet &jet : *event.topjets) {
+        if (!(jet.pt() > pt_min && jet.pt() < pt_max)){
+            topjets.push_back(jet);
+        }
+    }
+    std::swap(topjets, topjet_col);
+}
