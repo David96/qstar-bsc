@@ -3,7 +3,7 @@
 
 <!--
 <ConfigParse NEventsBreak="0" FileSplit="40" />
-<ConfigSGE RAM ="8" DISK ="2" Mail="david.leppla-weber@desy.de" Notification="as" Workdir="workdir_data_qcd_ht300_500"/>
+<ConfigSGE RAM ="8" DISK ="2" Mail="david.leppla-weber@desy.de" Notification="as" Workdir="workdir_data_qcd_post_selection"/>
 -->
 
 <!-- OutputLevel controls which messages are printed; set to VERBOSE or DEBUG for more verbosity, to WARNING or ERROR for less -->
@@ -15,8 +15,13 @@
    <!-- <Cycle Name="uhh2::AnalysisModuleRunner"  RunMode="PROOF" ProofServer="lite://"  ProofWorkDir="/nfs/dust/cms/user/ottjoc/proof-wd/" ProofNodes="2" OutputDirectory="./" PostFix="" TargetLumi="1" >  -->
 
         <!-- Verion attribute must have year in it, same as used in ntuple config, e.g. 2018, 2016v3, etc -->
-        <InputData Lumi="174.7762231" NEventsMax="-1" Type="MC" Version="QCD_preselection_2018" Cacheable="False">
-            <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/uhh2.AnalysisModuleRunner.MC.QCD__2018.root" Lumi="0.0"/>
+        <InputData Lumi="0.0" NEventsMax="-1" Type="MC" Version="QCD_preselection_2018" Cacheable="False">
+            <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/uhh2.AnalysisModuleRunner.MC.QCD_HT300to500_2018.root" Lumi="174.7762231"/>
+            <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/uhh2.AnalysisModuleRunner.MC.QCD_HT500to700_2018.root" Lumi="1854.82666"/>
+            <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/uhh2.AnalysisModuleRunner.MC.QCD_HT700to1000_2018.root" Lumi="8077.614559"/>
+            <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/uhh2.AnalysisModuleRunner.MC.QCD_HT1000to1500_2018.root" Lumi="14871.46169"/>
+            <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/uhh2.AnalysisModuleRunner.MC.QCD_HT1500to2000_2018.root" Lumi="105185.1375"/>
+            <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/uhh2.AnalysisModuleRunner.MC.QCD_HT2000toInf_2018.root" Lumi="259451.9961"/>
             <InputTree Name="AnalysisTree" />
          </InputData>
 

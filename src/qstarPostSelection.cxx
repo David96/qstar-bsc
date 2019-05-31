@@ -55,7 +55,7 @@ qstarPostSelection::qstarPostSelection(Context &ctx) {
 bool qstarPostSelection::process(Event &event) {
     h_nocuts->fill(event);
 
-    // Remove jets with pt < 700 GeV
+    // Remove jets with 400 < pt < 700 GeV
     topJetCleaner->process(event);
     sort_by_pt<TopJet>(*event.topjets);
 
