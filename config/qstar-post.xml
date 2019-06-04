@@ -16,11 +16,11 @@
 
       <!-- Verion attribute must have year in it, same as used in ntuple config, e.g. 2018, 2016v3, etc -->
       <InputData Lumi="49938.86483" NEventsMax="-1" Type="MC" Version="QstarToQW2TeV_PS_2018" Cacheable="False">
-         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/signal/uhh2.AnalysisModuleRunner.MC.qstar2TeV_2018.root" Lumi="" />
+         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/uhh2.AnalysisModuleRunner.MC.qstar2TeV_2018.root" Lumi="" />
          <InputTree Name="AnalysisTree" />
       </InputData>
       <InputData Lumi="49910.24627" NEventsMax="-1" Type="MC" Version="QstarToQW5TeV_PS_2018" Cacheable="False">
-         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/signal/uhh2.AnalysisModuleRunner.MC.qstar5TeV_2018.root" Lumi="" />
+         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/uhh2.AnalysisModuleRunner.MC.qstar5TeV_2018.root" Lumi="" />
          <InputTree Name="AnalysisTree" />
       </InputData>
 

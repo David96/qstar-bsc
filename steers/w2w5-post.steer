@@ -2,7 +2,7 @@ SteerPlotter(){
   
   // steering for the plotter
   fCycleName     = "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/uhh2.AnalysisModuleRunner"; // name of the cycle (first part of the name of the root files)
-  fInputFiles    = "MC.QCD_*PS_2018.root, MC.QstarToQW2TeV_postselection_2018.root, MC.QstarToQW5TeV_postselection_2018.root"; //, MC.qstar-Z-2TeV_2018.root, MC.qstar-Z-5TeV_2018.root";
+  fInputFiles    = "MC.QCD_*PS_2018.root, MC.QstarToQW2TeV_PS_2018.root, MC.QstarToQW5TeV_PS_2018.root"; //, MC.qstar-Z-2TeV_2018.root, MC.qstar-Z-5TeV_2018.root";
   fSampleNames   = "            QCD_bg,             qstarW2TeV,             qstarW5TeV"; //,             qstarZ2TeV,             qstarZ5TeV";
   fSamplesWeight = "               1.0,                    1.0,                    1.0"; //,                    1.0,                    1.0";
   fSamplesUnc  = "                0.05,                   0.05,                   0.05"; //,                   0.05,                   0.05";
