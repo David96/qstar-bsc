@@ -1,18 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE JobConfiguration PUBLIC "" "JobConfig.dtd"[
-
-<!ENTITY QCD_HT300to500 SYSTEM   "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2018/MC_QCD_HT300to500_madgraph.xml">
-<!ENTITY QCD_HT500to700 SYSTEM   "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2018/MC_QCD_HT500to700_madgraph.xml">
-<!ENTITY QCD_HT700to1000 SYSTEM  "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2018/MC_QCD_HT700to1000_madgraph.xml">
-<!ENTITY QCD_HT1000to1500 SYSTEM "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2018/MC_QCD_HT1000to1500_madgraph.xml">
-<!ENTITY QCD_HT1500to2000 SYSTEM "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2018/MC_QCD_HT1500to2000_madgraph.xml">
-<!ENTITY QCD_HT2000toInf SYSTEM  "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2018/MC_QCD_HT2000toInf_madgraph.xml">
-
-]>
+<!DOCTYPE JobConfiguration PUBLIC "" "JobConfig.dtd">
 
 <!--
 <ConfigParse NEventsBreak="0" FileSplit="40" />
-<ConfigSGE RAM ="8" DISK ="2" Mail="david.leppla-weber@desy.de" Notification="as" Workdir="workdir_data_qcd_ht300_500"/>
+<ConfigSGE RAM ="8" DISK ="2" Mail="david.leppla-weber@desy.de" Notification="as" Workdir="workdir_data_qcd_post_selection"/>
 -->
 
 <!-- OutputLevel controls which messages are printed; set to VERBOSE or DEBUG for more verbosity, to WARNING or ERROR for less -->
@@ -24,35 +15,13 @@
       <!-- <Cycle Name="uhh2::AnalysisModuleRunner"  RunMode="PROOF" ProofServer="lite://"  ProofWorkDir="/nfs/dust/cms/user/ottjoc/proof-wd/" ProofNodes="2" OutputDirectory="./" PostFix="" TargetLumi="1" >  -->
 
       <!-- Verion attribute must have year in it, same as used in ntuple config, e.g. 2018, 2016v3, etc -->
-      <InputData Lumi="174.7762231" NEventsMax="-1" Type="MC" Version="QCD_HT300to500_2018" Cacheable="False">
-         &QCD_HT300to500;
+      <InputData Lumi="49938.86483" NEventsMax="-1" Type="MC" Version="QstarToQW2TeV_PS_2018" Cacheable="False">
+         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/signal/uhh2.AnalysisModuleRunner.MC.qstar2TeV_2018.root" Lumi="" />
          <InputTree Name="AnalysisTree" />
-         <OutputTree Name="AnalysisTree" />
       </InputData>
-      <InputData Lumi="1854.82666" NEventsMax="-1" Type="MC" Version="QCD_HT500to700_2018" Cacheable="False">
-         &QCD_HT500to700;
+      <InputData Lumi="49910.24627" NEventsMax="-1" Type="MC" Version="QstarToQW5TeV_PS_2018" Cacheable="False">
+         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/signal/uhh2.AnalysisModuleRunner.MC.qstar5TeV_2018.root" Lumi="" />
          <InputTree Name="AnalysisTree" />
-         <OutputTree Name="AnalysisTree" />
-      </InputData>
-      <InputData Lumi="8077.614559" NEventsMax="-1" Type="MC" Version="QCD_HT700to1000_2018" Cacheable="False">
-         &QCD_HT700to1000;
-         <InputTree Name="AnalysisTree" />
-         <OutputTree Name="AnalysisTree" />
-      </InputData>
-      <InputData Lumi="14871.46169" NEventsMax="-1" Type="MC" Version="QCD_HT1000to1500_2018" Cacheable="False">
-         &QCD_HT1000to1500;
-         <InputTree Name="AnalysisTree" />
-         <OutputTree Name="AnalysisTree" />
-      </InputData>
-      <InputData Lumi="105185.1375" NEventsMax="-1" Type="MC" Version="QCD_HT1500to2000_2018" Cacheable="False">
-         &QCD_HT1500to2000;
-         <InputTree Name="AnalysisTree" />
-         <OutputTree Name="AnalysisTree" />
-      </InputData>
-      <InputData Lumi="259451.9961" NEventsMax="-1" Type="MC" Version="QCD_HT2000toInf_2018" Cacheable="False">
-         &QCD_HT2000toInf;
-         <InputTree Name="AnalysisTree" />
-         <OutputTree Name="AnalysisTree" />
       </InputData>
 
       <UserConfig>
@@ -66,9 +35,10 @@
          <Item Name="GenTopJetCollection" Value="genjetsAk8SubstructureSoftDrop" />
          <Item Name="GenParticleCollection" Value="GenParticles" />
          <Item Name="METName" Value="slimmedMETs" />
+         <Item Name="additionalBranches" Value="weight_pu" />
 
          <!-- the class name of the AnalysisModule subclasses to run: -->
-         <Item Name="AnalysisModule" Value="qstarModule" />
+         <Item Name="AnalysisModule" Value="qstarPostSelection" />
 
          <!-- tell AnalysisModuleRunner NOT to use the MC event weight from SFrame; rather let
          MCLumiWeight (called via CommonModules) calculate the MC event weight. The MC

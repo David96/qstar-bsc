@@ -26,25 +26,19 @@
     <Library Name="libSUHH2qstar"/>
     <Package Name="SUHH2qstar.par" />
 
-    <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="./" PostFix="" TargetLumi="59740.0" >
+    <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="./output/" PostFix="" TargetLumi="59740.0" >
    <!-- <Cycle Name="uhh2::AnalysisModuleRunner"  RunMode="PROOF" ProofServer="lite://"  ProofWorkDir="/nfs/dust/cms/user/ottjoc/proof-wd/" ProofNodes="2" OutputDirectory="./" PostFix="" TargetLumi="1" >  -->
 
         <!-- Verion attribute must have year in it, same as used in ntuple config, e.g. 2018, 2016v3, etc -->
-        <InputData Lumi="49.93886483" NEventsMax="-1" Type="MC" Version="qstar2TeV_2018" Cacheable="False">
-           &QstarToQW_M2000;
-           <InputTree Name="AnalysisTree" />
-            <!-- uncomment to write tree of selected events, i.e. of those events for which the AnalysisModule::process method  returns true
-            If no OutputTree is given, no events will be written.
-            You must use "AnalysisTree" as Name otherwise it will be empty. -->
-            <!-- <OutputTree Name="AnalysisTree" /> -->
-         </InputData>
-         <InputData Lumi="49.91024627" NEventsMax="-1" Type="MC" Version="qstar5TeV_2018" Cacheable="False">
-           &QstarToQW_M5000;
-           <InputTree Name="AnalysisTree" />
-            <!-- uncomment to write tree of selected events, i.e. of those events for which the AnalysisModule::process method  returns true
-            If no OutputTree is given, no events will be written.
-            You must use "AnalysisTree" as Name otherwise it will be empty. -->
-            <!-- <OutputTree Name="AnalysisTree" /> -->
+        <InputData Lumi="49938.86483" NEventsMax="-1" Type="MC" Version="qstar2TeV_2018" Cacheable="False">
+            &QstarToQW_M2000;
+            <InputTree Name="AnalysisTree" />
+            <OutputTree Name="AnalysisTree" />
+        </InputData>
+        <InputData Lumi="49910.24627" NEventsMax="-1" Type="MC" Version="qstar5TeV_2018" Cacheable="False">
+            &QstarToQW_M5000;
+            <InputTree Name="AnalysisTree" />
+            <OutputTree Name="AnalysisTree" />
         </InputData>
 
         <UserConfig>
