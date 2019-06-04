@@ -17,6 +17,7 @@
 #include "UHH2/common/include/ObjectIdUtils.h"
 #include "UHH2/common/include/MuonIds.h"
 #include "UHH2/common/include/ElectronIds.h"
+#include "UHH2/common/include/MCWeight.h"
 
 using namespace std;
 using namespace uhh2;
@@ -33,34 +34,46 @@ public:
     virtual bool process(Event & event) override;
 
 private:
+    bool isMC;
 
-    std::unique_ptr<Selection> pt1_sel;
+    std::unique_ptr<Selection> sdm_sel, tau21_sel;
 
-    std::unique_ptr<Hists> h_nocuts, h_pt1;
+    std::unique_ptr<Hists> h_nocuts, h_sdm, h_tau21;
 
-    std::unique_ptr<PtCleaner> topJetCleaner;
+    std::unique_ptr<uhh2::AnalysisModule> MCWeightModule;
+    std::unique_ptr<uhh2::AnalysisModule> MCPileupReweightModule;
 };
 
 qstarPostSelection::qstarPostSelection(Context &ctx) {
     cout << "Post selection started…" << endl;
 
-    pt1_sel.reset(new Pt1Selection(700.));
-
     h_nocuts.reset(new qstarHists(ctx, "NoCuts"));
-    h_pt1.reset(new qstarHists(ctx, "Pt1"));
+    h_sdm.reset(new qstarHists(ctx, "SDM"));
+    h_tau21.reset(new qstarHists(ctx, "tau21"));
 
-    topJetCleaner.reset(new PtCleaner(ctx, 400., 700.));
+    sdm_sel.reset(new SdmSelection(65, 105));
+    tau21_sel.reset(new Tau21Selection(0.35));
+
+    isMC = ctx.get("dataset_type") == "MC";
+    if (isMC) {
+        cout << "Initialising lumi weight module" << endl;
+        MCWeightModule.reset(new MCLumiWeight(ctx));
+        MCPileupReweightModule.reset(new MCPileupReweight(ctx));
+    }
 }
 
 bool qstarPostSelection::process(Event &event) {
+    if (isMC) {
+        MCWeightModule->process(event);
+        MCPileupReweightModule->process(event);
+    }
     h_nocuts->fill(event);
 
-    // Remove jets with 400 < pt < 700 GeV
-    topJetCleaner->process(event);
-    sort_by_pt<TopJet>(*event.topjets);
+    if (!sdm_sel->passes(event)) return false;
+    h_sdm->fill(event);
 
-    if (!pt1_sel->passes(event)) return false;
-    h_pt1->fill(event);
+    if (!tau21_sel->passes(event)) return false;
+    h_tau21->fill(event);
 
     return true;
 }

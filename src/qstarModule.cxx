@@ -1,22 +1,23 @@
 #include <iostream>
 #include <memory>
 
+#include "UHH2/common/include/CleaningModules.h"
+#include "UHH2/common/include/CommonModules.h"
+#include "UHH2/common/include/ElectronHists.h"
+#include "UHH2/common/include/ElectronIds.h"
+#include "UHH2/common/include/JetCorrections.h"
+#include "UHH2/common/include/JetHists.h"
+#include "UHH2/common/include/MCWeight.h"
+#include "UHH2/common/include/MuonHists.h"
+#include "UHH2/common/include/MuonIds.h"
+#include "UHH2/common/include/NSelections.h"
+#include "UHH2/common/include/ObjectIdUtils.h"
+#include "UHH2/common/include/PrintingModules.h"
+#include "UHH2/common/include/Utils.h"
 #include "UHH2/core/include/AnalysisModule.h"
 #include "UHH2/core/include/Event.h"
-#include "UHH2/common/include/CommonModules.h"
-#include "UHH2/common/include/CleaningModules.h"
-#include "UHH2/common/include/ElectronHists.h"
-#include "UHH2/common/include/MuonHists.h"
-#include "UHH2/common/include/NSelections.h"
-#include "UHH2/common/include/JetCorrections.h"
-#include "UHH2/qstar/include/qstarSelections.h"
 #include "UHH2/qstar/include/qstarHists.h"
-#include "UHH2/common/include/JetHists.h"
-#include "UHH2/common/include/Utils.h"
-#include "UHH2/common/include/PrintingModules.h"
-#include "UHH2/common/include/ObjectIdUtils.h"
-#include "UHH2/common/include/MuonIds.h"
-#include "UHH2/common/include/ElectronIds.h"
+#include "UHH2/qstar/include/qstarSelections.h"
 
 using namespace std;
 using namespace uhh2;
@@ -63,6 +64,9 @@ private:
         h_eta, h_muon_veto, h_ele_veto, h_invmass;
 
     std::unique_ptr<Hists> h_muon_before, h_muon_after, h_electron_before, h_electron_after;
+
+    std::unique_ptr<uhh2::AnalysisModule> MCWeightModule;
+    std::unique_ptr<uhh2::AnalysisModule> MCPileupReweightModule;
 
     std::unique_ptr<GenParticlesPrinter> printer;
 
@@ -120,6 +124,10 @@ qstarModule::qstarModule(Context & ctx){
         //            "gentopjets",JER_sf,ResolutionFileName));
         jet_EResSmearer.reset(new GenericJetResolutionSmearer(ctx,"topjets","gentopjets",
                     JERSmearing::SF_13TeV_Autumn18_V4, ResolutionFileName));
+
+        // Needed to save weight_pu branch in root file
+        MCWeightModule.reset(new MCLumiWeight(ctx));
+        MCPileupReweightModule.reset(new MCPileupReweight(ctx));
     } else {
         jet_corrector_A.reset(new TopJetCorrector(ctx, JERFiles::Autumn18_V4_A_L123_noRes_AK8PFPuppi_DATA));
         jet_corrector_B.reset(new TopJetCorrector(ctx, JERFiles::Autumn18_V4_B_L123_noRes_AK8PFPuppi_DATA));

@@ -77,3 +77,15 @@ void PtCleaner::process(Event &event) {
     }
     std::swap(topjets, topjet_col);
 }
+
+bool SdmSelection::passes(const Event &event) {
+    TopJet v_boson = event.topjets->at(0).softdropmass() > event.topjets->at(1).softdropmass() ?
+                        event.topjets->at(0) : event.topjets->at(1);
+    return v_boson.softdropmass() >= sdm_min && v_boson.softdropmass() <= sdm_max;
+}
+
+bool Tau21Selection::passes(const Event &event) {
+    float tau21_1 = event.topjets->at(0).tau2() / event.topjets->at(0).tau1();
+    float tau21_2 = event.topjets->at(1).tau2() / event.topjets->at(1).tau1();
+    return tau21_1 <= tau21_max || tau21_2 <= tau21_max;
+}

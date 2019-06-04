@@ -60,4 +60,21 @@ private:
     uhh2::Event::Handle<std::vector<TopJet>> hndl;
 };
 
+class SdmSelection : public uhh2::Selection{
+public:
+    SdmSelection(float sdm_min_, float sdm_max_) : sdm_min(sdm_min_), sdm_max(sdm_max_) {}
+    virtual bool passes(const uhh2::Event &event) override;
+
+private:
+    float sdm_min, sdm_max;
+};
+
+class Tau21Selection : public uhh2::Selection {
+    public:
+        Tau21Selection(float tau21_max_) : tau21_max(tau21_max_) {}
+        virtual bool passes(const uhh2::Event &event) override;
+    private:
+        float tau21_max;
+};
+
 }
