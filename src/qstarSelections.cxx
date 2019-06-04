@@ -85,7 +85,8 @@ bool SdmSelection::passes(const Event &event) {
 }
 
 bool Tau21Selection::passes(const Event &event) {
-    float tau21_1 = event.topjets->at(0).tau2() / event.topjets->at(0).tau1();
-    float tau21_2 = event.topjets->at(1).tau2() / event.topjets->at(1).tau1();
-    return tau21_1 <= tau21_max || tau21_2 <= tau21_max;
+    TopJet v_boson = event.topjets->at(0).softdropmass() > event.topjets->at(1).softdropmass() ?
+                        event.topjets->at(0) : event.topjets->at(1);
+    float tau21 = v_boson.tau2() / v_boson.tau1();
+    return tau21 <= tau21_max;
 }

@@ -167,48 +167,49 @@ void qstarHists::fill(const Event & event){
     SoftDropMass_2->Fill(jets[1].softdropmass(), weight);
     SoftDropMass_2->SetXTitle(SoftDropMass_2->GetTitle());
     SoftDropMass_2->SetYTitle("#events");
+
+    float chf_1 = jets[0].chargedHadronEnergyFraction();
+    CHF_1->Fill(chf_1, weight);
+    float tau1_1 = jets[0].tau1();
+    TAU1_1->Fill(tau1_1, weight);
+    float tau2_1 = jets[0].tau2();
+    TAU2_1->Fill(tau2_1, weight);
+    float tau21_1 = tau2_1/tau1_1;
+    Tau21_1->Fill(tau21_1, weight);
+
+    CHF_1->SetXTitle(CHF_1->GetTitle());
+    CHF_1->SetYTitle("#events");
+    TAU1_1->SetXTitle(TAU1_1->GetTitle());
+    TAU1_1->SetYTitle("#events");
+    TAU2_1->SetXTitle(TAU2_1->GetTitle());
+    TAU2_1->SetYTitle("#events");
+    Tau21_1->SetXTitle(Tau21_1->GetTitle());
+    Tau21_1->SetYTitle("#events");
+
+    float chf_2 = jets[1].chargedHadronEnergyFraction();
+    CHF_2->Fill(chf_2, weight);
+    float tau1_2 = jets[1].tau1();
+    TAU1_2->Fill(tau1_2, weight);
+    float tau2_2 = jets[1].tau2();
+    TAU2_2->Fill(tau2_2, weight);
+    float tau21_2 = tau2_2/tau1_2;
+    Tau21_2->Fill(tau21_2, weight);
+
+    CHF_2->SetXTitle(CHF_2->GetTitle());
+    CHF_2->SetYTitle("#events");
+    TAU1_2->SetXTitle(TAU1_2->GetTitle());
+    TAU1_2->SetYTitle("#events");
+    TAU2_2->SetXTitle(TAU2_2->GetTitle());
+    TAU2_2->SetYTitle("#events");
+    Tau21_2->SetXTitle(Tau21_2->GetTitle());
+    Tau21_2->SetYTitle("#events");
+
+    float mass = inv_mass_safe(jets[0].v4() + jets[1].v4());
+    invMass->Fill(mass, weight);
+
+    invMass->SetXTitle(invMass->GetTitle());
+    invMass->SetYTitle("#events");
   }
-  float chf_1 = jets[0].chargedHadronEnergyFraction();
-  CHF_1->Fill(chf_1, weight);
-  float tau1_1 = jets[0].tau1();
-  TAU1_1->Fill(tau1_1, weight);
-  float tau2_1 = jets[0].tau2();
-  TAU2_1->Fill(tau2_1, weight);
-  float tau21_1 = tau2_1/tau1_1;
-  Tau21_1->Fill(tau21_1, weight);
-
-  CHF_1->SetXTitle(CHF_1->GetTitle());
-  CHF_1->SetYTitle("#events");
-  TAU1_1->SetXTitle(TAU1_1->GetTitle());
-  TAU1_1->SetYTitle("#events");
-  TAU2_1->SetXTitle(TAU2_1->GetTitle());
-  TAU2_1->SetYTitle("#events");
-  Tau21_1->SetXTitle(Tau21_1->GetTitle());
-  Tau21_1->SetYTitle("#events");
-
-  float chf_2 = jets[1].chargedHadronEnergyFraction();
-  CHF_2->Fill(chf_2, weight);
-  float tau1_2 = jets[1].tau1();
-  TAU1_2->Fill(tau1_2, weight);
-  float tau2_2 = jets[1].tau2();
-  TAU2_2->Fill(tau2_2, weight);
-  float tau21_2 = tau2_2/tau1_2;
-  Tau21_2->Fill(tau21_2, weight);
-
-  CHF_2->SetXTitle(CHF_2->GetTitle());
-  CHF_2->SetYTitle("#events");
-  TAU1_2->SetXTitle(TAU1_2->GetTitle());
-  TAU1_2->SetYTitle("#events");
-  TAU2_2->SetXTitle(TAU2_2->GetTitle());
-  TAU2_2->SetYTitle("#events");
-  Tau21_2->SetXTitle(Tau21_2->GetTitle());
-  Tau21_2->SetYTitle("#events");
-
-  float mass = inv_mass_safe(jets[0].v4() + jets[1].v4());
-  invMass->Fill(mass, weight);
-
-  invMass->SetXTitle(invMass->GetTitle());
-  invMass->SetYTitle("#events");
 
   // Muons
   int Nmuons = event.muons->size();
