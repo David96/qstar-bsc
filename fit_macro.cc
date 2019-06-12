@@ -12,6 +12,7 @@
 #include "RooGaussian.h"
 #include "RooGenericPdf.h"
 #include "RooPlot.h"
+#include "RooPoisson.h"
 #include "RooRealVar.h"
 #include "TCanvas.h"
 #include "TF1.h"
@@ -47,10 +48,18 @@ void fit_macro(const char *bg_file, const char *bg_hist,
     TFile *bgf = new TFile(bg_file);
     TH1F *bgh;
     bgf->GetObject(bg_hist, bgh);
+    if (bgh == NULL) {
+        cerr << "File " << bg_file << " doesn't include histogram " << bg_hist << endl;
+        return;
+    }
 
     TFile *sigf = new TFile(sig_file);
     TH1F *sigh;
     sigf->GetObject(sig_hist, sigh);
+    if (sigh == NULL) {
+        cerr << "File " << sig_file << " doesn't include histogram " << sig_hist << endl;
+        return;
+    }
 
     float epsilon = 0.5;
     for(int i = 1; i <= bgh->GetNbinsX(); ++i) {
@@ -101,17 +110,27 @@ void fit_macro(const char *bg_file, const char *bg_hist,
     bg->SetParLimits(2, 6.5, 7.5);
     //ROOT::Math::MinimizerOptions::SetDefaultMaxFunctionCalls(9999999);
     bgh->SetLineColor(kBlue);
-    //bgh->Fit(bg, "RWLM", "", X_MIN, X_MAX);
+    bgh->Fit(bg, "RWLMV", "", X_MIN, X_MAX);
 
-    TF1 *sig = new TF1("sig", "gaus", 1500, 2500);
+    /*TF1 *sig = new TF1("sig", "gaus", 1500, 2500);
     //TF1 *sig = new TF1("sig", "crystal_ball(x,[0],[1],[2],[3])", 1500, 2500);
     sigh->SetMarkerColor(kRed);
     sigh->Fit(sig, "RWLM", "same", 1500, 2500);
     cout << "a: " << sig->GetParameter(0) << "; μ: " << sig->GetParameter(1) <<
         "; sigma: " << sig->GetParameter(2) << endl;
-    cout << "error a: " << sig->GetParError(0) << endl;
+    cout << "error a: " << sig->GetParError(0) << endl;*/
+    RooRealVar mjj("mjj", "m_{jj} [GeV]", 1000, 6000);
+    //RooRealVar m0("m0", "mean", 2000, 1000, 3000); /*2TeV*/
+    RooRealVar m0("m0", "mean", 2000, 4000, 6000); /*5TeV*/
+    RooRealVar sigma("sigma", "sigma", 100, 100, 400);
+    RooRealVar alpha("alpha", "alpha", 1, 0.5, 100);
+    RooRealVar n("n", "n", 0.01, 0, 100);
+    RooCBShape sig_pdf("sig", "Signal", mjj, m0, sigma, alpha, n);
+    //RooPoisson sig_pdf("sig", "Signal", mjj, m0);
+    RooDataHist sig_h("sig_hist", "Signal data", mjj, sigh);
+    //sig_pdf.fitTo(sig_h, Range(1000, 2900)); /*2TeV*/
+    sig_pdf.fitTo(sig_h, Range(4000, 6000)); /*5TeV*/
 
-    RooRealVar mjj("mjj", "m_{jj} [GeV]", X_MIN, X_MAX);
     auto P0 = bg->GetParameter(0); auto p0_err = bg->GetParError(0);
     auto P1 = bg->GetParameter(1); auto p1_err = bg->GetParError(1);
     auto P2 = bg->GetParameter(2); auto p2_err = bg->GetParError(2);
@@ -122,25 +141,35 @@ void fit_macro(const char *bg_file, const char *bg_hist,
     RooGenericPdf bg_pdf("bg", "Background", "(p0 * (1 - mjj /13000) ^ p2) / (mjj /13000)^p1",
             RooArgSet(mjj,p0,p1,p2));
 
-    P0 = sig->GetParameter(0); p0_err = sig->GetParError(0);
+    /*P0 = sig->GetParameter(0); p0_err = sig->GetParError(0);
     P1 = sig->GetParameter(1); p1_err = sig->GetParError(1);
     P2 = sig->GetParameter(2); p2_err = sig->GetParError(2);
     RooRealVar a("a", "Amplitude", P0, P0 - p0_err, P0 + p0_err);
     RooRealVar mu("mu", "Mu", P1, P1 - p1_err, P1 + p1_err);
-    RooRealVar sigma("sigma", "Sigma", P2, P2 - p2_err, P2 + p2_err);
+    RooRealVar sigma("sigma", "Sigma", P2, P2 - p2_err, P2 + p2_err);*/
 
-    RooGenericPdf sig_pdf("sig", "Signal", "a*exp(-0.5*((mjj-mu)/sigma)**2)", RooArgSet(mjj,a,mu,sigma));
+    //RooGenericPdf sig_pdf("sig", "Signal", "a*exp(-0.5*((mjj-mu)/sigma)**2)", RooArgSet(mjj,a,mu,sigma));
 
     RooRealVar nsig("nsig","#signal events",0.,100000);
     RooRealVar nbkg("nbkg","#background events",0.,100000);
     RooAddPdf model("model", "bg+cb", RooArgList(bg_pdf, sig_pdf), RooArgList(nsig, nbkg));
 
-    /*RooDataSet *gen_data = model.generate(mjj, 100000);
-    model.fitTo(*gen_data, Range(X_MIN, X_MAX));
+    RooDataSet *gen_data = model.generate(mjj, 100000);
+    //model.fitTo(*gen_data, Range(1000, X_MAX)); /*2TeV*/
+    model.fitTo(*gen_data, Range(1000, 6000)); /*5TeV*/
 
     RooPlot *dataFrame = mjj.frame(Title("m_{jj}"));
     gen_data->plotOn(dataFrame);
     model.plotOn(dataFrame);
+    model.paramOn(dataFrame);
+    //sig_h.plotOn(dataFrame);
+    //sig_pdf.plotOn(dataFrame);
+    //sig_pdf.paramOn(dataFrame);
     dataFrame->SetMinimum(0.1);
-    dataFrame->Draw();*/
+    dataFrame->Draw();
+
+    /*bgf->Close();
+    sigf->Close();
+    delete bgf;
+    delete sigf;*/
 }
