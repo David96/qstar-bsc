@@ -12,7 +12,7 @@
 
 <!--
 <ConfigParse NEventsBreak="0" FileSplit="40" />
-<ConfigSGE RAM ="8" DISK ="2" Mail="david.leppla-weber@desy.de" Notification="as" Workdir="workdir_data_qcd_ht300_500"/>
+<ConfigSGE RAM ="8" DISK ="2" Mail="david.leppla-weber@desy.de" Notification="as" Workdir="workdir_data_qcd"/>
 -->
 
 <!-- OutputLevel controls which messages are printed; set to VERBOSE or DEBUG for more verbosity, to WARNING or ERROR for less -->
