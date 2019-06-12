@@ -26,7 +26,7 @@ private:
         *pt_jet2, *pt12, *eta12, *SoftDropMass_1, *CHF_1, *TAU1_1, *TAU2_1, *Tau21_1,
         *SoftDropMass_2, *CHF_2, *TAU1_2, *TAU2_2, *Tau21_2, *invMass,
         *N_mu, *pt_mu, *eta_mu, *reliso_mu, *N_pv, *cb_pt, *cb_eta,
-        *cb_m, *cb_phi, *cb_e, *deta;
+        *cb_m, *cb_phi, *cb_e, *deta, *dphi;
     TH2D *HADcharged_vs_eta_jet1, *HADneutral_vs_eta_jet1, *HADcharged_vs_PU_jet1,
         *HADneutral_vs_PU_jet1;
 };
