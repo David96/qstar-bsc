@@ -28,58 +28,73 @@
 using namespace std;
 using namespace RooFit;
 
-double crystal_ball(double x, double alpha, double n, double mean, double sigma) {
-    double tmp = (x - mean) / sigma;
-    double A = pow((n / abs(alpha)), n) * exp(-alpha*alpha/2);
-    double B = n/abs(alpha) - abs(alpha);
-    double C = n/abs(alpha) * 1/(n-1) * exp(-alpha*alpha/2);
-    double D = sqrt(M_PI/2) * (1+erf(abs(alpha)/sqrt(2)));
-    double N = 1/(sigma*(C+D));
-    if(tmp > -alpha) {
-        return N * exp(-tmp*tmp/2);
-    } else {
-        return A * pow(B - tmp, -n);
-    }
+struct masspoint_data {
+    const char* filename;
+    int sig_min, sig_max, model_min, model_max;
+    int mean, mean_min, mean_max;
+};
+
+map<string, masspoint_data> masspoints;
+void init_masspoints() {
+
+    masspoints["W2TeV"] = {
+        "output/uhh2.AnalysisModuleRunner.MC.QstarToQW2TeV_PS_2018.root",
+        1000, 2900, // sig min/max
+        1000, 4500, // model min/max
+        2000, 1000, 3000 // mean, mean min/max
+    };
+    masspoints["W5TeV"] = {
+        "output/uhh2.AnalysisModuleRunner.MC.QstarToQW5TeV_PS_2018.root",
+        4000, 6000, // sig min/max
+        1000, 6000, // model min/max
+        5000, 4000, 6000 // mean, mean min/max
+    };
+    masspoints["Z2TeV"] = {
+        "output/uhh2.AnalysisModuleRunner.MC.QstarToQZ2TeV_PS_2018.root",
+        1000, 2900, // sig min/max
+        1000, 4500, // model min/max
+        2000, 1000, 3000 // mean, mean min/max
+    };
+    masspoints["Z5TeV"] = {
+        "output/uhh2.AnalysisModuleRunner.MC.QstarToQZ5TeV_PS_2018.root",
+        4000, 6000, // sig min/max
+        1000, 6000, // model min/max
+        5000, 4000, 6000 // mean, mean min/max
+    };
 }
 
-void fit_macro(const char *bg_file, const char *bg_hist,
-        const char *sig_file, const char *sig_hist) {
+void fit_macro(const char *bg_file, const char *hist, string masspoint_name) {
+
+    init_masspoints();
+
+    if(masspoints.find(masspoint_name) == masspoints.end()) {
+        cerr << "Masspoint " << masspoint_name << " doesn't exist!" << endl;
+        return;
+    }
+    auto masspoint = masspoints[masspoint_name];
+
     TCanvas *c = new TCanvas("c", "c", 1720, 980);
+
+    /* Get histograms from files */
     TFile *bgf = new TFile(bg_file);
     TH1F *bgh;
-    bgf->GetObject(bg_hist, bgh);
+    bgf->GetObject(hist, bgh);
     if (bgh == NULL) {
-        cerr << "File " << bg_file << " doesn't include histogram " << bg_hist << endl;
+        cerr << "File " << bg_file << " doesn't include histogram " << hist << endl;
         return;
     }
 
-    TFile *sigf = new TFile(sig_file);
+    TFile *sigf = new TFile(masspoint.filename);
     TH1F *sigh;
-    sigf->GetObject(sig_hist, sigh);
+    sigf->GetObject(hist, sigh);
     if (sigh == NULL) {
-        cerr << "File " << sig_file << " doesn't include histogram " << sig_hist << endl;
+        cerr << "File " << masspoint.filename << " doesn't include histogram " << hist << endl;
         return;
     }
 
-    float epsilon = 0.5;
-    for(int i = 1; i <= bgh->GetNbinsX(); ++i) {
-        if (bgh->GetBinContent(i) <= 0) {
-            //bgh->SetBinContent(i, 0.01);
-        }
-        if(bgh->GetBinContent(i) < epsilon) {
-            //bgh->SetBinError(i, 0);
-        }
-    }
-    for(int i = 1; i <= sigh->GetNbinsX(); ++i) {
-        /*if(sigh->GetBinContent(i) <= 0) {
-            sigh->SetBinContent(i, 0.1);
-        }*/
-        if(sigh->GetBinContent(i) < 2) {
-            //sigh->SetBinError(i, 0);
-        }
-    }
     c->SetLogy();
 
+    /* Rebinning */
     int nbins = bgh->GetNbinsX();
     int big_bins = 6;
     int bins_to_combine = 2;
@@ -100,37 +115,27 @@ void fit_macro(const char *bg_file, const char *bg_hist,
     bgh = (TH1F*)bgh->Rebin(new_bins - 1, "newbg", bins);
     //cout << "Last bin content: " << bgh->GetBinContent(bgh->GetNbinsX()) << endl;
 
-#define X_MIN 1400
-#define X_MAX 5200
-
-    TF1 *bg = new TF1("bg", "[0] * ( (1-x/13000)^[2]) / (x/13000)^[1]", X_MIN, X_MAX);
+    /* Background fit */
+    TF1 *bg = new TF1("bg", "[0] * ( (1-x/13000)^[2]) / (x/13000)^[1]", 1400, 5200);
     bg->SetParameters(0.05, 6.5, 6.8);
     bg->SetParLimits(0, 0.04, 0.065);
     bg->SetParLimits(1, 6.4, 6.7);
     bg->SetParLimits(2, 6.5, 7.5);
     //ROOT::Math::MinimizerOptions::SetDefaultMaxFunctionCalls(9999999);
     bgh->SetLineColor(kBlue);
-    bgh->Fit(bg, "RWLMV", "", X_MIN, X_MAX);
+    bgh->Fit(bg, "RWLMV", "", 1400, 5200);
 
-    /*TF1 *sig = new TF1("sig", "gaus", 1500, 2500);
-    //TF1 *sig = new TF1("sig", "crystal_ball(x,[0],[1],[2],[3])", 1500, 2500);
-    sigh->SetMarkerColor(kRed);
-    sigh->Fit(sig, "RWLM", "same", 1500, 2500);
-    cout << "a: " << sig->GetParameter(0) << "; μ: " << sig->GetParameter(1) <<
-        "; sigma: " << sig->GetParameter(2) << endl;
-    cout << "error a: " << sig->GetParError(0) << endl;*/
+    /* Signal fit */
     RooRealVar mjj("mjj", "m_{jj} [GeV]", 1000, 6000);
-    //RooRealVar m0("m0", "mean", 2000, 1000, 3000); /*2TeV*/
-    RooRealVar m0("m0", "mean", 2000, 4000, 6000); /*5TeV*/
+    RooRealVar m0("m0", "mean", masspoint.mean, masspoint.mean_min, masspoint.mean_max);
     RooRealVar sigma("sigma", "sigma", 100, 100, 400);
     RooRealVar alpha("alpha", "alpha", 1, 0.5, 100);
     RooRealVar n("n", "n", 0.01, 0, 100);
     RooCBShape sig_pdf("sig", "Signal", mjj, m0, sigma, alpha, n);
-    //RooPoisson sig_pdf("sig", "Signal", mjj, m0);
     RooDataHist sig_h("sig_hist", "Signal data", mjj, sigh);
-    //sig_pdf.fitTo(sig_h, Range(1000, 2900)); /*2TeV*/
-    sig_pdf.fitTo(sig_h, Range(4000, 6000)); /*5TeV*/
+    sig_pdf.fitTo(sig_h, Range(masspoint.sig_min, masspoint.sig_max));
 
+    /* Transfer bg params to RooFit */
     auto P0 = bg->GetParameter(0); auto p0_err = bg->GetParError(0);
     auto P1 = bg->GetParameter(1); auto p1_err = bg->GetParError(1);
     auto P2 = bg->GetParameter(2); auto p2_err = bg->GetParError(2);
@@ -141,23 +146,15 @@ void fit_macro(const char *bg_file, const char *bg_hist,
     RooGenericPdf bg_pdf("bg", "Background", "(p0 * (1 - mjj /13000) ^ p2) / (mjj /13000)^p1",
             RooArgSet(mjj,p0,p1,p2));
 
-    /*P0 = sig->GetParameter(0); p0_err = sig->GetParError(0);
-    P1 = sig->GetParameter(1); p1_err = sig->GetParError(1);
-    P2 = sig->GetParameter(2); p2_err = sig->GetParError(2);
-    RooRealVar a("a", "Amplitude", P0, P0 - p0_err, P0 + p0_err);
-    RooRealVar mu("mu", "Mu", P1, P1 - p1_err, P1 + p1_err);
-    RooRealVar sigma("sigma", "Sigma", P2, P2 - p2_err, P2 + p2_err);*/
-
-    //RooGenericPdf sig_pdf("sig", "Signal", "a*exp(-0.5*((mjj-mu)/sigma)**2)", RooArgSet(mjj,a,mu,sigma));
-
+    /* combined fit */
     RooRealVar nsig("nsig","#signal events",0.,100000);
     RooRealVar nbkg("nbkg","#background events",0.,100000);
-    RooAddPdf model("model", "bg+cb", RooArgList(bg_pdf, sig_pdf), RooArgList(nsig, nbkg));
+    RooAddPdf model("model", "bg+cb", RooArgList(bg_pdf, sig_pdf), RooArgList(nbkg, nsig));
 
     RooDataSet *gen_data = model.generate(mjj, 100000);
-    //model.fitTo(*gen_data, Range(1000, X_MAX)); /*2TeV*/
-    model.fitTo(*gen_data, Range(1000, 6000)); /*5TeV*/
+    model.fitTo(*gen_data, Range(masspoint.model_min, masspoint.model_max));
 
+    /* plot all that stuff */
     RooPlot *dataFrame = mjj.frame(Title("m_{jj}"));
     gen_data->plotOn(dataFrame);
     model.plotOn(dataFrame);
@@ -167,9 +164,4 @@ void fit_macro(const char *bg_file, const char *bg_hist,
     //sig_pdf.paramOn(dataFrame);
     dataFrame->SetMinimum(0.1);
     dataFrame->Draw();
-
-    /*bgf->Close();
-    sigf->Close();
-    delete bgf;
-    delete sigf;*/
 }
