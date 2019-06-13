@@ -13,6 +13,7 @@
 #include "RooGenericPdf.h"
 #include "RooPlot.h"
 #include "RooPoisson.h"
+#include "RooRandom.h"
 #include "RooRealVar.h"
 #include "TCanvas.h"
 #include "TF1.h"
@@ -149,8 +150,10 @@ void fit_macro(const char *bg_file, const char *hist, string masspoint_name) {
     /* combined fit */
     RooRealVar nsig("nsig","#signal events",0.,100000);
     RooRealVar nbkg("nbkg","#background events",0.,100000);
-    RooAddPdf model("model", "bg+cb", RooArgList(bg_pdf, sig_pdf), RooArgList(nbkg, nsig));
+    RooAddPdf model("model", "bg+sig", RooArgList(bg_pdf, sig_pdf), RooArgList(nbkg, nsig));
 
+    // make stuff deterministic - otherwise every run gives a slightly different result
+    RooRandom::randomGenerator()->SetSeed(142);
     RooDataSet *gen_data = model.generate(mjj, 100000);
     model.fitTo(*gen_data, Range(masspoint.model_min, masspoint.model_max));
 
@@ -158,6 +161,8 @@ void fit_macro(const char *bg_file, const char *hist, string masspoint_name) {
     RooPlot *dataFrame = mjj.frame(Title("m_{jj}"));
     gen_data->plotOn(dataFrame);
     model.plotOn(dataFrame);
+    model.plotOn(dataFrame, Components("bg"),LineStyle(kDashed));
+    model.plotOn(dataFrame, Components("sig"),LineColor(kRed));
     model.paramOn(dataFrame);
     //sig_h.plotOn(dataFrame);
     //sig_pdf.plotOn(dataFrame);
