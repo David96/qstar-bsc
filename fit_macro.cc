@@ -15,6 +15,7 @@
 #include "RooPoisson.h"
 #include "RooRandom.h"
 #include "RooRealVar.h"
+#include "RooWorkspace.h"
 #include "TCanvas.h"
 #include "TF1.h"
 #include "TFile.h"
@@ -35,14 +36,60 @@ struct masspoint_data {
     int mean, mean_min, mean_max;
 };
 
-map<string, masspoint_data> masspoints;
-void init_masspoints() {
-
+void init_masspoints(map<string, masspoint_data> &masspoints) {
+    masspoints["W12TeV"] = {
+        "output/uhh2.AnalysisModuleRunner.MC.QstarToQW12TeV_PS_2018.root",
+        1000, 1800, // sig min/max
+        1000, 4500, // model min/max
+        2000, 1000, 3000 // mean, mean min/max
+    };
+    masspoints["W14TeV"] = {
+        "output/uhh2.AnalysisModuleRunner.MC.QstarToQW14TeV_PS_2018.root",
+        1000, 2300, // sig min/max
+        1000, 4500, // model min/max
+        2000, 1000, 3000 // mean, mean min/max
+    };
+    masspoints["W16TeV"] = {
+        "output/uhh2.AnalysisModuleRunner.MC.QstarToQW16TeV_PS_2018.root",
+        1200, 2500, // sig min/max
+        1000, 4500, // model min/max
+        2000, 1000, 3000 // mean, mean min/max
+    };
+    masspoints["W18TeV"] = {
+        "output/uhh2.AnalysisModuleRunner.MC.QstarToQW18TeV_PS_2018.root",
+        1200, 2700, // sig min/max
+        1000, 4500, // model min/max
+        2000, 1000, 3000 // mean, mean min/max
+    };
     masspoints["W2TeV"] = {
         "output/uhh2.AnalysisModuleRunner.MC.QstarToQW2TeV_PS_2018.root",
         1000, 2900, // sig min/max
         1000, 4500, // model min/max
         2000, 1000, 3000 // mean, mean min/max
+    };
+    masspoints["W25TeV"] = {
+        "output/uhh2.AnalysisModuleRunner.MC.QstarToQW25TeV_PS_2018.root",
+        1700, 3300, // sig min/max
+        1000, 4500, // model min/max
+        2500, 1000, 3500 // mean, mean min/max
+    };
+    masspoints["W3TeV"] = {
+        "output/uhh2.AnalysisModuleRunner.MC.QstarToQW3TeV_PS_2018.root",
+        2000, 3800, // sig min/max
+        1000, 5000, // model min/max
+        3000, 2000, 4000 // mean, mean min/max
+    };
+    masspoints["W4TeV"] = {
+        "output/uhh2.AnalysisModuleRunner.MC.QstarToQW4TeV_PS_2018.root",
+        3000, 4800, // sig min/max
+        1000, 5000, // model min/max
+        4000, 3000, 5000 // mean, mean min/max
+    };
+    masspoints["W45TeV"] = {
+        "output/uhh2.AnalysisModuleRunner.MC.QstarToQW45TeV_PS_2018.root",
+        3500, 5300, // sig min/max
+        1000, 5500, // model min/max
+        4500, 3500, 5500 // mean, mean min/max
     };
     masspoints["W5TeV"] = {
         "output/uhh2.AnalysisModuleRunner.MC.QstarToQW5TeV_PS_2018.root",
@@ -64,9 +111,10 @@ void init_masspoints() {
     };
 }
 
-void fit_macro(const char *bg_file, const char *hist, string masspoint_name) {
+void fit_macro(const char *bg_file, const char *hist, string masspoint_name, bool debug_signal = false) {
 
-    init_masspoints();
+    map<string, masspoint_data> masspoints;
+    init_masspoints(masspoints);
 
     if(masspoints.find(masspoint_name) == masspoints.end()) {
         cerr << "Masspoint " << masspoint_name << " doesn't exist!" << endl;
@@ -124,7 +172,7 @@ void fit_macro(const char *bg_file, const char *hist, string masspoint_name) {
     bg->SetParLimits(2, 6.5, 7.5);
     //ROOT::Math::MinimizerOptions::SetDefaultMaxFunctionCalls(9999999);
     bgh->SetLineColor(kBlue);
-    bgh->Fit(bg, "RWLMV", "", 1400, 5200);
+    bgh->Fit(bg, "RWLM", "", 1400, 5200);
 
     /* Signal fit */
     RooRealVar mjj("mjj", "m_{jj} [GeV]", 1000, 6000);
@@ -140,9 +188,9 @@ void fit_macro(const char *bg_file, const char *hist, string masspoint_name) {
     auto P0 = bg->GetParameter(0); auto p0_err = bg->GetParError(0);
     auto P1 = bg->GetParameter(1); auto p1_err = bg->GetParError(1);
     auto P2 = bg->GetParameter(2); auto p2_err = bg->GetParError(2);
-    RooRealVar p0("p0", "P0", P0, P0 - p0_err, P0 + p0_err);
-    RooRealVar p1("p1", "P1", P1, P1 - p1_err, P1 + p1_err);
-    RooRealVar p2("p2", "P2", P2, P2 - p2_err, P2 + p2_err);
+    RooRealVar p0("p0", "P0", P0, P0 - 3 * p0_err, P0 + 3 * p0_err);
+    RooRealVar p1("p1", "P1", P1, P1 - 3 * p1_err, P1 + 3 * p1_err);
+    RooRealVar p2("p2", "P2", P2, P2 - 3 * p2_err, P2 + 3 * p2_err);
 
     RooGenericPdf bg_pdf("bg", "Background", "(p0 * (1 - mjj /13000) ^ p2) / (mjj /13000)^p1",
             RooArgSet(mjj,p0,p1,p2));
@@ -152,21 +200,31 @@ void fit_macro(const char *bg_file, const char *hist, string masspoint_name) {
     RooRealVar nbkg("nbkg","#background events",0.,100000);
     RooAddPdf model("model", "bg+sig", RooArgList(bg_pdf, sig_pdf), RooArgList(nbkg, nsig));
 
-    // make stuff deterministic - otherwise every run gives a slightly different result
-    RooRandom::randomGenerator()->SetSeed(142);
-    RooDataSet *gen_data = model.generate(mjj, 100000);
-    model.fitTo(*gen_data, Range(masspoint.model_min, masspoint.model_max));
-
-    /* plot all that stuff */
     RooPlot *dataFrame = mjj.frame(Title("m_{jj}"));
-    gen_data->plotOn(dataFrame);
-    model.plotOn(dataFrame);
-    model.plotOn(dataFrame, Components("bg"),LineStyle(kDashed));
-    model.plotOn(dataFrame, Components("sig"),LineColor(kRed));
-    model.paramOn(dataFrame);
-    //sig_h.plotOn(dataFrame);
-    //sig_pdf.plotOn(dataFrame);
-    //sig_pdf.paramOn(dataFrame);
+    if (!debug_signal) {
+        // make stuff deterministic - otherwise every run gives a slightly different result
+        RooRandom::randomGenerator()->SetSeed(142);
+        RooDataSet *gen_data = model.generate(mjj, 100000);
+        model.fitTo(*gen_data, Range(masspoint.model_min, masspoint.model_max));
+
+        // save to RooWorkspace
+        RooWorkspace w("model");
+        w.import(sig_pdf);
+        w.import(bg_pdf);
+        w.import(model);
+        w.writeToFile(("model_" + masspoint_name + ".root").c_str());
+
+        /* plot all that stuff */
+        gen_data->plotOn(dataFrame);
+        model.plotOn(dataFrame);
+        model.plotOn(dataFrame, Components("bg"),LineStyle(kDashed));
+        model.plotOn(dataFrame, Components("sig"),LineColor(kRed));
+        model.paramOn(dataFrame);
+    } else {
+        sig_h.plotOn(dataFrame);
+        sig_pdf.plotOn(dataFrame);
+        sig_pdf.paramOn(dataFrame);
+    }
     dataFrame->SetMinimum(0.1);
     dataFrame->Draw();
 }

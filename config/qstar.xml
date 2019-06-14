@@ -30,13 +30,58 @@
    <!-- <Cycle Name="uhh2::AnalysisModuleRunner"  RunMode="PROOF" ProofServer="lite://"  ProofWorkDir="/nfs/dust/cms/user/ottjoc/proof-wd/" ProofNodes="2" OutputDirectory="./" PostFix="" TargetLumi="1" >  -->
 
         <!-- Verion attribute must have year in it, same as used in ntuple config, e.g. 2018, 2016v3, etc -->
+        <InputData Lumi="49944.03158" NEventsMax="-1" Type="MC" Version="qstar12TeV_2018" Cacheable="False">
+            &QstarToQW_M1200;
+            <InputTree Name="AnalysisTree" />
+            <OutputTree Name="AnalysisTree" />
+        </InputData>
+        <InputData Lumi="49942.59535" NEventsMax="-1" Type="MC" Version="qstar14TeV_2018" Cacheable="False">
+            &QstarToQW_M1400;
+            <InputTree Name="AnalysisTree" />
+            <OutputTree Name="AnalysisTree" />
+        </InputData>
+        <InputData Lumi="49939.60782" NEventsMax="-1" Type="MC" Version="qstar16TeV_2018" Cacheable="False">
+            &QstarToQW_M1600;
+            <InputTree Name="AnalysisTree" />
+            <OutputTree Name="AnalysisTree" />
+        </InputData>
+        <InputData Lumi="49937.29324" NEventsMax="-1" Type="MC" Version="qstar18TeV_2018" Cacheable="False">
+            &QstarToQW_M1800;
+            <InputTree Name="AnalysisTree" />
+            <OutputTree Name="AnalysisTree" />
+        </InputData>
         <InputData Lumi="49938.86483" NEventsMax="-1" Type="MC" Version="qstar2TeV_2018" Cacheable="False">
             &QstarToQW_M2000;
             <InputTree Name="AnalysisTree" />
             <OutputTree Name="AnalysisTree" />
         </InputData>
+        <InputData Lumi="49927.38984" NEventsMax="-1" Type="MC" Version="qstar25TeV_2018" Cacheable="False">
+            &QstarToQW_M2500;
+            <InputTree Name="AnalysisTree" />
+            <OutputTree Name="AnalysisTree" />
+        </InputData>
+        <InputData Lumi="49926.53728" NEventsMax="-1" Type="MC" Version="qstar3TeV_2018" Cacheable="False">
+            &QstarToQW_M3000;
+            <InputTree Name="AnalysisTree" />
+            <OutputTree Name="AnalysisTree" />
+        </InputData>
+        <InputData Lumi="49913.93527" NEventsMax="-1" Type="MC" Version="qstar4TeV_2018" Cacheable="False">
+            &QstarToQW_M4000;
+            <InputTree Name="AnalysisTree" />
+            <OutputTree Name="AnalysisTree" />
+        </InputData>
+        <InputData Lumi="49917.44847" NEventsMax="-1" Type="MC" Version="qstar45TeV_2018" Cacheable="False">
+            &QstarToQW_M4500;
+            <InputTree Name="AnalysisTree" />
+            <OutputTree Name="AnalysisTree" />
+        </InputData>
         <InputData Lumi="49910.24627" NEventsMax="-1" Type="MC" Version="qstar5TeV_2018" Cacheable="False">
             &QstarToQW_M5000;
+            <InputTree Name="AnalysisTree" />
+            <OutputTree Name="AnalysisTree" />
+        </InputData>
+        <InputData Lumi="49903.64873" NEventsMax="-1" Type="MC" Version="qstar6TeV_2018" Cacheable="False">
+            &QstarToQW_M6000;
             <InputTree Name="AnalysisTree" />
             <OutputTree Name="AnalysisTree" />
         </InputData>
