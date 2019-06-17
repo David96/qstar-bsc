@@ -39,45 +39,45 @@ struct masspoint_data {
 void init_masspoints(map<string, masspoint_data> &masspoints) {
     masspoints["W12TeV"] = {
         "output/uhh2.AnalysisModuleRunner.MC.QstarToQW12TeV_PS_2018.root",
-        1000, 1800, // sig min/max
+        1100, 1600, // sig min/max
         1000, 4500, // model min/max
-        2000, 1000, 3000 // mean, mean min/max
+        1200, 1100, 1400 // mean, mean min/max
     };
     masspoints["W14TeV"] = {
         "output/uhh2.AnalysisModuleRunner.MC.QstarToQW14TeV_PS_2018.root",
-        1000, 2300, // sig min/max
+        1100, 2000, // sig min/max
         1000, 4500, // model min/max
-        2000, 1000, 3000 // mean, mean min/max
+        1400, 1300, 1600 // mean, mean min/max
     };
     masspoints["W16TeV"] = {
         "output/uhh2.AnalysisModuleRunner.MC.QstarToQW16TeV_PS_2018.root",
-        1200, 2500, // sig min/max
+        1200, 2200, // sig min/max
         1000, 4500, // model min/max
-        2000, 1000, 3000 // mean, mean min/max
+        1600, 1500, 1700 // mean, mean min/max
     };
     masspoints["W18TeV"] = {
         "output/uhh2.AnalysisModuleRunner.MC.QstarToQW18TeV_PS_2018.root",
         1200, 2700, // sig min/max
         1000, 4500, // model min/max
-        2000, 1000, 3000 // mean, mean min/max
+        1800, 1700, 2000 // mean, mean min/max
     };
     masspoints["W2TeV"] = {
         "output/uhh2.AnalysisModuleRunner.MC.QstarToQW2TeV_PS_2018.root",
         1000, 2900, // sig min/max
         1000, 4500, // model min/max
-        2000, 1000, 3000 // mean, mean min/max
+        2000, 1950, 2200 // mean, mean min/max
     };
     masspoints["W25TeV"] = {
         "output/uhh2.AnalysisModuleRunner.MC.QstarToQW25TeV_PS_2018.root",
         1700, 3300, // sig min/max
         1000, 4500, // model min/max
-        2500, 1000, 3500 // mean, mean min/max
+        2500, 2400, 2700 // mean, mean min/max
     };
     masspoints["W3TeV"] = {
         "output/uhh2.AnalysisModuleRunner.MC.QstarToQW3TeV_PS_2018.root",
-        2000, 3800, // sig min/max
+        2200, 3800, // sig min/max
         1000, 5000, // model min/max
-        3000, 2000, 4000 // mean, mean min/max
+        3000, 2800, 3200 // mean, mean min/max
     };
     masspoints["W4TeV"] = {
         "output/uhh2.AnalysisModuleRunner.MC.QstarToQW4TeV_PS_2018.root",
@@ -95,7 +95,7 @@ void init_masspoints(map<string, masspoint_data> &masspoints) {
         "output/uhh2.AnalysisModuleRunner.MC.QstarToQW5TeV_PS_2018.root",
         4000, 6000, // sig min/max
         1000, 6000, // model min/max
-        5000, 4000, 6000 // mean, mean min/max
+        5000, 4800, 5200 // mean, mean min/max
     };
     masspoints["Z2TeV"] = {
         "output/uhh2.AnalysisModuleRunner.MC.QstarToQZ2TeV_PS_2018.root",
@@ -161,7 +161,7 @@ void fit_macro(const char *bg_file, const char *hist, string masspoint_name, boo
     }
     bins[new_bins - 1] = bgh->GetBinLowEdge(nbins) + bgh->GetBinWidth(nbins);
     //cout << "Last higher edge (bin[" << new_bins - 1 << "]): " << bins[new_bins - 1] << endl;
-    bgh = (TH1F*)bgh->Rebin(new_bins - 1, "newbg", bins);
+    TH1F *bgh_rebinned = (TH1F*)bgh->Rebin(new_bins - 1, "newbg", bins);
     //cout << "Last bin content: " << bgh->GetBinContent(bgh->GetNbinsX()) << endl;
 
     /* Background fit */
@@ -171,15 +171,15 @@ void fit_macro(const char *bg_file, const char *hist, string masspoint_name, boo
     bg->SetParLimits(1, 6.4, 6.7);
     bg->SetParLimits(2, 6.5, 7.5);
     //ROOT::Math::MinimizerOptions::SetDefaultMaxFunctionCalls(9999999);
-    bgh->SetLineColor(kBlue);
-    bgh->Fit(bg, "RWLM", "", 1400, 5200);
+    bgh_rebinned->SetLineColor(kBlue);
+    bgh_rebinned->Fit(bg, "RWLM", "", 1400, 5200);
 
     /* Signal fit */
     RooRealVar mjj("mjj", "m_{jj} [GeV]", 1000, 6000);
     RooRealVar m0("m0", "mean", masspoint.mean, masspoint.mean_min, masspoint.mean_max);
     RooRealVar sigma("sigma", "sigma", 100, 100, 400);
-    RooRealVar alpha("alpha", "alpha", 1, 0.5, 100);
-    RooRealVar n("n", "n", 0.01, 0, 100);
+    RooRealVar alpha("alpha", "alpha", 5, 0.3, 100);
+    RooRealVar n("n", "n", 10, 0.8, 10000);
     RooCBShape sig_pdf("sig", "Signal", mjj, m0, sigma, alpha, n);
     RooDataHist sig_h("sig_hist", "Signal data", mjj, sigh);
     sig_pdf.fitTo(sig_h, Range(masspoint.sig_min, masspoint.sig_max));
@@ -191,35 +191,60 @@ void fit_macro(const char *bg_file, const char *hist, string masspoint_name, boo
     RooRealVar p0("p0", "P0", P0, P0 - 3 * p0_err, P0 + 3 * p0_err);
     RooRealVar p1("p1", "P1", P1, P1 - 3 * p1_err, P1 + 3 * p1_err);
     RooRealVar p2("p2", "P2", P2, P2 - 3 * p2_err, P2 + 3 * p2_err);
+    p0.setError(p0_err);
+    p1.setError(p1_err);
+    p2.setError(p2_err);
 
     RooGenericPdf bg_pdf("bg", "Background", "(p0 * (1 - mjj /13000) ^ p2) / (mjj /13000)^p1",
             RooArgSet(mjj,p0,p1,p2));
 
     /* combined fit */
-    RooRealVar nsig("nsig","#signal events",0.,100000);
-    RooRealVar nbkg("nbkg","#background events",0.,100000);
+    RooRealVar nsig("nsig","#signal events",0.,1000000);
+    RooRealVar nbkg("nbkg","#background events",0.,1000000);
     RooAddPdf model("model", "bg+sig", RooArgList(bg_pdf, sig_pdf), RooArgList(nbkg, nsig));
 
     RooPlot *dataFrame = mjj.frame(Title("m_{jj}"));
     if (!debug_signal) {
         // make stuff deterministic - otherwise every run gives a slightly different result
         RooRandom::randomGenerator()->SetSeed(142);
-        RooDataSet *gen_data = model.generate(mjj, 100000);
-        model.fitTo(*gen_data, Range(masspoint.model_min, masspoint.model_max));
+        for (int i = 1; i <= bgh->GetNbinsX(); ++i) {
+            bgh->SetBinContent(i, bgh->GetBinContent(i) + sigh->GetBinContent(i));
+            bgh->SetBinError(i, sqrt(bgh->GetBinContent(i)));
+        }
+        RooDataHist model_h("model_hist", "Model", mjj, bgh);
+        //RooDataSet *gen_data = model.generate(mjj, 100000);
+        model.fitTo(model_h, Range(masspoint.model_min, masspoint.model_max));
 
-        // save to RooWorkspace
-        RooWorkspace w("model");
-        w.import(sig_pdf);
-        w.import(bg_pdf);
-        w.import(model);
-        w.writeToFile(("model_" + masspoint_name + ".root").c_str());
 
         /* plot all that stuff */
-        gen_data->plotOn(dataFrame);
+        model_h.plotOn(dataFrame);
         model.plotOn(dataFrame);
         model.plotOn(dataFrame, Components("bg"),LineStyle(kDashed));
         model.plotOn(dataFrame, Components("sig"),LineColor(kRed));
         model.paramOn(dataFrame);
+        /*
+        RooDataHist bg_h("bg_hist", "Background data", mjj, bgh);
+        bg_h.plotOn(dataFrame);
+        bg_pdf.plotOn(dataFrame);
+        bg_pdf.paramOn(dataFrame);
+        */
+
+        /*m0.setConstant();
+        sigma.setConstant();
+        alpha.setConstant();
+        n.setConstant();
+        p0.setConstant();
+        p1.setConstant();
+        p2.setConstant();
+        nsig.setConstant();
+        nbkg.setConstant();*/
+
+        // save to RooWorkspace
+        RooWorkspace w("model");
+        //w.import(sig_pdf);
+        //w.import(bg_pdf);
+        w.import(model);
+        w.writeToFile(("model_" + masspoint_name + ".root").c_str());
     } else {
         sig_h.plotOn(dataFrame);
         sig_pdf.plotOn(dataFrame);
