@@ -5,12 +5,14 @@
 
 #include "RooAddPdf.h"
 #include "RooArgusBG.h"
+#include "RooBukinPdf.h"
 #include "RooCBShape.h"
 #include "RooConstVar.h"
 #include "RooDataHist.h"
 #include "RooDataSet.h"
 #include "RooGaussian.h"
 #include "RooGenericPdf.h"
+#include "RooNovosibirsk.h"
 #include "RooPlot.h"
 #include "RooPoisson.h"
 #include "RooRandom.h"
@@ -26,92 +28,14 @@
 #include "TPaveText.h"
 #include "TROOT.h"
 #include "TTree.h"
+#include "masspoints.h"
+#include "HZZ2L2QRooPdfs.cc"
 
 using namespace std;
 using namespace RooFit;
 
-struct masspoint_data {
-    const char* filename;
-    int sig_min, sig_max, model_min, model_max;
-    int mean, mean_min, mean_max;
-};
-
-void init_masspoints(map<string, masspoint_data> &masspoints) {
-    masspoints["W12TeV"] = {
-        "output/uhh2.AnalysisModuleRunner.MC.QstarToQW12TeV_PS_2018.root",
-        1100, 1600, // sig min/max
-        1000, 4500, // model min/max
-        1200, 1100, 1400 // mean, mean min/max
-    };
-    masspoints["W14TeV"] = {
-        "output/uhh2.AnalysisModuleRunner.MC.QstarToQW14TeV_PS_2018.root",
-        1100, 2000, // sig min/max
-        1000, 4500, // model min/max
-        1400, 1300, 1600 // mean, mean min/max
-    };
-    masspoints["W16TeV"] = {
-        "output/uhh2.AnalysisModuleRunner.MC.QstarToQW16TeV_PS_2018.root",
-        1200, 2200, // sig min/max
-        1000, 4500, // model min/max
-        1600, 1500, 1700 // mean, mean min/max
-    };
-    masspoints["W18TeV"] = {
-        "output/uhh2.AnalysisModuleRunner.MC.QstarToQW18TeV_PS_2018.root",
-        1200, 2700, // sig min/max
-        1000, 4500, // model min/max
-        1800, 1700, 2000 // mean, mean min/max
-    };
-    masspoints["W2TeV"] = {
-        "output/uhh2.AnalysisModuleRunner.MC.QstarToQW2TeV_PS_2018.root",
-        1000, 2900, // sig min/max
-        1000, 4500, // model min/max
-        2000, 1950, 2200 // mean, mean min/max
-    };
-    masspoints["W25TeV"] = {
-        "output/uhh2.AnalysisModuleRunner.MC.QstarToQW25TeV_PS_2018.root",
-        1700, 3300, // sig min/max
-        1000, 4500, // model min/max
-        2500, 2400, 2700 // mean, mean min/max
-    };
-    masspoints["W3TeV"] = {
-        "output/uhh2.AnalysisModuleRunner.MC.QstarToQW3TeV_PS_2018.root",
-        2200, 3800, // sig min/max
-        1000, 5000, // model min/max
-        3000, 2800, 3200 // mean, mean min/max
-    };
-    masspoints["W4TeV"] = {
-        "output/uhh2.AnalysisModuleRunner.MC.QstarToQW4TeV_PS_2018.root",
-        3000, 4800, // sig min/max
-        1000, 5000, // model min/max
-        4000, 3000, 5000 // mean, mean min/max
-    };
-    masspoints["W45TeV"] = {
-        "output/uhh2.AnalysisModuleRunner.MC.QstarToQW45TeV_PS_2018.root",
-        3500, 5300, // sig min/max
-        1000, 5500, // model min/max
-        4500, 3500, 5500 // mean, mean min/max
-    };
-    masspoints["W5TeV"] = {
-        "output/uhh2.AnalysisModuleRunner.MC.QstarToQW5TeV_PS_2018.root",
-        4000, 6000, // sig min/max
-        1000, 6000, // model min/max
-        5000, 4800, 5200 // mean, mean min/max
-    };
-    masspoints["Z2TeV"] = {
-        "output/uhh2.AnalysisModuleRunner.MC.QstarToQZ2TeV_PS_2018.root",
-        1000, 2900, // sig min/max
-        1000, 4500, // model min/max
-        2000, 1000, 3000 // mean, mean min/max
-    };
-    masspoints["Z5TeV"] = {
-        "output/uhh2.AnalysisModuleRunner.MC.QstarToQZ5TeV_PS_2018.root",
-        4000, 6000, // sig min/max
-        1000, 6000, // model min/max
-        5000, 4000, 6000 // mean, mean min/max
-    };
-}
-
-void fit_macro(const char *bg_file, const char *hist, string masspoint_name, bool debug_signal = false) {
+void fit_macro(const char *hist, string masspoint_name, string version,
+        bool debug_signal = false, bool postselection = true, bool debug_bg = false) {
 
     map<string, masspoint_data> masspoints;
     init_masspoints(masspoints);
@@ -125,19 +49,23 @@ void fit_macro(const char *bg_file, const char *hist, string masspoint_name, boo
     TCanvas *c = new TCanvas("c", "c", 1720, 980);
 
     /* Get histograms from files */
-    TFile *bgf = new TFile(bg_file);
+    TFile *bgf = new TFile(("output/background/" + version + "/uhh2.AnalysisModuleRunner.MC.QCD_" +
+                (postselection?"PS_":"") + "2018.root").c_str());
     TH1F *bgh;
     bgf->GetObject(hist, bgh);
     if (bgh == NULL) {
-        cerr << "File " << bg_file << " doesn't include histogram " << hist << endl;
+        cerr << "File " << ("output/background/" + version + "/uhh2.AnalysisModuleRunner.MC.QCD_" +
+                (postselection?"PS_":"") + "2018.root") << " doesn't include histogram " << hist << endl;
         return;
     }
 
-    TFile *sigf = new TFile(masspoint.filename);
+    TFile *sigf = new TFile(( "output/signal/" + version + "/" +
+                (postselection ? string(masspoint.filename) : string(masspoint.preselection)) ).c_str());
     TH1F *sigh;
     sigf->GetObject(hist, sigh);
     if (sigh == NULL) {
-        cerr << "File " << masspoint.filename << " doesn't include histogram " << hist << endl;
+        cerr << "File " << ( "output/signal/" + version + "/" +
+                (postselection ? string(masspoint.filename) : string(masspoint.preselection)) ) << " doesn't include histogram " << hist << endl;
         return;
     }
 
@@ -145,7 +73,7 @@ void fit_macro(const char *bg_file, const char *hist, string masspoint_name, boo
 
     /* Rebinning */
     int nbins = bgh->GetNbinsX();
-    int big_bins = 6;
+    int big_bins = 8;
     int bins_to_combine = 2;
     int new_bins = nbins + 1 - big_bins * (bins_to_combine - 1);
     double bins[new_bins];
@@ -162,94 +90,149 @@ void fit_macro(const char *bg_file, const char *hist, string masspoint_name, boo
     bins[new_bins - 1] = bgh->GetBinLowEdge(nbins) + bgh->GetBinWidth(nbins);
     //cout << "Last higher edge (bin[" << new_bins - 1 << "]): " << bins[new_bins - 1] << endl;
     TH1F *bgh_rebinned = (TH1F*)bgh->Rebin(new_bins - 1, "newbg", bins);
+    for (int i = bgh_rebinned->GetNbinsX(); i > bgh_rebinned->GetNbinsX() - big_bins; --i) {
+        bgh_rebinned->SetBinContent(i, bgh_rebinned->GetBinContent(i) / bins_to_combine);
+    }
     //cout << "Last bin content: " << bgh->GetBinContent(bgh->GetNbinsX()) << endl;
 
     /* Background fit */
-    TF1 *bg = new TF1("bg", "[0] * ( (1-x/13000)^[2]) / (x/13000)^[1]", 1400, 5200);
+    TF1 *bg = new TF1("bg", "[0] * ( (1-x/13000)^[2]) / (x/13000)^[1]", 1400, 6200);
     bg->SetParameters(0.05, 6.5, 6.8);
-    bg->SetParLimits(0, 0.04, 0.065);
-    bg->SetParLimits(1, 6.4, 6.7);
-    bg->SetParLimits(2, 6.5, 7.5);
+    bg->SetParLimits(0, 0.04, 0.3);
+    bg->SetParLimits(1, 6.0, 6.75);
+    bg->SetParLimits(2, 6.45, 7.6);
     //ROOT::Math::MinimizerOptions::SetDefaultMaxFunctionCalls(9999999);
     bgh_rebinned->SetLineColor(kBlue);
-    bgh_rebinned->Fit(bg, "RWLM", "", 1400, 5200);
-
-    /* Signal fit */
-    RooRealVar mjj("mjj", "m_{jj} [GeV]", 1000, 6000);
-    RooRealVar m0("m0", "mean", masspoint.mean, masspoint.mean_min, masspoint.mean_max);
-    RooRealVar sigma("sigma", "sigma", 100, 100, 400);
-    RooRealVar alpha("alpha", "alpha", 5, 0.3, 100);
-    RooRealVar n("n", "n", 10, 0.8, 10000);
-    RooCBShape sig_pdf("sig", "Signal", mjj, m0, sigma, alpha, n);
-    RooDataHist sig_h("sig_hist", "Signal data", mjj, sigh);
-    sig_pdf.fitTo(sig_h, Range(masspoint.sig_min, masspoint.sig_max));
-
-    /* Transfer bg params to RooFit */
-    auto P0 = bg->GetParameter(0); auto p0_err = bg->GetParError(0);
-    auto P1 = bg->GetParameter(1); auto p1_err = bg->GetParError(1);
-    auto P2 = bg->GetParameter(2); auto p2_err = bg->GetParError(2);
-    RooRealVar p0("p0", "P0", P0, P0 - 3 * p0_err, P0 + 3 * p0_err);
-    RooRealVar p1("p1", "P1", P1, P1 - 3 * p1_err, P1 + 3 * p1_err);
-    RooRealVar p2("p2", "P2", P2, P2 - 3 * p2_err, P2 + 3 * p2_err);
-    p0.setError(p0_err);
-    p1.setError(p1_err);
-    p2.setError(p2_err);
-
-    RooGenericPdf bg_pdf("bg", "Background", "(p0 * (1 - mjj /13000) ^ p2) / (mjj /13000)^p1",
-            RooArgSet(mjj,p0,p1,p2));
-
-    /* combined fit */
-    RooRealVar nsig("nsig","#signal events",0.,1000000);
-    RooRealVar nbkg("nbkg","#background events",0.,1000000);
-    RooAddPdf model("model", "bg+sig", RooArgList(bg_pdf, sig_pdf), RooArgList(nbkg, nsig));
-
-    RooPlot *dataFrame = mjj.frame(Title("m_{jj}"));
-    if (!debug_signal) {
-        // make stuff deterministic - otherwise every run gives a slightly different result
-        RooRandom::randomGenerator()->SetSeed(142);
-        for (int i = 1; i <= bgh->GetNbinsX(); ++i) {
-            bgh->SetBinContent(i, bgh->GetBinContent(i) + sigh->GetBinContent(i));
-            bgh->SetBinError(i, sqrt(bgh->GetBinContent(i)));
-        }
-        RooDataHist model_h("model_hist", "Model", mjj, bgh);
-        //RooDataSet *gen_data = model.generate(mjj, 100000);
-        model.fitTo(model_h, Range(masspoint.model_min, masspoint.model_max));
-
-
-        /* plot all that stuff */
-        model_h.plotOn(dataFrame);
-        model.plotOn(dataFrame);
-        model.plotOn(dataFrame, Components("bg"),LineStyle(kDashed));
-        model.plotOn(dataFrame, Components("sig"),LineColor(kRed));
-        model.paramOn(dataFrame);
-        /*
-        RooDataHist bg_h("bg_hist", "Background data", mjj, bgh);
-        bg_h.plotOn(dataFrame);
-        bg_pdf.plotOn(dataFrame);
-        bg_pdf.paramOn(dataFrame);
-        */
-
-        /*m0.setConstant();
-        sigma.setConstant();
-        alpha.setConstant();
-        n.setConstant();
-        p0.setConstant();
-        p1.setConstant();
-        p2.setConstant();
-        nsig.setConstant();
-        nbkg.setConstant();*/
-
-        // save to RooWorkspace
-        RooWorkspace w("model");
-        //w.import(sig_pdf);
-        //w.import(bg_pdf);
-        w.import(model);
-        w.writeToFile(("model_" + masspoint_name + ".root").c_str());
+    bgh_rebinned->Fit(bg, "VRWLM", "", 1400, 6200);
+    if (debug_bg && false) {
+        bgh_rebinned->Draw();
     } else {
-        sig_h.plotOn(dataFrame);
-        sig_pdf.plotOn(dataFrame);
-        sig_pdf.paramOn(dataFrame);
+        /* Signal fit */
+
+        /* find sigma */
+        float sum = 0;
+        int min = masspoint.mean - 3*sigh->GetBinWidth(1);
+        int max = masspoint.mean + 3*sigh->GetBinWidth(1);
+        int nentries = 0;
+        for (int i = min; i <= max; i += sigh->GetBinWidth(1)) {
+            int bin_number = sigh->GetXaxis()->FindBin(i);
+            if (bin_number != 0) {
+                int bin_content = sigh->GetBinContent(bin_number);
+                sum += bin_content * pow(i - masspoint.mean, 2);
+                nentries += bin_content;
+            }
+        }
+        float sigma_est = sqrt(1/(float)(nentries - 1 ) * sum);
+
+        RooRealVar mjj("mjj", "m_{jj} [GeV]", 1000, 7000);
+        RooRealVar m0("m0", "mean", masspoint.mean, masspoint.mean_min, masspoint.mean_max);
+        RooRealVar sigma("sigma", "sigma", /*sigma_est * 0.8*/masspoint.mean * 0.1, masspoint.mean * 0.02, masspoint.mean * 0.10);
+        //sigma.setConstant();
+        RooRealVar alpha1("alpha1", "alpha", 1, 0, 1.8);
+        RooRealVar alpha2("alpha2", "alpha", 1, 0, 1.8);
+        RooRealVar n1("n1", "n", 5, 0.5, 30);
+        RooRealVar n2("n2", "n", 5, 0.0, 30);
+        //ncb.setConstant(); ng.setConstant();
+        //RooCBShape sig_pdf_cb("sig_cb", "Signal", mjj, m0, sigma, alpha, n);
+        //RooGaussian sig_pdf_g("sig_g", "Signal", mjj, m0_g, sigma_g);
+        //RooAddPdf sig_pdf("sig", "sig_cb+sig_g", RooArgList(sig_pdf_cb, sig_pdf_g), RooArgList(ncb, ng));
+        //RooBukinPdf sig_pdf("sig", "Signal", mjj, m0, sigma, alpha, n_left, n_right);
+        //RooNovosibirsk sig_pdf("sig", "Signal", mjj, m0, sigma, n_left);
+        RooDoubleCB sig_pdf("sig", "Signal", mjj, m0, sigma, alpha1, n1, alpha2, n2);
+        RooDataHist sig_h("sig_hist", "Signal data", mjj, sigh);
+        sig_pdf.fitTo(sig_h, Range(masspoint.sig_min, masspoint.sig_max));
+
+        /* Fix signal parameters */
+        if (!debug_signal) {
+            m0.setConstant();
+            sigma.setConstant();
+            alpha1.setConstant();
+            alpha2.setConstant();
+            n1.setConstant();
+            n2.setConstant();
+        }
+
+        /* Transfer bg params to RooFit */
+        auto P0 = bg->GetParameter(0); auto p0_err = bg->GetParError(0);
+        auto P1 = bg->GetParameter(1); auto p1_err = bg->GetParError(1);
+        auto P2 = bg->GetParameter(2); auto p2_err = bg->GetParError(2);
+        RooRealVar p0("p0", "P0", P0, P0 - 1 * p0_err, P0 + 1 * p0_err);
+        RooRealVar p1("p1", "P1", P1, P1 - 1 * p1_err, P1 + 1 * p1_err);
+        RooRealVar p2("p2", "P2", P2, P2 - 1 * p2_err, P2 + 1 * p2_err);
+        p0.setError(p0_err);
+        p1.setError(p1_err);
+        p2.setError(p2_err);
+        /*p0.setConstant();
+        p1.setConstant();
+        p2.setConstant();*/
+
+        RooGenericPdf bg_pdf("bg", "Background", "(p0 * (1 - mjj /13000) ^ p2) / (mjj /13000)^p1",
+                RooArgSet(mjj,p0,p1,p2));
+        RooDataHist bg_h("bg_hist", "Background data", mjj, bgh);
+        //bg_pdf.fitTo(bg_h, Range(1200, 6200));
+
+        /* combined fit */
+        RooRealVar nsig("nsig","#signal events", 0, 0., 100000000);
+        RooRealVar nbkg("nbkg","#background events",0.,100000000);
+        //nsig.setConstant();
+        RooAddPdf model("model", "bg+sig", RooArgList(bg_pdf, sig_pdf), RooArgList(nbkg, nsig));
+
+        RooPlot *dataFrame = mjj.frame(Title("m_{jj}"));
+        if (!debug_signal) {
+            // make stuff deterministic - otherwise every run gives a slightly different result
+            RooRandom::randomGenerator()->SetSeed(142);
+            for (int i = 1; i <= bgh->GetNbinsX(); ++i) {
+                bgh->SetBinContent(i, bgh->GetBinContent(i) + sigh->GetBinContent(i));
+                bgh->SetBinError(i, sqrt(bgh->GetBinContent(i)));
+            }
+            RooDataHist model_h("model_hist", "Model", mjj, bgh);
+            //RooDataSet *gen_data = model.generate(mjj, 100000);
+            if (!debug_bg) {
+                model.fitTo(model_h, Range(masspoint.model_min, masspoint.model_max));
+            }
+            //model.chi2FitTo(model_h, Range(masspoint.model_min, masspoint.model_max));
+
+
+            /* plot all that stuff */
+            if (debug_bg) {
+                bg_h.plotOn(dataFrame);
+                bg_pdf.plotOn(dataFrame);
+                bg_pdf.paramOn(dataFrame);
+            } else {
+                model_h.plotOn(dataFrame);
+                model.plotOn(dataFrame);
+                RooAbsData *data;
+                //int floatPars = model.getParameters(data)->selectByAttrib("Constant", kFALSE)->getSize() - 1;
+                //cout << "Number of free parameters: " << floatPars << endl;
+                //cout << "chi^2/ndof: " <<  dataFrame->chiSquare(floatPars) << endl;
+                model.plotOn(dataFrame, Components("bg"),LineStyle(kDashed));
+                model.plotOn(dataFrame, Components("sig"),LineColor(kRed));
+                model.paramOn(dataFrame);
+            }
+
+
+            // save to RooWorkspace
+            RooWorkspace w("model");
+            //w.import(sig_pdf);
+            //w.import(bg_pdf);
+            w.import(model);
+            w.writeToFile(("model_" + masspoint_name + ".root").c_str());
+
+            cout << "Nsig integral: " << sigh->Integral() / (bgh->Integral() + sigh->Integral()) << endl
+                << "Nsig fit: " << nsig.getVal() / (nsig.getVal() + nbkg.getVal()) << endl;
+        } else {
+            sig_h.plotOn(dataFrame);
+            sig_pdf.plotOn(dataFrame);
+            //sig_pdf.plotOn(dataFrame, Components("sig_cb"), LineColor(kYellow));
+            //sig_pdf.plotOn(dataFrame, Components("sig_g"), LineColor(kRed));
+            sig_pdf.paramOn(dataFrame);
+            cout << "N: " << sigh->GetEntries() << endl;
+            cout << "Sum: " << sum << endl;
+            cout << "Nentries: " << nentries << endl;
+            cout << "Esitmated sigma: " << sigma_est << endl;
+            cout << "Chi^2 " << dataFrame->chiSquare(6) << endl;
+        }
+        dataFrame->SetMinimum(0.1);
+        dataFrame->Draw();
     }
-    dataFrame->SetMinimum(0.1);
-    dataFrame->Draw();
 }
