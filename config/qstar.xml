@@ -9,9 +9,11 @@
 <!ENTITY QstarToQW_M2000 SYSTEM "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2018/QstarToQW/QstarToQW_M-2000.xml">
 <!ENTITY QstarToQW_M2500 SYSTEM "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2018/QstarToQW/QstarToQW_M-2500.xml">
 <!ENTITY QstarToQW_M3000 SYSTEM "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2018/QstarToQW/QstarToQW_M-3000.xml">
+<!ENTITY QstarToQW_M3500 SYSTEM "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2018/QstarToQW/QstarToQW_M-3500.xml">
 <!ENTITY QstarToQW_M4000 SYSTEM "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2018/QstarToQW/QstarToQW_M-4000.xml">
 <!ENTITY QstarToQW_M4500 SYSTEM "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2018/QstarToQW/QstarToQW_M-4500.xml">
 <!ENTITY QstarToQW_M5000 SYSTEM "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2018/QstarToQW/QstarToQW_M-5000.xml">
+<!ENTITY QstarToQW_M5500 SYSTEM "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2018/QstarToQW/QstarToQW_M-5500.xml">
 <!ENTITY QstarToQW_M6000 SYSTEM "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2018/QstarToQW/QstarToQW_M-6000.xml">
 
 ]>
@@ -65,6 +67,11 @@
             <InputTree Name="AnalysisTree" />
             <OutputTree Name="AnalysisTree" />
         </InputData>
+        <InputData Lumi="49923.0475" NEventsMax="-1" Type="MC" Version="qstar35TeV_2018" Cacheable="False">
+            &QstarToQW_M3500;
+            <InputTree Name="AnalysisTree" />
+            <OutputTree Name="AnalysisTree" />
+        </InputData>
         <InputData Lumi="49913.93527" NEventsMax="-1" Type="MC" Version="qstar4TeV_2018" Cacheable="False">
             &QstarToQW_M4000;
             <InputTree Name="AnalysisTree" />
@@ -77,6 +84,11 @@
         </InputData>
         <InputData Lumi="49910.24627" NEventsMax="-1" Type="MC" Version="qstar5TeV_2018" Cacheable="False">
             &QstarToQW_M5000;
+            <InputTree Name="AnalysisTree" />
+            <OutputTree Name="AnalysisTree" />
+        </InputData>
+        <InputData Lumi="49909.57143" NEventsMax="-1" Type="MC" Version="qstar55TeV_2018" Cacheable="False">
+            &QstarToQW_M5500;
             <InputTree Name="AnalysisTree" />
             <OutputTree Name="AnalysisTree" />
         </InputData>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE JobConfiguration PUBLIC "" "JobConfig.dtd"[
+
+<!ENTITY DATA_JetHT_Run2018A SYSTEM "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2018/DATA_JetHT2018A.xml" >
+<!ENTITY DATA_JetHT_Run2018B SYSTEM "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2018/DATA_JetHT2018B.xml" >
+<!ENTITY DATA_JetHT_Run2018C SYSTEM "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2018/DATA_JetHT2018C.xml" >
+<!ENTITY DATA_JetHT_Run2018D SYSTEM "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2018/DATA_JetHT2018D.xml" >
+
+]>
+
+<!--
+<ConfigParse NEventsBreak="0" FileSplit="40" />
+<ConfigSGE RAM ="8" DISK ="2" Mail="david.leppla-weber@desy.de" Notification="as" Workdir="workdir_real_data_qcd"/>
+-->
+
+<!-- OutputLevel controls which messages are printed; set to VERBOSE or DEBUG for more verbosity, to WARNING or ERROR for less -->
+<JobConfiguration JobName="ExampleCycleJob" OutputLevel="INFO">
+   <Library Name="libSUHH2qstar"/>
+   <Package Name="SUHH2qstar.par" />
+
+   <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="./output/data/" PostFix="" TargetLumi="59740.0" >
+      <!-- <Cycle Name="uhh2::AnalysisModuleRunner"  RunMode="PROOF" ProofServer="lite://"  ProofWorkDir="/nfs/dust/cms/user/ottjoc/proof-wd/" ProofNodes="2" OutputDirectory="./" PostFix="" TargetLumi="1" >  -->
+
+      <!-- Verion attribute must have year in it, same as used in ntuple config, e.g. 2018, 2016v3, etc -->
+      <InputData Lumi="1" NEventsMax="-1" Type="data" Version="DATA_JetHT_Run2018A" Cacheable="False">
+         &DATA_JetHT_Run2018A;
+         <InputTree Name="AnalysisTree" />
+         <OutputTree Name="AnalysisTree" />
+      </InputData>
+      <InputData Lumi="1" NEventsMax="-1" Type="data" Version="DATA_JetHT_Run2018B" Cacheable="False">
+         &DATA_JetHT_Run2018B;
+         <InputTree Name="AnalysisTree" />
+         <OutputTree Name="AnalysisTree" />
+      </InputData>
+      <InputData Lumi="1" NEventsMax="-1" Type="data" Version="DATA_JetHT_Run2018C" Cacheable="False">
+         &DATA_JetHT_Run2018C;
+         <InputTree Name="AnalysisTree" />
+         <OutputTree Name="AnalysisTree" />
+      </InputData>
+      <InputData Lumi="1" NEventsMax="-1" Type="data" Version="DATA_JetHT_Run2018D" Cacheable="False">
+         &DATA_JetHT_Run2018D;
+         <InputTree Name="AnalysisTree" />
+         <OutputTree Name="AnalysisTree" />
+      </InputData>
+
+      <UserConfig>
+         <!-- define which collections to read from the input. Only specify what you need to save I/O time -->
+         <Item Name="PrimaryVertexCollection" Value="offlineSlimmedPrimaryVertices" />
+         <Item Name="ElectronCollection" Value="slimmedElectronsUSER" />
+         <Item Name="MuonCollection" Value="slimmedMuonsUSER" />
+         <Item Name="JetCollection" Value="jetsAk8Puppi" />
+         <Item Name="TopJetCollection" Value="jetsAk8PuppiSubstructure_SoftDropPuppi" />
+         <Item Name="GenJetCollection" Value="slimmedGenJets" />
+         <Item Name="GenTopJetCollection" Value="genjetsAk8SubstructureSoftDrop" />
+         <Item Name="METName" Value="slimmedMETs" />
+
+         <!-- the class name of the AnalysisModule subclasses to run: -->
+         <Item Name="AnalysisModule" Value="qstarModule" />
+
+         <!-- tell AnalysisModuleRunner NOT to use the MC event weight from SFrame; rather let
+         MCLumiWeight (called via CommonModules) calculate the MC event weight. The MC
+         event weight assigned by MCLumiWeight is InputData.Lumi / Cycle.TargetLumi. -->
+         <Item Name="use_sframe_weight" Value="false" />
+
+         <!-- configuration for MCPileupReweight (run as part of CommonModules): -->
+         <Item Name="pileup_directory" Value="common/data/2018/MyMCPileupHistogram.root" />
+         <Item Name="pileup_directory_data" Value="common/data/2018/MyDataPileupHistogram2018.root" />
+
+         <Item Name="lumi_file" Value="common/data/2018/Cert_314472-325175_13TeV_PromptReco_Collisions18_JSON.root" />
+      </UserConfig>
+   </Cycle>
+</JobConfiguration>
