@@ -66,7 +66,7 @@ private:
     std::unique_ptr<Hists> h_muon_before, h_muon_after, h_electron_before, h_electron_after;
 
     std::unique_ptr<uhh2::AnalysisModule> MCWeightModule;
-    std::unique_ptr<uhh2::AnalysisModule> MCPileupReweightModule;
+    std::unique_ptr<MCPileupReweight> MCPileupReweightModule;
 
     std::unique_ptr<GenParticlesPrinter> printer;
 
@@ -109,7 +109,6 @@ qstarModule::qstarModule(Context & ctx){
 
     const string jec_tag = "Autumn18";
     const string jec_ver = "8";
-    const auto JER_sf  = JERSmearing::SF_13TeV_Autumn18_V4;
     const string ResolutionFileName = "2018/Autumn18_V4_MC_PtResolution_AK8PFPuppi.txt";
     const string jec_jet_coll_AK8puppi = "AK8PFPuppi";
     isMC = ctx.get("dataset_type") == "MC";
@@ -119,20 +118,18 @@ qstarModule::qstarModule(Context & ctx){
     std::cout << "Smearing: " << jec_jet_coll_AK8puppi << " with "<< ResolutionFileName << std::endl;
 
     if (isMC) {
-        jet_corrector.reset(new TopJetCorrector(ctx, JERFiles::Autumn18_V4_L123_AK8PFPuppi_MC));
-        //jet_EResSmearer.reset(new GenericJetResolutionSmearer(ctx,"jetsAk8PuppiSubstructure_SoftDropPuppi",
-        //            "gentopjets",JER_sf,ResolutionFileName));
+        jet_corrector.reset(new TopJetCorrector(ctx, JERFiles::Autumn18_V8_L123_AK8PFPuppi_MC));
         jet_EResSmearer.reset(new GenericJetResolutionSmearer(ctx,"topjets","gentopjets",
-                    JERSmearing::SF_13TeV_Autumn18_V4, ResolutionFileName));
+                    JERSmearing::SF_13TeV_Autumn18_RunABCD_V4, ResolutionFileName));
 
         // Needed to save weight_pu branch in root file
         MCWeightModule.reset(new MCLumiWeight(ctx));
         MCPileupReweightModule.reset(new MCPileupReweight(ctx));
     } else {
-        jet_corrector_A.reset(new TopJetCorrector(ctx, JERFiles::Autumn18_V4_A_L123_noRes_AK8PFPuppi_DATA));
-        jet_corrector_B.reset(new TopJetCorrector(ctx, JERFiles::Autumn18_V4_B_L123_noRes_AK8PFPuppi_DATA));
-        jet_corrector_C.reset(new TopJetCorrector(ctx, JERFiles::Autumn18_V4_C_L123_noRes_AK8PFPuppi_DATA));
-        jet_corrector_D.reset(new TopJetCorrector(ctx, JERFiles::Autumn18_V4_D_L123_noRes_AK8PFPuppi_DATA));
+        jet_corrector_A.reset(new TopJetCorrector(ctx, JERFiles::Autumn18_V8_A_L123_noRes_AK8PFPuppi_DATA));
+        jet_corrector_B.reset(new TopJetCorrector(ctx, JERFiles::Autumn18_V8_B_L123_noRes_AK8PFPuppi_DATA));
+        jet_corrector_C.reset(new TopJetCorrector(ctx, JERFiles::Autumn18_V8_C_L123_noRes_AK8PFPuppi_DATA));
+        jet_corrector_D.reset(new TopJetCorrector(ctx, JERFiles::Autumn18_V8_D_L123_noRes_AK8PFPuppi_DATA));
     }
 
     sdmCalc.reset(new SoftDropMassCalculator(ctx, true,
@@ -146,14 +143,14 @@ qstarModule::qstarModule(Context & ctx){
 
     // 2. set up selections
     njet_sel.reset(new NTopJetSelection(2)); // see common/include/NSelections.h
-    eta_sel.reset(new EtaSelection()); // see qstarSelections
+    eta_sel.reset(new EtaSelection(1.3)); // see qstarSelections
     invmass_sel.reset(new InvMassSelection());
 
     MuonId MuId  = AndId<Muon>(MuonID(Muon::CutBasedIdTight), PtEtaCut(30., 2.4), MuonID(Muon::TkIsoLoose)); //changed for 102X
     ElectronId EleId = AndId<Electron>(ElectronID_HEEP_RunII_25ns, PtEtaCut(35., 2.5));
 
-    muon_veto.reset(new MuonVeto(0.8, MuId));
-    ele_veto.reset(new ElectronVeto(0.8, EleId));
+    muon_veto.reset(new MuonVeto(MuId, 0.8));
+    ele_veto.reset(new ElectronVeto(EleId, 0.8));
 
     // 3. Set up Hists classes:
     h_nocuts.reset(new qstarHists(ctx, "NoCuts"));
@@ -171,8 +168,9 @@ qstarModule::qstarModule(Context & ctx){
     h_electron_before.reset(new ElectronHists(ctx, "electron_before"));
     h_electron_after.reset(new ElectronHists(ctx, "electron_after"));
 
-
+#ifdef DEBUG
     printer.reset(new GenParticlesPrinter(ctx));
+#endif
 }
 
 bool qstarModule::process(Event & event) {
@@ -189,7 +187,7 @@ bool qstarModule::process(Event & event) {
 #ifdef DEBUG
     cout << "qstarModule: Starting to process event (runid, eventid) = ("
          << event.run << ", " << event.event << "); weight = " << event.weight << endl;
-    printer->process(event);
+    //printer->process(event);
 #endif
 
     h_nocuts->fill(event);
@@ -206,11 +204,18 @@ bool qstarModule::process(Event & event) {
     h_common->fill(event);
 
     h_muon_before->fill(event);
+
+#ifdef DEBUG
+    cout << "Calling muon veto" << endl;
+#endif
     if (!muon_veto->passes(event)) return false;
     h_muon_veto->fill(event);
     h_muon_after->fill(event);
 
     h_electron_before->fill(event);
+#ifdef DEBUG
+    cout << "Calling electron veto" << endl;
+#endif
     if (!ele_veto->passes(event)) return false;
     h_ele_veto->fill(event);
     h_electron_after->fill(event);

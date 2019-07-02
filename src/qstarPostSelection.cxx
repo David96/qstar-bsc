@@ -52,7 +52,7 @@ qstarPostSelection::qstarPostSelection(Context &ctx) {
     h_tau21.reset(new qstarHists(ctx, "tau21"));
 
     sdm_sel.reset(new SdmSelection(65, 105));
-    tau21_sel.reset(new Tau21Selection(0.35));
+    tau21_sel.reset(new Tau21Selection(0.35, (SdmSelection*)sdm_sel.get()));
 
     isMC = ctx.get("dataset_type") == "MC";
     if (isMC) {

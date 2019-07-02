@@ -28,32 +28,31 @@ bool InvMassSelection::passes(const Event &event) {
                     > invmass_min;
 }
 
+MuonVeto::MuonVeto(const MuonId muid_, float deltaR_min_  ) : deltaR_min(deltaR_min_), muid(muid_) {}
 
-MuonVeto::MuonVeto(float deltaR_min_, const boost::optional<MuonId> &muid_): deltaR_min(deltaR_min_), muid(muid_){}
-
-bool MuonVeto::passes(const Event & event){
+bool MuonVeto::passes(const uhh2::Event & event){
     assert(event.topjets);
     assert(event.muons);
-    if(muid) {
-        for(const auto &muon : *event.muons) {
+    using namespace std;
+    for(const Muon &muon : *event.muons) {
+        if (muid(muon, event)) {
             for(const auto &topjet : *event.topjets) {
-                return deltaR(topjet, muon) >= deltaR_min;
+                if(deltaR(topjet, muon) < deltaR_min ) return false;
             }
         }
     }
     return true;
 }
 
-ElectronVeto::ElectronVeto(float deltaR_min_, const boost::optional<ElectronId> & eleid_)
-                         : deltaR_min(deltaR_min_), eleid(eleid_){}
+ElectronVeto::ElectronVeto(const ElectronId eleid_, float deltaR_min_ ) : deltaR_min(deltaR_min_), eleid(eleid_) {}
 
-bool ElectronVeto::passes(const Event & event){
+bool ElectronVeto::passes(const uhh2::Event & event){
     assert(event.topjets);
     assert(event.electrons);
-    if(eleid) {
-        for(const auto &topjet : *event.topjets) {
-            for(const auto &electron : *event.electrons) {
-                return deltaR(topjet, electron) >= deltaR_min;
+    for(const auto &electron : *event.electrons) {
+        if (eleid(electron, event)) {
+            for(const auto &topjet : *event.topjets) {
+                if(deltaR(topjet,electron) < deltaR_min) return false;
             }
         }
     }
@@ -78,15 +77,21 @@ void PtCleaner::process(Event &event) {
     std::swap(topjets, topjet_col);
 }
 
+bool SdmSelection::passes(const TopJet &jet) {
+    return jet.softdropmass() >= sdm_min && jet.softdropmass() <= sdm_max;
+}
+
 bool SdmSelection::passes(const Event &event) {
-    TopJet v_boson = event.topjets->at(0).softdropmass() > event.topjets->at(1).softdropmass() ?
-                        event.topjets->at(0) : event.topjets->at(1);
-    return v_boson.softdropmass() >= sdm_min && v_boson.softdropmass() <= sdm_max;
+    return passes(event.topjets->at(0)) || passes(event.topjets->at(1));
+    //TopJet v_boson = event.topjets->at(0).softdropmass() > event.topjets->at(1).softdropmass() ?
+    //                    event.topjets->at(0) : event.topjets->at(1);
+    //return v_boson.softdropmass() >= sdm_min && v_boson.softdropmass() <= sdm_max;
 }
 
 bool Tau21Selection::passes(const Event &event) {
-    TopJet v_boson = event.topjets->at(0).softdropmass() > event.topjets->at(1).softdropmass() ?
-                        event.topjets->at(0) : event.topjets->at(1);
+    TopJet v_boson = sdm_sel->passes(event.topjets->at(0)) ? event.topjets->at(0) : event.topjets->at(1);
+    //TopJet v_boson = event.topjets->at(0).softdropmass() > event.topjets->at(1).softdropmass() ?
+    //                    event.topjets->at(0) : event.topjets->at(1);
     float tau21 = v_boson.tau2() / v_boson.tau1();
     return tau21 <= tau21_max;
 }

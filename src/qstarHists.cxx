@@ -24,7 +24,7 @@ qstarHists::qstarHists(Context & ctx, const string & dirname): Hists(ctx, dirnam
   pt12 = book<TH1F>("pt12", "p_{T}^{1+2} [GeV]", 100, 10, 3000);
   eta12 = book<TH1F>("eta12", "#eta^{1+2}", 40, -3.2, 3.2);
   deta = book<TH1F>("deta", "#Delta #eta^{1,2}", 80, -4, 4);
-  dphi = book<TH1F>("dphi", "#Delta #phi^{1,2}", 40, -3.2, 3.2);
+  dphi = book<TH1F>("dphi", "#Delta #phi^{1,2}", 40, -5.0, 5.0);
 
   // combined jets
   cb_pt = book<TH1F>("cb_pt", "p_{T} [GeV/c^{2}]", 100, 150, 3000);
@@ -110,10 +110,10 @@ void qstarHists::fill(const Event & event){
     auto v4 = jets[0].v4() + jets[1].v4();
     eta_jet2->Fill(jets[1].eta(), weight);
     pt_jet2->Fill(jets[1].pt(), weight);
-    pt12->Fill(v4.Pt());
-    eta12->Fill(v4.Eta());
-    deta->Fill(jets[0].eta() - jets[1].eta());
-    dphi->Fill(jets[0].phi() - jets[1].phi());
+    pt12->Fill(v4.Pt(), weight);
+    eta12->Fill(v4.Eta(), weight);
+    deta->Fill(jets[0].eta() - jets[1].eta(), weight);
+    dphi->Fill(jets[0].phi() - jets[1].phi(), weight);
 
     eta_jet2->SetXTitle(eta_jet2->GetTitle());
     eta_jet2->SetYTitle("#events");
