@@ -26,6 +26,8 @@
 #include "TPaveText.h"
 #include "TROOT.h"
 #include "TTree.h"
+#include "RooStats/AsymptoticCalculator.h"
+#include "RooStats/HypoTestInverter.h"
 
 using namespace std;
 using namespace RooFit;
@@ -48,9 +50,12 @@ void cs_limits(const char *masspoint_name, const int mass, bool plot = false) {
         cerr << "Couldn't get nsig or nbkg" << endl;
         return;
     }
+    double csl_high = (w->var("nsig")->getVal() + w->var("nsig")->getError() * 2) / 59740;
+    double csl_low = (w->var("nsig")->getVal() - w->var("nsig")->getError() * 2) / 59740;
     cout << "Cross Section limmits: " << endl
-        << "High: " << (w->var("nsig")->getVal() + w->var("nsig")->getError() * 2) / 59740 << endl
-        << "Low: " <<  (w->var("nsig")->getVal() - w->var("nsig")->getError() * 2) / 59740 << endl;
+        << "High: " << csl_high << endl
+        << "Low: " <<  csl_low << endl;
+    cout << "sigma * BR: " << csl_low * 0.109 << " - " << csl_high * 0.109 << endl;
     RooAddPdf *model = (RooAddPdf*)w->pdf("model");
     if (model == NULL) {
         cerr << "Couldn't get model" << endl;
@@ -81,7 +86,8 @@ void cs_limits(const char *masspoint_name, const int mass, bool plot = false) {
     RooAbsReal *int_bg = bg->createIntegral(*mjj, NormSet(bg_args), Range("integral"));
 
     cout << "Bg: " << bkg << endl << "Sig: " << sig << endl << "S/sqrt(B): " << sig / sqrt(bkg) << endl
-         << "2sigma: " << nsig->getError() * 2 << endl;
+         << "2sigma: " << nsig->getError() * 2 << endl
+         << "sqrt(B): " << sqrt(bkg) << endl;
     cout << "Signal integral: " << nsig->getVal() * int_sig->getVal() << endl
          << "Background integral: " << nbkg->getVal() * int_bg->getVal() << endl
          << "S/sqrt(B): "
