@@ -66,7 +66,7 @@ void macro(const char *file1, const char *file2, const char *output_folder) {
                     w_hist->Draw("same");
 
                     c1->BuildLegend(0.5, 0.8, 0.9, 0.9);
-                    c1->SaveAs((string(output_folder) + "/" + string(key->GetName()) + "_" + string(key_h->GetName()) + ".pdf").c_str());
+                    c1->SaveAs((string(output_folder) + "/" + string(key->GetName()) + "_" + string(key_h->GetName()) + ".ps").c_str());
                     delete c1;
                     delete z_hist;
                     delete w_hist;

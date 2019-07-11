@@ -2,6 +2,7 @@
 #include <string>
 #include <string.h>
 #include <cmath>
+#include <algorithm>
 
 #include "RooAddPdf.h"
 #include "RooArgusBG.h"
@@ -29,13 +30,15 @@
 #include "TROOT.h"
 #include "TTree.h"
 #include "masspoints.h"
-#include "HZZ2L2QRooPdfs.cc"
+#include "HZZ2L2QRooPdfs.h"
 
 using namespace std;
 using namespace RooFit;
 
 void fit_macro(const char *hist, string masspoint_name, string version,
-        bool debug_signal = false, bool postselection = true, bool debug_bg = false) {
+        bool debug_signal = false, string selection = "MC.QCD_2018", bool debug_bg = false,
+        string opt = "") {
+    gROOT->ProcessLine(".L ../../../lib/slc6_amd64_gcc700/libHiggsAnalysisCombinedLimit.so");
 
     map<string, masspoint_data> masspoints;
     init_masspoints(masspoints);
@@ -49,23 +52,13 @@ void fit_macro(const char *hist, string masspoint_name, string version,
     TCanvas *c = new TCanvas("c", "c", 1720, 980);
 
     /* Get histograms from files */
-    TFile *bgf = new TFile(("output/background/" + version + "/uhh2.AnalysisModuleRunner.MC.QCD_" +
-                (postselection?"PS_":"") + "2018.root").c_str());
+    TFile *bgf = new TFile(("output/background/" + version + "/" + (opt == "" ? "" : opt + "/")+ "uhh2.AnalysisModuleRunner." +
+                selection + ".root").c_str());
     TH1F *bgh;
     bgf->GetObject(hist, bgh);
     if (bgh == NULL) {
-        cerr << "File " << ("output/background/" + version + "/uhh2.AnalysisModuleRunner.MC.QCD_" +
-                (postselection?"PS_":"") + "2018.root") << " doesn't include histogram " << hist << endl;
-        return;
-    }
-
-    TFile *sigf = new TFile(( "output/signal/" + version + "/" +
-                (postselection ? string(masspoint.filename) : string(masspoint.preselection)) ).c_str());
-    TH1F *sigh;
-    sigf->GetObject(hist, sigh);
-    if (sigh == NULL) {
-        cerr << "File " << ( "output/signal/" + version + "/" +
-                (postselection ? string(masspoint.filename) : string(masspoint.preselection)) ) << " doesn't include histogram " << hist << endl;
+        cerr << "File " << ("output/background/" + version + "/" + (opt == "" ? "" : opt + "/") + "uhh2.AnalysisModuleRunner." +
+                selection + ".root") << " doesn't include histogram " << hist << endl;
         return;
     }
 
@@ -98,15 +91,26 @@ void fit_macro(const char *hist, string masspoint_name, string version,
     /* Background fit */
     TF1 *bg = new TF1("bg", "[0] * ( (1-x/13000)^[2]) / (x/13000)^[1]", 1400, 6200);
     bg->SetParameters(0.05, 6.5, 6.8);
-    bg->SetParLimits(0, 0.04, 0.3);
+    /*bg->SetParLimits(0, 0.04, 0.3);
     bg->SetParLimits(1, 6.0, 6.75);
-    bg->SetParLimits(2, 6.45, 7.6);
+    bg->SetParLimits(2, 6.45, 7.6);*/
     //ROOT::Math::MinimizerOptions::SetDefaultMaxFunctionCalls(9999999);
     bgh_rebinned->SetLineColor(kBlue);
     bgh_rebinned->Fit(bg, "VRWLM", "", 1400, 6200);
-    if (debug_bg && false) {
+    if (debug_bg/* && false*/) {
         bgh_rebinned->Draw();
     } else {
+        /* Open signal file */
+        TFile *sigf = new TFile(( "output/signal/" + version + "/" + (opt == "" ? "" : opt + "/") +
+                    (selection == "MC.QCD_2018" ? string(masspoint.preselection) : string(masspoint.filename)) ).c_str());
+        TH1F *sigh;
+        sigf->GetObject(hist, sigh);
+        if (sigh == NULL) {
+            cerr << "File " << ( "output/signal/" + version + "/" + (opt == "" ? "" : opt + "/") +
+                    (selection == "MC.QCD_2018" ? string(masspoint.preselection) : string(masspoint.filename)) ) << " doesn't include histogram " << hist << endl;
+            return;
+        }
+
         /* Signal fit */
 
         /* find sigma */
@@ -126,7 +130,7 @@ void fit_macro(const char *hist, string masspoint_name, string version,
 
         RooRealVar mjj("mjj", "m_{jj} [GeV]", 1000, 7000);
         RooRealVar m0("m0", "mean", masspoint.mean, masspoint.mean_min, masspoint.mean_max);
-        RooRealVar sigma("sigma", "sigma", /*sigma_est * 0.8*/masspoint.mean * 0.1, masspoint.mean * 0.02, masspoint.mean * 0.10);
+        RooRealVar sigma("sigma", "sigma", /*sigma_est * 0.8*/masspoint.mean * 0.1, masspoint.mean * 0.03, masspoint.mean * 0.10);
         //sigma.setConstant();
         RooRealVar alpha1("alpha1", "alpha", 1, 0, 1.8);
         RooRealVar alpha2("alpha2", "alpha", 1, 0, 1.8);
@@ -156,7 +160,7 @@ void fit_macro(const char *hist, string masspoint_name, string version,
         auto P0 = bg->GetParameter(0); auto p0_err = bg->GetParError(0);
         auto P1 = bg->GetParameter(1); auto p1_err = bg->GetParError(1);
         auto P2 = bg->GetParameter(2); auto p2_err = bg->GetParError(2);
-        RooRealVar p0("p0", "P0", P0, P0 - 1 * p0_err, P0 + 1 * p0_err);
+        RooRealVar p0("p0", "P0", P0, 0.001, P0 + 1 * p0_err);
         RooRealVar p1("p1", "P1", P1, P1 - 1 * p1_err, P1 + 1 * p1_err);
         RooRealVar p2("p2", "P2", P2, P2 - 1 * p2_err, P2 + 1 * p2_err);
         p0.setError(p0_err);
@@ -202,9 +206,9 @@ void fit_macro(const char *hist, string masspoint_name, string version,
                 model_h.plotOn(dataFrame);
                 model.plotOn(dataFrame);
                 RooAbsData *data;
-                //int floatPars = model.getParameters(data)->selectByAttrib("Constant", kFALSE)->getSize() - 1;
-                //cout << "Number of free parameters: " << floatPars << endl;
-                //cout << "chi^2/ndof: " <<  dataFrame->chiSquare(floatPars) << endl;
+                int floatPars = 5;//model.getParameters(data)->selectByAttrib("Constant", kFALSE)->getSize() - 1;
+                cout << "Number of free parameters: " << floatPars << endl;
+                cout << "chi^2/ndof: " <<  dataFrame->chiSquare(floatPars) << endl;
                 model.plotOn(dataFrame, Components("bg"),LineStyle(kDashed));
                 model.plotOn(dataFrame, Components("sig"),LineColor(kRed));
                 model.paramOn(dataFrame);
@@ -213,10 +217,15 @@ void fit_macro(const char *hist, string masspoint_name, string version,
 
             // save to RooWorkspace
             RooWorkspace w("model");
+            w.autoImportClassCode(kTRUE);
+            w.addClassDeclImportDir("./");
+            w.addClassImplImportDir("./");
+            cout << RooDoubleCB::Class()->ImplFileName() << endl;
+            w.importClassCode(RooDoubleCB::Class(), kTRUE);
             //w.import(sig_pdf);
             //w.import(bg_pdf);
             w.import(model);
-            w.writeToFile(("model_" + masspoint_name + ".root").c_str());
+            w.writeToFile(("model_" + opt + masspoint_name + ".root").c_str());
 
             cout << "Nsig integral: " << sigh->Integral() / (bgh->Integral() + sigh->Integral()) << endl
                 << "Nsig fit: " << nsig.getVal() / (nsig.getVal() + nbkg.getVal()) << endl;
