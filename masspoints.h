@@ -30,8 +30,8 @@ void init_masspoints(map<string, masspoint_data> &masspoints) {
         "uhh2.AnalysisModuleRunner.MC.QstarToQW14TeV_PS_2018.root", // post
         "uhh2.AnalysisModuleRunner.MC.QstarToQW_OLD_TAGGER_14TeV_PS_2018.root", // old tagger
         "uhh2.AnalysisModuleRunner.MC.qstar14TeV_2018.root", // original
-        1100, 2000, // sig min/max
-        1200, 6200, // model min/max
+        1000, 2000, // sig min/max
+        1300, 6200, // model min/max
         1400, 1300, 1600 // mean, mean min/max
     };
     masspoints["W16TeV"] = {
@@ -58,7 +58,7 @@ void init_masspoints(map<string, masspoint_data> &masspoints) {
         "uhh2.AnalysisModuleRunner.MC.QstarToQW_OLD_TAGGER_2TeV_PS_2018.root", // old tagger
         "uhh2.AnalysisModuleRunner.MC.qstar2TeV_2018.root", // original
         1000, 5800, // sig min/max
-        1400, 6000, // model min/max
+        1400, 5000, // model min/max
         2000, 1950, 2200 // mean, mean min/max
     };
     masspoints["W25TeV"] = {
@@ -116,19 +116,19 @@ void init_masspoints(map<string, masspoint_data> &masspoints) {
         5000, 4800, 5200 // mean, mean min/max
     };
     masspoints["W55TeV"] = {
-        "uhh2.AnalysisModuleRunner.MC.qstar5TeV_2018.root", // pre
-        "uhh2.AnalysisModuleRunner.MC.QstarToQW5TeV_PS_2018.root", // post
-        "uhh2.AnalysisModuleRunner.MC.QstarToQW_OLD_TAGGER_5TeV_PS_2018.root", // old tagger
-        "uhh2.AnalysisModuleRunner.MC.qstar5TeV_2018.root", // original
+        "uhh2.AnalysisModuleRunner.MC.qstar55TeV_2018.root", // pre
+        "uhh2.AnalysisModuleRunner.MC.QstarToQW55TeV_PS_2018.root", // post
+        "uhh2.AnalysisModuleRunner.MC.QstarToQW_OLD_TAGGER_55TeV_PS_2018.root", // old tagger
+        "uhh2.AnalysisModuleRunner.MC.qstar55TeV_2018.root", // original
         2000, 7000, // sig min/max
         1400, 6000, // model min/max
         5000, 4800, 5200 // mean, mean min/max
     };
     masspoints["W6TeV"] = {
-        "uhh2.AnalysisModuleRunner.MC.qstar5TeV_2018.root", // pre
-        "uhh2.AnalysisModuleRunner.MC.QstarToQW5TeV_PS_2018.root", // post
-        "uhh2.AnalysisModuleRunner.MC.QstarToQW_OLD_TAGGER_5TeV_PS_2018.root", // old tagger
-        "uhh2.AnalysisModuleRunner.MC.qstar5TeV_2018.root", // original
+        "uhh2.AnalysisModuleRunner.MC.qstar6TeV_2018.root", // pre
+        "uhh2.AnalysisModuleRunner.MC.QstarToQW6TeV_PS_2018.root", // post
+        "uhh2.AnalysisModuleRunner.MC.QstarToQW_OLD_TAGGER_6TeV_PS_2018.root", // old tagger
+        "uhh2.AnalysisModuleRunner.MC.qstar6TeV_2018.root", // original
         2000, 7000, // sig min/max
         1400, 7000, // model min/max
         6000, 5800, 6200 // mean, mean min/max

@@ -23,8 +23,8 @@ qstarHists::qstarHists(Context & ctx, const string & dirname): Hists(ctx, dirnam
   pt_jet2 = book<TH1F>("pt_jet2", "p_{T}^{jet 2} [GeV]", 100, 150, 3000);
   pt12 = book<TH1F>("pt12", "p_{T}^{1+2} [GeV]", 100, 10, 3000);
   eta12 = book<TH1F>("eta12", "#eta^{1+2}", 40, -3.2, 3.2);
-  deta = book<TH1F>("deta", "#Delta #eta^{1,2}", 80, -4, 4);
-  dphi = book<TH1F>("dphi", "#Delta #phi^{1,2}", 40, -5.0, 5.0);
+  deta = book<TH1F>("deta", "#Delta #eta^{1,2}", 80, 0, 4);
+  dphi = book<TH1F>("dphi", "#Delta #phi^{1,2}", 40, 0, 5.0);
 
   // combined jets
   cb_pt = book<TH1F>("cb_pt", "p_{T} [GeV/c^{2}]", 100, 150, 3000);
@@ -61,7 +61,10 @@ qstarHists::qstarHists(Context & ctx, const string & dirname): Hists(ctx, dirnam
   reliso_mu = book<TH1F>("reliso_mu", "#mu rel. Iso", 40, 0, 0.5);
 
   // primary vertices
-  N_pv = book<TH1F>("N_pv", "N^{PV}", 50, 0, 50);
+  N_pv = book<TH1F>("N_pv", "N^{PV}", 100, 0, 100);
+
+  tagger_1 = book<TH1F>("uncorrelatedDeepBoosted_WvsQCD_1", "WvsQCD jet 1", 100, 0, 1);
+  tagger_2 = book<TH1F>("uncorrelatedDeepBoosted_WvsQCD_2", "WvsQCD jet 2", 100, 0, 1);
 }
 
 
@@ -112,8 +115,8 @@ void qstarHists::fill(const Event & event){
     pt_jet2->Fill(jets[1].pt(), weight);
     pt12->Fill(v4.Pt(), weight);
     eta12->Fill(v4.Eta(), weight);
-    deta->Fill(jets[0].eta() - jets[1].eta(), weight);
-    dphi->Fill(jets[0].phi() - jets[1].phi(), weight);
+    deta->Fill(abs(jets[0].eta() - jets[1].eta()), weight);
+    dphi->Fill(abs(jets[0].phi() - jets[1].phi()), weight);
 
     eta_jet2->SetXTitle(eta_jet2->GetTitle());
     eta_jet2->SetYTitle("#events");
@@ -212,6 +215,14 @@ void qstarHists::fill(const Event & event){
 
     invMass->SetXTitle(invMass->GetTitle());
     invMass->SetYTitle("#events");
+
+    tagger_1->Fill(jets[0].btag_MassDecorrelatedDeepBoosted_WvsQCD(), weight);
+    tagger_2->Fill(jets[1].btag_MassDecorrelatedDeepBoosted_WvsQCD(), weight);
+
+    tagger_1->SetXTitle(tagger_1->GetTitle());
+    tagger_2->SetXTitle(tagger_2->GetTitle());
+    tagger_1->SetYTitle("WvsQCD");
+    tagger_2->SetYTitle("WvsQCD");
   }
 
   // Muons

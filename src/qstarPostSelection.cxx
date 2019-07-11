@@ -34,11 +34,11 @@ public:
     virtual bool process(Event & event) override;
 
 private:
-    bool isMC;
+    bool isMC, deepBoostedTagger;
 
-    std::unique_ptr<Selection> sdm_sel, tau21_sel;
+    std::unique_ptr<Selection> sdm_sel, tau21_sel, vvsqcd_sel;
 
-    std::unique_ptr<Hists> h_nocuts, h_sdm, h_tau21;
+    std::unique_ptr<Hists> h_nocuts, h_sdm, h_tau21, h_deep_boosted;
 
     std::unique_ptr<uhh2::AnalysisModule> MCWeightModule;
     std::unique_ptr<uhh2::AnalysisModule> MCPileupReweightModule;
@@ -48,11 +48,23 @@ qstarPostSelection::qstarPostSelection(Context &ctx) {
     cout << "Post selection started…" << endl;
 
     h_nocuts.reset(new qstarHists(ctx, "NoCuts"));
-    h_sdm.reset(new qstarHists(ctx, "SDM"));
-    h_tau21.reset(new qstarHists(ctx, "tau21"));
+
+    deepBoostedTagger = ctx.get("use_deep_boosted", "false").compare("true") == 0;
 
     sdm_sel.reset(new SdmSelection(65, 105));
-    tau21_sel.reset(new Tau21Selection(0.35, (SdmSelection*)sdm_sel.get()));
+    h_sdm.reset(new qstarHists(ctx, "SDM"));
+
+    if (deepBoostedTagger) {
+        float vvsqcd_min = stof(ctx.get("vvsqcd_min", "0.3"));
+        cout << "Using deep boosted with vvsqcd_min = " << vvsqcd_min<< endl;
+        vvsqcd_sel.reset(new VvsQCDSelection(vvsqcd_min, (SdmSelection*)sdm_sel.get()));
+        h_deep_boosted.reset(new qstarHists(ctx, "deep_boosted"));
+    } else {
+
+        float tau_max = stof(ctx.get("tau21_sel", "0.35"));
+        tau21_sel.reset(new Tau21Selection(tau_max, (SdmSelection*)sdm_sel.get()));
+        h_tau21.reset(new qstarHists(ctx, "tau21"));
+    }
 
     isMC = ctx.get("dataset_type") == "MC";
     if (isMC) {
@@ -72,8 +84,13 @@ bool qstarPostSelection::process(Event &event) {
     if (!sdm_sel->passes(event)) return false;
     h_sdm->fill(event);
 
-    if (!tau21_sel->passes(event)) return false;
-    h_tau21->fill(event);
+    if (deepBoostedTagger) {
+        if (!vvsqcd_sel->passes(event)) return false;
+        h_deep_boosted->fill(event);
+    } else {
+        if (!tau21_sel->passes(event)) return false;
+        h_tau21->fill(event);
+    }
 
     return true;
 }

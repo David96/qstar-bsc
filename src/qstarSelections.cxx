@@ -95,3 +95,11 @@ bool Tau21Selection::passes(const Event &event) {
     float tau21 = v_boson.tau2() / v_boson.tau1();
     return tau21 <= tau21_max;
 }
+
+bool VvsQCDSelection::passes(const Event &event) {
+    assert(event.topjets->size() >= 2);
+    TopJet v_boson = sdm_sel->passes(event.topjets->at(0)) ? event.topjets->at(0) : event.topjets->at(1);
+    float vvsqcd = use_z ? v_boson.btag_MassDecorrelatedDeepBoosted_ZvsQCD() :
+        v_boson.btag_MassDecorrelatedDeepBoosted_WvsQCD();
+    return vvsqcd > vvsqcd_min;
+}

@@ -27,7 +27,7 @@ class MuonVeto : public uhh2::Selection {
 public:
     MuonVeto(const MuonId muid_, float deltaR_min_ = 0.8f  );
     virtual bool passes(const uhh2::Event & event) override;
-  private:
+private:
     float deltaR_min;
     const MuonId muid;
 };
@@ -36,7 +36,7 @@ class ElectronVeto : public uhh2::Selection {
 public:
     ElectronVeto(const ElectronId eleid_, float deltaR_min_ = 0.8f  );
     virtual bool passes(const uhh2::Event & event) override;
-  private:
+private:
     float deltaR_min;
     const ElectronId eleid;
 };
@@ -52,7 +52,7 @@ private:
 class PtCleaner {
 public:
     PtCleaner(uhh2::Context &ctx, float pt_min_, float pt_max_) : pt_min(pt_min_),
-                pt_max(pt_max_), hndl(ctx.get_handle<std::vector<TopJet>>("topjets")) {}
+    pt_max(pt_max_), hndl(ctx.get_handle<std::vector<TopJet>>("topjets")) {}
     void process(uhh2::Event &event);
 
 private:
@@ -71,12 +71,23 @@ private:
 };
 
 class Tau21Selection : public uhh2::Selection {
-    public:
-        Tau21Selection(float tau21_max_, SdmSelection *sdm_sel_) : tau21_max(tau21_max_), sdm_sel(sdm_sel_) {}
-        virtual bool passes(const uhh2::Event &event) override;
-    private:
-        float tau21_max;
-        SdmSelection *sdm_sel;
+public:
+    Tau21Selection(float tau21_max_, SdmSelection *sdm_sel_) : tau21_max(tau21_max_), sdm_sel(sdm_sel_) {}
+    virtual bool passes(const uhh2::Event &event) override;
+private:
+    float tau21_max;
+    SdmSelection *sdm_sel;
+};
+
+class VvsQCDSelection : public uhh2::Selection {
+public:
+    VvsQCDSelection(float vvsqcd_min_, SdmSelection *sdm_sel_, bool use_z_ = false) :
+        vvsqcd_min(vvsqcd_min_), use_z(use_z_), sdm_sel(sdm_sel_) {}
+    virtual bool passes(const uhh2::Event &event) override;
+private:
+    float vvsqcd_min;
+    bool use_z;
+    SdmSelection *sdm_sel;
 };
 
 }
