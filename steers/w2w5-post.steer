@@ -19,7 +19,7 @@ SteerPlotter(){
   bShapeNorm = false;   // shape normalization? 
   bPortrait = true;    // portrait or landscape?
   bDrawEntries = false; // draw the histogram entries?
-  fLumi = 19.7; // luminosity of sample
+  fLumi = 59.7; // luminosity of sample
   fSysError = 0.022; // luminosity uncertainty
   bDrawLumi = false;   // plot ratio histograms?
   bForPrelim = false; // draw text saying "CMS Preliminary" -> only works if bDrawLumi is on

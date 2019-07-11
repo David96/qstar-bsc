@@ -9,7 +9,7 @@
 ]>
 
 <!--
-<ConfigParse NEventsBreak="0" FileSplit="40" />
+<ConfigParse NEventsBreak="0" FileSplit="100" />
 <ConfigSGE RAM ="2" DISK ="2" Mail="david.leppla-weber@desy.de" Notification="as" Workdir="workdir_sideband_data"/>
 -->
 

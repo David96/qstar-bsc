@@ -11,7 +11,7 @@
    <Library Name="libSUHH2qstar"/>
    <Package Name="SUHH2qstar.par" />
 
-   <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="./output/" PostFix="" TargetLumi="59740.0" >
+   <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/current_signal/" PostFix="" TargetLumi="59740.0" >
       <!-- <Cycle Name="uhh2::AnalysisModuleRunner"  RunMode="PROOF" ProofServer="lite://"  ProofWorkDir="/nfs/dust/cms/user/ottjoc/proof-wd/" ProofNodes="2" OutputDirectory="./" PostFix="" TargetLumi="1" >  -->
 
       <!-- Verion attribute must have year in it, same as used in ntuple config, e.g. 2018, 2016v3, etc -->
@@ -95,6 +95,8 @@
 
          <!-- Some test configuration; see qstarModule.cxx for how to access it: -->
          <Item Name="TestKey" Value="TestKeyValue" />
+         <Item Name="use_deep_boosted" Value="true" />
+         <Item Name="vvsqcd_min" Value="0.1" />
       </UserConfig>
    </Cycle>
 </JobConfiguration>
