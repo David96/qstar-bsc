@@ -41,10 +41,8 @@ void compare_efficiencies(const char *signal1, const char *cut1, bool post1, con
                     (post1?string(mp.second.filename):string(mp.second.preselection)) ).c_str());
         TFile *t2 = signal2 == NULL ? NULL : new TFile(( "output/signal/" + string(signal2) + "/" +
                     (post2?string(mp.second.filename):string(mp.second.preselection)) ).c_str());
-        TFile *orig1 = new TFile(("output/signal/" + string(signal1) +
-                    (post1?"/../":"/") + string(mp.second.orig)).c_str());
-        TFile *orig2 = new TFile(("output/signal/" + string(signal2) +
-                    (post2?"/../":"/") + string(mp.second.orig)).c_str());
+        TFile *orig1 = new TFile(("output/current_signal/" + string(mp.second.orig)).c_str());
+        TFile *orig2 = new TFile(("output/current_signal/" + string(mp.second.orig)).c_str());
 
         TH1F *njet1, *njet2, *njet1_orig, *njet2_orig;
         t1->GetObject(cut1, njet1);

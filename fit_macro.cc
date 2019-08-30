@@ -31,9 +31,11 @@
 #include "TTree.h"
 #include "masspoints.h"
 #include "HZZ2L2QRooPdfs.h"
+#include "RooStats/ModelConfig.h"
 
 using namespace std;
 using namespace RooFit;
+using namespace RooStats;
 
 void fit_macro(const char *hist, string masspoint_name, string version,
         bool debug_signal = false, string selection = "MC.QCD_2018", bool debug_bg = false,
@@ -52,18 +54,19 @@ void fit_macro(const char *hist, string masspoint_name, string version,
     TCanvas *c = new TCanvas("c", "c", 1720, 980);
 
     /* Get histograms from files */
-    TFile *bgf = new TFile(("output/background/" + version + "/" + (opt == "" ? "" : opt + "/")+ "uhh2.AnalysisModuleRunner." +
+    TFile *bgf = new TFile(("output/" + version + "/" + (opt == "" ? "" : opt + "/")+ "uhh2.AnalysisModuleRunner." +
                 selection + ".root").c_str());
     TH1F *bgh;
     bgf->GetObject(hist, bgh);
     if (bgh == NULL) {
-        cerr << "File " << ("output/background/" + version + "/" + (opt == "" ? "" : opt + "/") + "uhh2.AnalysisModuleRunner." +
+        cerr << "File " << ("output/" + version + "/" + (opt == "" ? "" : opt + "/") + "uhh2.AnalysisModuleRunner." +
                 selection + ".root") << " doesn't include histogram " << hist << endl;
         return;
     }
 
     c->SetLogy();
 
+    bgh->Scale(1 / bgh->GetBinWidth(1));
     /* Rebinning */
     int nbins = bgh->GetNbinsX();
     int big_bins = 8;
@@ -101,15 +104,20 @@ void fit_macro(const char *hist, string masspoint_name, string version,
         bgh_rebinned->Draw();
     } else {
         /* Open signal file */
-        TFile *sigf = new TFile(( "output/signal/" + version + "/" + (opt == "" ? "" : opt + "/") +
-                    (selection == "MC.QCD_2018" ? string(masspoint.preselection) : string(masspoint.filename)) ).c_str());
+        string year = (version == "2016"?"2016v2":(version=="2017"?"2017v2":version));
+        TFile *sigf = new TFile(( "output/" + version + "/" + (opt == "" ? "" : opt + "/") +
+                    (selection == "MC.QCD_2018" ? string(masspoint.preselection) : string(masspoint.filename))
+                    + year + ".root").c_str());
         TH1F *sigh;
         sigf->GetObject(hist, sigh);
         if (sigh == NULL) {
-            cerr << "File " << ( "output/signal/" + version + "/" + (opt == "" ? "" : opt + "/") +
-                    (selection == "MC.QCD_2018" ? string(masspoint.preselection) : string(masspoint.filename)) ) << " doesn't include histogram " << hist << endl;
+            cerr << "File " << ( "output/" + version + "/" + (opt == "" ? "" : opt + "/") +
+                    (selection == "MC.QCD_2018" ? string(masspoint.preselection) : string(masspoint.filename))
+                    + year + ".root" ) << " doesn't include histogram " << hist << endl;
             return;
         }
+
+        sigh->Scale(1 / sigh->GetBinWidth(1));
 
         /* Signal fit */
 
@@ -128,7 +136,7 @@ void fit_macro(const char *hist, string masspoint_name, string version,
         }
         float sigma_est = sqrt(1/(float)(nentries - 1 ) * sum);
 
-        RooRealVar mjj("mjj", "m_{jj} [GeV]", 1000, 7000);
+        RooRealVar mjj("mjj", "m_{jj} [GeV]", 1000, 8500);
         RooRealVar m0("m0", "mean", masspoint.mean, masspoint.mean_min, masspoint.mean_max);
         RooRealVar sigma("sigma", "sigma", /*sigma_est * 0.8*/masspoint.mean * 0.1, masspoint.mean * 0.03, masspoint.mean * 0.10);
         //sigma.setConstant();
@@ -160,9 +168,9 @@ void fit_macro(const char *hist, string masspoint_name, string version,
         auto P0 = bg->GetParameter(0); auto p0_err = bg->GetParError(0);
         auto P1 = bg->GetParameter(1); auto p1_err = bg->GetParError(1);
         auto P2 = bg->GetParameter(2); auto p2_err = bg->GetParError(2);
-        RooRealVar p0("p0", "P0", P0, 0.001, P0 + 1 * p0_err);
-        RooRealVar p1("p1", "P1", P1, P1 - 1 * p1_err, P1 + 1 * p1_err);
-        RooRealVar p2("p2", "P2", P2, P2 - 1 * p2_err, P2 + 1 * p2_err);
+        RooRealVar p0("p0", "P0", P0, std::max(0.001, P0 - 1 * p0_err), P0 + 5 * p0_err);
+        RooRealVar p1("p1", "P1", P1, std::max(0.1, P1 - 1 * p1_err), P1 + 1 * p1_err);
+        RooRealVar p2("p2", "P2", P2, std::max(0.1, P2 - 1 * p2_err), P2 + 1 * p2_err);
         p0.setError(p0_err);
         p1.setError(p1_err);
         p2.setError(p2_err);
@@ -176,7 +184,7 @@ void fit_macro(const char *hist, string masspoint_name, string version,
         //bg_pdf.fitTo(bg_h, Range(1200, 6200));
 
         /* combined fit */
-        RooRealVar nsig("nsig","#signal events", 0, 0., 100000000);
+        RooRealVar nsig("nsig","#signal events", masspoint.mean == 7500 ? 0 : 4000, 0., 10000000);
         RooRealVar nbkg("nbkg","#background events",0.,100000000);
         //nsig.setConstant();
         RooAddPdf model("model", "bg+sig", RooArgList(bg_pdf, sig_pdf), RooArgList(nbkg, nsig));
@@ -185,6 +193,7 @@ void fit_macro(const char *hist, string masspoint_name, string version,
         if (!debug_signal) {
             // make stuff deterministic - otherwise every run gives a slightly different result
             RooRandom::randomGenerator()->SetSeed(142);
+            cout << "Sig bins: " << sigh->GetNbinsX() << "; Bg bins: " << bgh->GetNbinsX() << endl;
             for (int i = 1; i <= bgh->GetNbinsX(); ++i) {
                 bgh->SetBinContent(i, bgh->GetBinContent(i) + sigh->GetBinContent(i));
                 bgh->SetBinError(i, sqrt(bgh->GetBinContent(i)));
@@ -216,19 +225,74 @@ void fit_macro(const char *hist, string masspoint_name, string version,
 
 
             // save to RooWorkspace
+            // unrestrict parameters for limit calculation
+            //p0.setRange(0, 10);
+            //p1.setRange(0, 30);
+            //p2.setRange(0, 30);
+            p0.setRange(std::max(0.001, P0 - 5 * p0_err), P0 + 5 * p0_err);
+            p1.setRange(std::max(0.001, P1 - 3 * p1_err), P1 + 3 * p1_err);
+            p2.setRange(std::max(0.001, P2 - 3 * p2_err), P2 + 3 * p2_err);
             RooWorkspace w("model");
             w.autoImportClassCode(kTRUE);
             w.addClassDeclImportDir("./");
             w.addClassImplImportDir("./");
-            cout << RooDoubleCB::Class()->ImplFileName() << endl;
             w.importClassCode(RooDoubleCB::Class(), kTRUE);
             //w.import(sig_pdf);
             //w.import(bg_pdf);
+            mjj.setVal(masspoint.mean);
             w.import(model);
-            w.writeToFile(("model_" + opt + masspoint_name + ".root").c_str());
+            w.defineSet("obs_bg", "mjj");
+            w.defineSet("obs_model", "mjj");
+            w.defineSet("poi", "nsig");
+
+            ModelConfig bgModel("bgModel", &w);
+            bgModel.SetPdf(bg_pdf);
+            bgModel.SetObservables(*w.set("obs_bg"));
+            bgModel.SetParametersOfInterest(*w.set("poi"));
+            bgModel.SetSnapshot(*w.set("poi"));
+
+            ModelConfig completeModel("bg+sModel", &w);
+            completeModel.SetPdf(model);
+            completeModel.SetObservables(*w.set("obs_model"));
+            completeModel.SetParametersOfInterest(*w.set("poi"));
+            completeModel.SetSnapshot(*w.set("poi"));
+
+            w.import(bgModel);
+            w.import(completeModel);
+            w.import(model_h);
+            w.Print();
+            std::replace(opt.begin(), opt.end(), '/', '_');
+            w.writeToFile(("models/" + version + "/" + opt + masspoint_name + ".root").c_str());
 
             cout << "Nsig integral: " << sigh->Integral() / (bgh->Integral() + sigh->Integral()) << endl
                 << "Nsig fit: " << nsig.getVal() / (nsig.getVal() + nbkg.getVal()) << endl;
+
+            cout << "Bg integral: " << bgh->Integral() << endl
+                 << "Sig integral: " << sigh->Integral() << endl;
+
+            string datacard = "";
+            transform(masspoint_name.begin(), masspoint_name.end(), masspoint_name.begin(),
+                    [](unsigned char c){ return std::tolower(c); });
+
+            if (opt == "DB083") {
+                cout << "Writing rate for deep boosted HP category" << endl;
+                datacard = "datacards/" + version + "/deep_boosted/HP/" + masspoint_name + "_datacard.txt";
+            } else if (opt == "LP") {
+                cout << "Writing rate for deep boosted LP category" << endl;
+                datacard = "datacards/" + version + "/deep_boosted/LP/" + masspoint_name + "_datacard.txt";
+            } else if (opt == "TAU035") {
+                cout << "Writing rate for tau HP category" << endl;
+                datacard = "datacards/" + version + "/tau21/HP/" + masspoint_name + "_datacard.txt";
+            } else if (opt == "LPtau") {
+                cout << "Writing rate for tau LP category" << endl;
+                datacard = "datacards/" + version + "/tau21/LP/" + masspoint_name + "_datacard.txt";
+            }
+            if (datacard != "") {
+                string sed = string("sed -i 's/rate .*/rate    ") + to_string(sigh->Integral()) + " " +
+                    to_string(bgh->Integral()) + "/g' " + datacard;
+                cout << "Running " << sed << endl;
+                cout << "sed run with exit code " << system(sed.c_str()) << endl;
+            }
         } else {
             sig_h.plotOn(dataFrame);
             sig_pdf.plotOn(dataFrame);
@@ -241,7 +305,7 @@ void fit_macro(const char *hist, string masspoint_name, string version,
             cout << "Esitmated sigma: " << sigma_est << endl;
             cout << "Chi^2 " << dataFrame->chiSquare(6) << endl;
         }
-        dataFrame->SetMinimum(0.1);
+        dataFrame->SetMinimum(0.001);
         dataFrame->Draw();
     }
 }
