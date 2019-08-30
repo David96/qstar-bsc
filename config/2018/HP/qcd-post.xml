@@ -11,32 +11,32 @@
    <Library Name="libSUHH2qstar"/>
    <Package Name="SUHH2qstar.par" />
 
-   <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/current_bg/" PostFix="" TargetLumi="59740.0" >
+   <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2018/HP/" PostFix="" TargetLumi="59740.0" >
       <!-- <Cycle Name="uhh2::AnalysisModuleRunner"  RunMode="PROOF" ProofServer="lite://"  ProofWorkDir="/nfs/dust/cms/user/ottjoc/proof-wd/" ProofNodes="2" OutputDirectory="./" PostFix="" TargetLumi="1" >  -->
 
       <!-- Verion attribute must have year in it, same as used in ntuple config, e.g. 2018, 2016v3, etc -->
       <InputData Lumi="174.7762231" NEventsMax="-1" Type="MC" Version="QCD_PS_HT300to500_2018" Cacheable="False">
-         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/current_bg/uhh2.AnalysisModuleRunner.MC.QCD_HT300to500_2018.root" Lumi=""/>
+         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2018/uhh2.AnalysisModuleRunner.MC.QCD_HT300to500_2018.root" Lumi=""/>
          <InputTree Name="AnalysisTree" />
       </InputData>
       <InputData Lumi="1854.82666" NEventsMax="-1" Type="MC" Version="QCD_PS_HT500to700_2018" Cacheable="False">
-         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/current_bg/uhh2.AnalysisModuleRunner.MC.QCD_HT500to700_2018.root" Lumi=""/>
+         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2018/uhh2.AnalysisModuleRunner.MC.QCD_HT500to700_2018.root" Lumi=""/>
          <InputTree Name="AnalysisTree" />
       </InputData>
       <InputData Lumi="8077.614559" NEventsMax="-1" Type="MC" Version="QCD_PS_HT700to1000_2018" Cacheable="False">
-         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/current_bg/uhh2.AnalysisModuleRunner.MC.QCD_HT700to1000_2018.root" Lumi=""/>
+         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2018/uhh2.AnalysisModuleRunner.MC.QCD_HT700to1000_2018.root" Lumi=""/>
          <InputTree Name="AnalysisTree" />
       </InputData>
       <InputData Lumi="14871.46169" NEventsMax="-1" Type="MC" Version="QCD_PS_HT1000to1500_2018" Cacheable="False">
-         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/current_bg/uhh2.AnalysisModuleRunner.MC.QCD_HT1000to1500_2018.root" Lumi=""/>
+         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2018/uhh2.AnalysisModuleRunner.MC.QCD_HT1000to1500_2018.root" Lumi=""/>
          <InputTree Name="AnalysisTree" />
       </InputData>
       <InputData Lumi="105185.1375" NEventsMax="-1" Type="MC" Version="QCD_PS_HT1500to2000_2018" Cacheable="False">
-         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/current_bg/uhh2.AnalysisModuleRunner.MC.QCD_HT1500to2000_2018.root" Lumi=""/>
+         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2018/uhh2.AnalysisModuleRunner.MC.QCD_HT1500to2000_2018.root" Lumi=""/>
          <InputTree Name="AnalysisTree" />
       </InputData>
       <InputData Lumi="259451.9961" NEventsMax="-1" Type="MC" Version="QCD_PS_HT2000toInf_2018" Cacheable="False">
-         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/current_bg/uhh2.AnalysisModuleRunner.MC.QCD_HT2000toInf_2018.root" Lumi=""/>
+         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2018/uhh2.AnalysisModuleRunner.MC.QCD_HT2000toInf_2018.root" Lumi=""/>
          <InputTree Name="AnalysisTree" />
       </InputData>
 
@@ -68,7 +68,7 @@
          <!-- Some test configuration; see qstarModule.cxx for how to access it: -->
          <Item Name="TestKey" Value="TestKeyValue" />
          <Item Name="use_deep_boosted" Value="true" />
-         <Item Name="vvsqcd_min" Value="0.89" />
+         <Item Name="vvsqcd_min" Value="0.85" />
          <Item Name="tau21_sel" Value="0.35" />
       </UserConfig>
    </Cycle>

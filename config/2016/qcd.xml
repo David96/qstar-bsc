@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE JobConfiguration PUBLIC "" "JobConfig.dtd"[
+
+<!ENTITY QCD_HT50to100 SYSTEM   "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2016v3/MC_QCD_HT50to100.xml">
+<!ENTITY QCD_HT100to200 SYSTEM   "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2016v3/MC_QCD_HT100to200.xml">
+<!ENTITY QCD_HT200to300 SYSTEM   "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2016v3/MC_QCD_HT200to300.xml">
+<!ENTITY QCD_HT300to500 SYSTEM   "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2016v3/MC_QCD_HT300to500.xml">
+<!ENTITY QCD_HT500to700 SYSTEM   "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2016v3/MC_QCD_HT500to700.xml">
+<!ENTITY QCD_HT700to1000 SYSTEM   "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2016v3/MC_QCD_HT700to1000.xml">
+<!ENTITY QCD_HT1000to1500 SYSTEM   "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2016v3/MC_QCD_HT1000to1500.xml">
+<!ENTITY QCD_HT1500to2000 SYSTEM   "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2016v3/MC_QCD_HT1500to2000.xml">
+<!ENTITY QCD_HT2000toInf SYSTEM   "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2016v3/MC_QCD_HT2000toInf.xml">
+
+]>
+
+<!--
+<ConfigParse NEventsBreak="0" FileSplit="10" />
+<ConfigSGE RAM ="2" DISK ="2" Mail="david.leppla-weber@desy.de" Notification="as" Workdir="workdir_qcd_2016"/>
+-->
+
+<!-- OutputLevel controls which messages are printed; set to VERBOSE or DEBUG for more verbosity, to WARNING or ERROR for less -->
+<JobConfiguration JobName="ExampleCycleJob" OutputLevel="INFO">
+   <Library Name="libSUHH2qstar"/>
+   <Package Name="SUHH2qstar.par" />
+
+   <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="./output/2016/" PostFix="" TargetLumi="35920.0" >
+
+      <!-- Verion attribute must have year in it, same as used in ntuple config, e.g. 2018, 2016v3, etc -->
+      <InputData Lumi="0.01695242903" NEventsMax="-1" Type="MC" Version="QCD_HT50to100_2016v3" Cacheable="False">
+         &QCD_HT50to100;
+         <InputTree Name="AnalysisTree" />
+         <OutputTree Name="AnalysisTree" />
+      </InputData>
+      <InputData Lumi="2.914202787" NEventsMax="-1" Type="MC" Version="QCD_HT100to200_2016v3" Cacheable="False">
+         &QCD_HT100to200;
+         <InputTree Name="AnalysisTree" />
+         <OutputTree Name="AnalysisTree" />
+      </InputData>
+      <InputData Lumi="33.12492699" NEventsMax="-1" Type="MC" Version="QCD_HT200to300_2016v3" Cacheable="False">
+         &QCD_HT200to300;
+         <InputTree Name="AnalysisTree" />
+         <OutputTree Name="AnalysisTree" />
+      </InputData>
+      <InputData Lumi="152.707843" NEventsMax="-1" Type="MC" Version="QCD_HT300to500_2016v3" Cacheable="False">
+         &QCD_HT300to500;
+         <InputTree Name="AnalysisTree" />
+         <OutputTree Name="AnalysisTree" />
+      </InputData>
+      <InputData Lumi="1648.17919" NEventsMax="-1" Type="MC" Version="QCD_HT500to700_2016v3" Cacheable="False">
+         &QCD_HT500to700;
+         <InputTree Name="AnalysisTree" />
+         <OutputTree Name="AnalysisTree" />
+      </InputData>
+      <InputData Lumi="5378.647343" NEventsMax="-1" Type="MC" Version="QCD_HT700to1000_2016v3" Cacheable="False">
+         &QCD_HT700to1000;
+         <InputTree Name="AnalysisTree" />
+         <OutputTree Name="AnalysisTree" />
+      </InputData>
+      <InputData Lumi="12602.26926" NEventsMax="-1" Type="MC" Version="QCD_HT1000to1500_2016v3" Cacheable="False">
+         &QCD_HT1000to1500;
+         <InputTree Name="AnalysisTree" />
+         <OutputTree Name="AnalysisTree" />
+      </InputData>
+      <InputData Lumi="98743.59466" NEventsMax="-1" Type="MC" Version="QCD_HT1500to2000_2016v3" Cacheable="False">
+         &QCD_HT1500to2000;
+         <InputTree Name="AnalysisTree" />
+         <OutputTree Name="AnalysisTree" />
+      </InputData>
+      <InputData Lumi="235651.7036" NEventsMax="-1" Type="MC" Version="QCD_HT2000toInf_2016v3" Cacheable="False">
+         &QCD_HT2000toInf;
+         <InputTree Name="AnalysisTree" />
+         <OutputTree Name="AnalysisTree" />
+      </InputData>
+
+      <UserConfig>
+         <!-- define which collections to read from the input. Only specify what you need to save I/O time -->
+         <Item Name="PrimaryVertexCollection" Value="offlineSlimmedPrimaryVertices" />
+         <Item Name="ElectronCollection" Value="slimmedElectronsUSER" />
+         <Item Name="MuonCollection" Value="slimmedMuonsUSER" />
+         <Item Name="JetCollection" Value="jetsAk8Puppi" />
+         <Item Name="TopJetCollection" Value="jetsAk8PuppiSubstructure_SoftDropPuppi" />
+         <Item Name="GenJetCollection" Value="slimmedGenJets" />
+         <Item Name="GenTopJetCollection" Value="genjetsAk8SubstructureSoftDrop" />
+         <Item Name="GenParticleCollection" Value="GenParticles" />
+         <Item Name="METName" Value="slimmedMETs" />
+
+         <!-- the class name of the AnalysisModule subclasses to run: -->
+         <Item Name="AnalysisModule" Value="qstarModule" />
+
+         <!-- tell AnalysisModuleRunner NOT to use the MC event weight from SFrame; rather let
+         MCLumiWeight (called via CommonModules) calculate the MC event weight. The MC
+         event weight assigned by MCLumiWeight is InputData.Lumi / Cycle.TargetLumi. -->
+         <Item Name="use_sframe_weight" Value="false" />
+
+         <!-- configuration for MCPileupReweight (run as part of CommonModules): -->
+         <Item Name="pileup_directory" Value="common/data/2016/MyMCPileupHistogram.root" />
+         <Item Name="pileup_directory_data" Value="common/data/2016/MyDataPileupHistogram.root" />
+
+         <!-- Some test configuration; see qstarModule.cxx for how to access it: -->
+         <Item Name="TestKey" Value="TestKeyValue" />
+      </UserConfig>
+   </Cycle>
+</JobConfiguration>

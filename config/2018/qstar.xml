@@ -23,7 +23,7 @@
 
 <!--
 <ConfigParse NEventsBreak="0" FileSplit="40" />
-<ConfigSGE RAM ="8" DISK ="2" Mail="david.leppla-weber@desy.de" Notification="as" Workdir="workdir_data_qstartoV"/>
+<ConfigSGE RAM ="8" DISK ="2" Mail="david.leppla-weber@desy.de" Notification="as" Workdir="workdir_qstar_2018"/>
 -->
 
 <!-- OutputLevel controls which messages are printed; set to VERBOSE or DEBUG for more verbosity, to WARNING or ERROR for less -->
@@ -31,7 +31,7 @@
     <Library Name="libSUHH2qstar"/>
     <Package Name="SUHH2qstar.par" />
 
-    <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="./output/current_signal/" PostFix="" TargetLumi="59740.0" >
+    <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="./output/2018/" PostFix="" TargetLumi="59740.0" >
    <!-- <Cycle Name="uhh2::AnalysisModuleRunner"  RunMode="PROOF" ProofServer="lite://"  ProofWorkDir="/nfs/dust/cms/user/ottjoc/proof-wd/" ProofNodes="2" OutputDirectory="./" PostFix="" TargetLumi="1" >  -->
 
         <!-- Verion attribute must have year in it, same as used in ntuple config, e.g. 2018, 2016v3, etc -->

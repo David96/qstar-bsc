@@ -11,72 +11,72 @@
    <Library Name="libSUHH2qstar"/>
    <Package Name="SUHH2qstar.par" />
 
-   <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="./output/current_signal/OPT089/" PostFix="" TargetLumi="59740.0" >
+   <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="./output/2018/OPT085/" PostFix="" TargetLumi="59740.0" >
       <!-- <Cycle Name="uhh2::AnalysisModuleRunner"  RunMode="PROOF" ProofServer="lite://"  ProofWorkDir="/nfs/dust/cms/user/ottjoc/proof-wd/" ProofNodes="2" OutputDirectory="./" PostFix="" TargetLumi="1" >  -->
 
       <!-- Verion attribute must have year in it, same as used in ntuple config, e.g. 2018, 2016v3, etc -->
       <InputData Lumi="49979.76422" NEventsMax="-1" Type="MC" Version="QstarToQZ12TeV_PS_2018" Cacheable="False">
-         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/current_signal/uhh2.AnalysisModuleRunner.MC.qstar-Z-12TeV_2018.root" Lumi="" />
+         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2018/uhh2.AnalysisModuleRunner.MC.qstar-Z-12TeV_2018.root" Lumi="" />
          <InputTree Name="AnalysisTree" />
       </InputData>
       <InputData Lumi="49977.70028" NEventsMax="-1" Type="MC" Version="QstarToQZ14TeV_PS_2018" Cacheable="False">
-         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/current_signal/uhh2.AnalysisModuleRunner.MC.qstar-Z-14TeV_2018.root" Lumi="" />
+         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2018/uhh2.AnalysisModuleRunner.MC.qstar-Z-14TeV_2018.root" Lumi="" />
          <InputTree Name="AnalysisTree" />
       </InputData>
       <InputData Lumi="49976.86382" NEventsMax="-1" Type="MC" Version="QstarToQZ16TeV_PS_2018" Cacheable="False">
-         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/current_signal/uhh2.AnalysisModuleRunner.MC.qstar-Z-16TeV_2018.root" Lumi="" />
+         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2018/uhh2.AnalysisModuleRunner.MC.qstar-Z-16TeV_2018.root" Lumi="" />
          <InputTree Name="AnalysisTree" />
       </InputData>
       <InputData Lumi="49973.28613" NEventsMax="-1" Type="MC" Version="QstarToQZ18TeV_PS_2018" Cacheable="False">
-         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/current_signal/uhh2.AnalysisModuleRunner.MC.qstar-Z-18TeV_2018.root" Lumi="" />
+         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2018/uhh2.AnalysisModuleRunner.MC.qstar-Z-18TeV_2018.root" Lumi="" />
          <InputTree Name="AnalysisTree" />
       </InputData>
       <InputData Lumi="49974.16594" NEventsMax="-1" Type="MC" Version="QstarToQZ2TeV_PS_2018" Cacheable="False">
-         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/current_signal/uhh2.AnalysisModuleRunner.MC.qstar-Z-2TeV_2018.root" Lumi="" />
+         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2018/uhh2.AnalysisModuleRunner.MC.qstar-Z-2TeV_2018.root" Lumi="" />
          <InputTree Name="AnalysisTree" />
       </InputData>
       <InputData Lumi="49970.89926" NEventsMax="-1" Type="MC" Version="QstarToQZ25TeV_PS_2018" Cacheable="False">
-         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/current_signal/uhh2.AnalysisModuleRunner.MC.qstar-Z-25TeV_2018.root" Lumi="" />
+         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2018/uhh2.AnalysisModuleRunner.MC.qstar-Z-25TeV_2018.root" Lumi="" />
          <InputTree Name="AnalysisTree" />
       </InputData>
       <InputData Lumi="49968.60597" NEventsMax="-1" Type="MC" Version="QstarToQZ3TeV_PS_2018" Cacheable="False">
-         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/current_signal/uhh2.AnalysisModuleRunner.MC.qstar-Z-3TeV_2018.root" Lumi="" />
+         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2018/uhh2.AnalysisModuleRunner.MC.qstar-Z-3TeV_2018.root" Lumi="" />
          <InputTree Name="AnalysisTree" />
       </InputData>
       <InputData Lumi="49961.89116" NEventsMax="-1" Type="MC" Version="QstarToQZ35TeV_PS_2018" Cacheable="False">
-         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/current_signal/uhh2.AnalysisModuleRunner.MC.qstar-Z-35TeV_2018.root" Lumi="" />
+         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2018/uhh2.AnalysisModuleRunner.MC.qstar-Z-35TeV_2018.root" Lumi="" />
          <InputTree Name="AnalysisTree" />
       </InputData>
       <InputData Lumi="49959.17624" NEventsMax="-1" Type="MC" Version="QstarToQZ4TeV_PS_2018" Cacheable="False">
-         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/current_signal/uhh2.AnalysisModuleRunner.MC.qstar-Z-4TeV_2018.root" Lumi="" />
+         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2018/uhh2.AnalysisModuleRunner.MC.qstar-Z-4TeV_2018.root" Lumi="" />
          <InputTree Name="AnalysisTree" />
       </InputData>
       <InputData Lumi="49956.09579" NEventsMax="-1" Type="MC" Version="QstarToQZ45TeV_PS_2018" Cacheable="False">
-         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/current_signal/uhh2.AnalysisModuleRunner.MC.qstar-Z-45TeV_2018.root" Lumi="" />
+         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2018/uhh2.AnalysisModuleRunner.MC.qstar-Z-45TeV_2018.root" Lumi="" />
          <InputTree Name="AnalysisTree" />
       </InputData>
       <InputData Lumi="49952.36239" NEventsMax="-1" Type="MC" Version="QstarToQZ5TeV_PS_2018" Cacheable="False">
-         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/current_signal/uhh2.AnalysisModuleRunner.MC.qstar-Z-5TeV_2018.root" Lumi="" />
+         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2018/uhh2.AnalysisModuleRunner.MC.qstar-Z-5TeV_2018.root" Lumi="" />
          <InputTree Name="AnalysisTree" />
       </InputData>
       <InputData Lumi="49956.736" NEventsMax="-1" Type="MC" Version="QstarToQZ55TeV_PS_2018" Cacheable="False">
-         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/current_signal/uhh2.AnalysisModuleRunner.MC.qstar-Z-55TeV_2018.root" Lumi="" />
+         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2018/uhh2.AnalysisModuleRunner.MC.qstar-Z-55TeV_2018.root" Lumi="" />
          <InputTree Name="AnalysisTree" />
       </InputData>
       <InputData Lumi="49947.54223" NEventsMax="-1" Type="MC" Version="QstarToQZ6TeV_PS_2018" Cacheable="False">
-         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/current_signal/uhh2.AnalysisModuleRunner.MC.qstar-Z-6TeV_2018.root" Lumi="" />
+         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2018/uhh2.AnalysisModuleRunner.MC.qstar-Z-6TeV_2018.root" Lumi="" />
          <InputTree Name="AnalysisTree" />
       </InputData>
       <InputData Lumi="49957.32772" NEventsMax="-1" Type="MC" Version="QstarToQZ65TeV_PS_2018" Cacheable="False">
-         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/current_signal/uhh2.AnalysisModuleRunner.MC.qstar-Z-65TeV_2018.root" Lumi="" />
+         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2018/uhh2.AnalysisModuleRunner.MC.qstar-Z-65TeV_2018.root" Lumi="" />
          <InputTree Name="AnalysisTree" />
       </InputData>
       <InputData Lumi="49958.77182" NEventsMax="-1" Type="MC" Version="QstarToQZ7TeV_PS_2018" Cacheable="False">
-         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/current_signal/uhh2.AnalysisModuleRunner.MC.qstar-Z-7TeV_2018.root" Lumi="" />
+         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2018/uhh2.AnalysisModuleRunner.MC.qstar-Z-7TeV_2018.root" Lumi="" />
          <InputTree Name="AnalysisTree" />
       </InputData>
       <InputData Lumi="49962.11004" NEventsMax="-1" Type="MC" Version="QstarToQZ75TeV_PS_2018" Cacheable="False">
-         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/current_signal/uhh2.AnalysisModuleRunner.MC.qstar-Z-75TeV_2018.root" Lumi="" />
+         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2018/uhh2.AnalysisModuleRunner.MC.qstar-Z-75TeV_2018.root" Lumi="" />
          <InputTree Name="AnalysisTree" />
       </InputData>
 
@@ -108,7 +108,7 @@
 
          <!-- Some test configuration; see qstarModule.cxx for how to access it: -->
          <Item Name="use_deep_boosted" Value="true" />
-         <Item Name="vvsqcd_min" Value="0.89" />
+         <Item Name="vvsqcd_min" Value="0.85" />
          <Item Name="tau21_sel" Value="0.35" />
          <Item Name="TestKey" Value="TestKeyValue" />
       </UserConfig>
