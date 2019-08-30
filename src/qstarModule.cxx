@@ -40,35 +40,81 @@ public:
 private:
     bool isMC;
 
-    std::unique_ptr<CommonModules> common;
+    unique_ptr<CommonModules> common;
 
-    std::unique_ptr<TopJetCleaner> topJetCleaner;
+    unique_ptr<TopJetCleaner> topJetCleaner;
 
-    std::unique_ptr<TopJetCorrector> jet_corrector;
+    unique_ptr<TopJetCorrector> jet_corrector;
 
-    std::unique_ptr<TopJetCorrector> jet_corrector_A;
-    std::unique_ptr<TopJetCorrector> jet_corrector_B;
-    std::unique_ptr<TopJetCorrector> jet_corrector_C;
-    std::unique_ptr<TopJetCorrector> jet_corrector_D;
+    unique_ptr<TopJetCorrector> jet_corrector_2016_B;
+    unique_ptr<TopJetCorrector> jet_corrector_2016_C;
+    unique_ptr<TopJetCorrector> jet_corrector_2016_D;
+    unique_ptr<TopJetCorrector> jet_corrector_2016_E;
+    unique_ptr<TopJetCorrector> jet_corrector_2016_F;
+    unique_ptr<TopJetCorrector> jet_corrector_2016_G;
+    unique_ptr<TopJetCorrector> jet_corrector_2016_H;
 
-    std::unique_ptr<GenericJetResolutionSmearer> jet_EResSmearer;
+    unique_ptr<TopJetCorrector> jet_corrector_2017_B;
+    unique_ptr<TopJetCorrector> jet_corrector_2017_C;
+    unique_ptr<TopJetCorrector> jet_corrector_2017_D;
+    unique_ptr<TopJetCorrector> jet_corrector_2017_E;
+    unique_ptr<TopJetCorrector> jet_corrector_2017_F;
 
-    std::unique_ptr<SoftDropMassCalculator> sdmCalc;
+    unique_ptr<TopJetCorrector> jet_corrector_2018_A;
+    unique_ptr<TopJetCorrector> jet_corrector_2018_B;
+    unique_ptr<TopJetCorrector> jet_corrector_2018_C;
+    unique_ptr<TopJetCorrector> jet_corrector_2018_D;
+
+    unique_ptr<GenericJetResolutionSmearer> jet_EResSmearer;
+
+    unique_ptr<SoftDropMassCalculator> sdmCalc;
 
     // declare the Selections to use. Use unique_ptr to ensure automatic call of delete in the destructor,
     // to avoid memory leaks.
-    std::unique_ptr<Selection> njet_sel, eta_sel, invmass_sel, muon_veto, ele_veto;
+    unique_ptr<Selection> njet_sel, eta_sel, invmass_sel, muon_veto, ele_veto;
 
     // store the Hists collection as member variables. Again, use unique_ptr to avoid memory leaks.
-    std::unique_ptr<Hists> h_nocuts, h_common, h_cleaner, h_corrections, h_njet,
+    unique_ptr<Hists> h_nocuts, h_common, h_cleaner, h_corrections, h_njet,
         h_eta, h_muon_veto, h_ele_veto, h_invmass;
 
-    std::unique_ptr<Hists> h_muon_before, h_muon_after, h_electron_before, h_electron_after;
+    unique_ptr<Hists> h_muon_before, h_muon_after, h_electron_before, h_electron_after;
 
-    std::unique_ptr<uhh2::AnalysisModule> MCWeightModule;
-    std::unique_ptr<MCPileupReweight> MCPileupReweightModule;
+    unique_ptr<AnalysisModule> MCWeightModule;
+    unique_ptr<MCPileupReweight> MCPileupReweightModule;
 
-    std::unique_ptr<GenParticlesPrinter> printer;
+    unique_ptr<GenParticlesPrinter> printer;
+
+    Year year;
+
+    const int runnr_2016_Ab = 271036;
+    const int runnr_2016_Ae = 271658;
+    const int runnr_2016_Bb = 272007;
+    const int runnr_2016_Be = 275376;
+    const int runnr_2016_Cb = 275657;
+    const int runnr_2016_Ce = 276283;
+    const int runnr_2016_Db = 276315;
+    const int runnr_2016_De = 276811;
+    const int runnr_2016_Eb = 276831;
+    const int runnr_2016_Ee = 277420;
+    const int runnr_2016_Fb = 277772;
+    const int runnr_2016_Fe = 278808;
+    const int runnr_2016_Gb = 278820;
+    const int runnr_2016_Ge = 280385;
+    const int runnr_2016_Hb = 280919;
+    const int runnr_2016_He = 284044;
+
+    const int runnr_2017_Ab = 294927;
+    const int runnr_2017_Ae = 297019;
+    const int runnr_2017_Bb = 297046;
+    const int runnr_2017_Be = 299329;
+    const int runnr_2017_Cb = 299368;
+    const int runnr_2017_Ce = 302029;
+    const int runnr_2017_Db = 302030;
+    const int runnr_2017_De = 303434;
+    const int runnr_2017_Eb = 303824;
+    const int runnr_2017_Ee = 304797;
+    const int runnr_2017_Fb = 305040;
+    const int runnr_2017_Fe = 306462;
 
     const int runnr_2018_Ab = 315252;
     const int runnr_2018_Ae = 316995;
@@ -107,29 +153,60 @@ qstarModule::qstarModule(Context & ctx){
     common->init(ctx);
     topJetCleaner.reset(new TopJetCleaner(ctx, PtEtaCut(200., 2.4)));
 
-    const string jec_tag = "Autumn18";
-    const string jec_ver = "8";
-    const string ResolutionFileName = "2018/Autumn18_V4_MC_PtResolution_AK8PFPuppi.txt";
-    const string jec_jet_coll_AK8puppi = "AK8PFPuppi";
+    string ResolutionFileName;
     isMC = ctx.get("dataset_type") == "MC";
+    year = extract_year(ctx);
 
-    std::cout << "USING "<< "?" << " MC JEC: "<< jec_tag << " V" << jec_ver << std::endl;
-    std::cout << "for the following jet collections: " << jec_jet_coll_AK8puppi << std::endl;
-    std::cout << "Smearing: " << jec_jet_coll_AK8puppi << " with "<< ResolutionFileName << std::endl;
+    JERSmearing::SFtype1 smearing;
+    switch (year) {
+        case Year::is2016v3:
+        case Year::is2016v2:
+            smearing = JERSmearing::SF_13TeV_Summer16_25nsV1;
+            ResolutionFileName = "2016/Summer16_25nsV1_MC_PtResolution_AK8PFPuppi.txt";
+            cout << "Year 2016" << endl;
+            break;
+        case Year::is2017v2:
+            smearing = JERSmearing::SF_13TeV_Fall17_V3;
+            ResolutionFileName = "2017/Fall17_V3_MC_PtResolution_AK8PFPuppi.txt";
+            cout << "Year 2017" << endl;
+            break;
+        case Year::is2018:
+            smearing = JERSmearing::SF_13TeV_Autumn18_RunABCD_V4;
+            ResolutionFileName = "2018/Autumn18_V4_MC_PtResolution_AK8PFPuppi.txt";
+            cout << "Year 2018" << endl;
+            break;
+        default:
+            cerr << "No year detected!!!" << endl;
+    }
 
     if (isMC) {
         jet_corrector.reset(new TopJetCorrector(ctx, JERFiles::Autumn18_V8_L123_AK8PFPuppi_MC));
-        jet_EResSmearer.reset(new GenericJetResolutionSmearer(ctx,"topjets","gentopjets",
-                    JERSmearing::SF_13TeV_Autumn18_RunABCD_V4, ResolutionFileName));
+        jet_EResSmearer.reset(new GenericJetResolutionSmearer(ctx,"topjets","gentopjets", smearing, ResolutionFileName));
 
         // Needed to save weight_pu branch in root file
         MCWeightModule.reset(new MCLumiWeight(ctx));
         MCPileupReweightModule.reset(new MCPileupReweight(ctx));
     } else {
-        jet_corrector_A.reset(new TopJetCorrector(ctx, JERFiles::Autumn18_V8_A_L123_noRes_AK8PFPuppi_DATA));
-        jet_corrector_B.reset(new TopJetCorrector(ctx, JERFiles::Autumn18_V8_B_L123_noRes_AK8PFPuppi_DATA));
-        jet_corrector_C.reset(new TopJetCorrector(ctx, JERFiles::Autumn18_V8_C_L123_noRes_AK8PFPuppi_DATA));
-        jet_corrector_D.reset(new TopJetCorrector(ctx, JERFiles::Autumn18_V8_D_L123_noRes_AK8PFPuppi_DATA));
+        if (year == Year::is2016v3) {
+            jet_corrector_2016_B.reset(new TopJetCorrector(ctx, JERFiles::Summer16_07Aug2017_V11_B_L123_AK8PFPuppi_DATA));
+            jet_corrector_2016_C.reset(new TopJetCorrector(ctx, JERFiles::Summer16_07Aug2017_V11_B_L123_AK8PFPuppi_DATA));
+            jet_corrector_2016_D.reset(new TopJetCorrector(ctx, JERFiles::Summer16_07Aug2017_V11_B_L123_AK8PFPuppi_DATA));
+            jet_corrector_2016_E.reset(new TopJetCorrector(ctx, JERFiles::Summer16_07Aug2017_V11_B_L123_AK8PFPuppi_DATA));
+            jet_corrector_2016_F.reset(new TopJetCorrector(ctx, JERFiles::Summer16_07Aug2017_V11_B_L123_AK8PFPuppi_DATA));
+            jet_corrector_2016_G.reset(new TopJetCorrector(ctx, JERFiles::Summer16_07Aug2017_V11_B_L123_AK8PFPuppi_DATA));
+            jet_corrector_2016_H.reset(new TopJetCorrector(ctx, JERFiles::Summer16_07Aug2017_V11_B_L123_AK8PFPuppi_DATA));
+        } else if (year == Year::is2017v2) {
+            jet_corrector_2017_B.reset(new TopJetCorrector(ctx, JERFiles::Fall17_17Nov2017_V32_B_L123_AK8PFPuppi_DATA));
+            jet_corrector_2017_C.reset(new TopJetCorrector(ctx, JERFiles::Fall17_17Nov2017_V32_C_L123_AK8PFPuppi_DATA));
+            jet_corrector_2017_D.reset(new TopJetCorrector(ctx, JERFiles::Fall17_17Nov2017_V32_D_L123_AK8PFPuppi_DATA));
+            jet_corrector_2017_E.reset(new TopJetCorrector(ctx, JERFiles::Fall17_17Nov2017_V32_E_L123_AK8PFPuppi_DATA));
+            jet_corrector_2017_F.reset(new TopJetCorrector(ctx, JERFiles::Fall17_17Nov2017_V32_F_L123_AK8PFPuppi_DATA));
+        } else if (year == Year::is2018) {
+            jet_corrector_2018_A.reset(new TopJetCorrector(ctx, JERFiles::Autumn18_V8_A_L123_noRes_AK8PFPuppi_DATA));
+            jet_corrector_2018_B.reset(new TopJetCorrector(ctx, JERFiles::Autumn18_V8_B_L123_noRes_AK8PFPuppi_DATA));
+            jet_corrector_2018_C.reset(new TopJetCorrector(ctx, JERFiles::Autumn18_V8_C_L123_noRes_AK8PFPuppi_DATA));
+            jet_corrector_2018_D.reset(new TopJetCorrector(ctx, JERFiles::Autumn18_V8_D_L123_noRes_AK8PFPuppi_DATA));
+        }
     }
 
     sdmCalc.reset(new SoftDropMassCalculator(ctx, true,
@@ -224,17 +301,55 @@ bool qstarModule::process(Event & event) {
         jet_corrector->process(event);
         jet_EResSmearer->process(event);
     } else {
-        if(event.run >= runnr_2018_Ab && event.run <= runnr_2018_Ae){
-            jet_corrector_A->process(event);
+        if (event.run >= runnr_2016_Bb && event.run <= runnr_2016_Be) {
+            jet_corrector_2016_B->process(event);
+        }
+        else if(event.run >= runnr_2016_Cb && event.run <= runnr_2016_Ce){
+            jet_corrector_2016_C->process(event);
+        }
+        else if(event.run >= runnr_2016_Db && event.run <= runnr_2016_De){
+            jet_corrector_2016_D->process(event);
+        }
+        else if(event.run >= runnr_2016_Eb && event.run <= runnr_2016_Ee){
+            jet_corrector_2016_E->process(event);
+        }
+        else if(event.run >= runnr_2016_Fb && event.run <= runnr_2016_Fe){
+            jet_corrector_2016_F->process(event);
+        }
+        else if(event.run >= runnr_2016_Gb && event.run <= runnr_2016_Ge){
+            jet_corrector_2016_G->process(event);
+        }
+        else if(event.run >= runnr_2016_Hb && event.run <= runnr_2016_He){
+            jet_corrector_2016_H->process(event);
+        }
+        else if(event.run >= runnr_2017_Bb && event.run <= runnr_2017_Be){
+            jet_corrector_2017_B->process(event);
+        }
+        else if(event.run >= runnr_2017_Cb && event.run <= runnr_2017_Ce){
+            jet_corrector_2017_C->process(event);
+        }
+        else if(event.run >= runnr_2017_Db && event.run <= runnr_2017_De){
+            jet_corrector_2017_D->process(event);
+        }
+        else if(event.run >= runnr_2017_Eb && event.run <= runnr_2017_Ee){
+            jet_corrector_2017_E->process(event);
+        }
+        else if(event.run >= runnr_2017_Fb && event.run <= runnr_2017_Fe){
+            jet_corrector_2017_F->process(event);
+        }
+        else if(event.run >= runnr_2018_Ab && event.run <= runnr_2018_Ae){
+            jet_corrector_2018_A->process(event);
         }
         else if(event.run >= runnr_2018_Bb && event.run <= runnr_2018_Be){
-            jet_corrector_B->process(event);
+            jet_corrector_2018_B->process(event);
         }
         else if(event.run >= runnr_2018_Cb && event.run <= runnr_2018_Ce){
-            jet_corrector_C->process(event);
+            jet_corrector_2018_C->process(event);
         }
         else if(event.run >= runnr_2018_Db && event.run <= runnr_2018_De){
-            jet_corrector_D->process(event);
+            jet_corrector_2018_D->process(event);
+        } else {
+            cerr << "No correct JEC Corrector found!" << endl;
         }
     }
     sort_by_pt<TopJet>(*event.topjets);

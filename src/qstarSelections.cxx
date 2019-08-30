@@ -82,6 +82,7 @@ bool SdmSelection::passes(const TopJet &jet) {
 }
 
 bool SdmSelection::passes(const Event &event) {
+    assert(event.topjets->size() >= 2);
     return passes(event.topjets->at(0)) || passes(event.topjets->at(1));
     //TopJet v_boson = event.topjets->at(0).softdropmass() > event.topjets->at(1).softdropmass() ?
     //                    event.topjets->at(0) : event.topjets->at(1);

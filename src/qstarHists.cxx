@@ -46,7 +46,7 @@ qstarHists::qstarHists(Context & ctx, const string & dirname): Hists(ctx, dirnam
   TAU2_2 = book<TH1F>("TAU2_2","#tau_{2_{2}}",20,0,1);
   Tau21_2 = book<TH1F>("Tau21_2", "#tau_{2_{2}}/#tau_{1_{2}}", 20,0,1);
 
-  invMass = book<TH1F>("invMass","M_{jj}-AK8 [GeV/c^{2}]",30,1000,7000);
+  invMass = book<TH1F>("invMass","M_{jj}-AK8 [GeV/c^{2}]",38,1000,8600);
 
   HADcharged_vs_eta_jet1 = book<TH2D>("HADcharged_vs_eta_jet1","HADcharged vs #eta; #eta; HADcharged",100,-6,6,100,0.0,1.0);
   HADneutral_vs_eta_jet1 = book<TH2D>("HADneutral_vs_eta_jet1","HADneutral vs #eta; #eta; HADneutral",100,-6,6,100,0.0,1.0);
