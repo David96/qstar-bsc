@@ -1,0 +1,16 @@
+INFO: (function: improveOnce) CascadeMinimizer.cc: 167 -- Minimisation configured with Type=Minuit2, Algo=Migrad, strategy=1, tolerance=0.1
+INFO: (function: improveOnce) CascadeMinimizer.cc: 190 -- Minimisation finished with status=0
+INFO: (function: improveOnce) CascadeMinimizer.cc: 195 -- Minimization success! status=0
+INFO: (function: improveOnce) CascadeMinimizer.cc: 167 -- Minimisation configured with Type=Minuit2, Algo=Migrad, strategy=1, tolerance=0.1
+INFO: (function: improveOnce) CascadeMinimizer.cc: 190 -- Minimisation finished with status=0
+INFO: (function: improveOnce) CascadeMinimizer.cc: 195 -- Minimization success! status=0
+INFO: (function: anyParameterAtBoundaries) utils.cc: 982 -- Found parameter p0 at boundary (within ~1sigma): 0.318264+/-89415.2
+INFO: (function: minimize) CascadeMinimizer.cc: 478 -- After fit, some parameters are found at the boundary (within ~1sigma)
+DEBUG: (function: runSpecific) FitDiagnostics.cc: 304 -- Fit B-only, status = 0, numBadNLL = 0, covariance quality = 3
+INFO: (function: improveOnce) CascadeMinimizer.cc: 167 -- Minimisation configured with Type=Minuit2, Algo=Migrad, strategy=1, tolerance=0.1
+INFO: (function: improveOnce) CascadeMinimizer.cc: 190 -- Minimisation finished with status=-1
+DEBUG: (function: improveOnce) CascadeMinimizer.cc: 196 -- Minimization ended with latest status != 0 or 1
+INFO: (function: anyParameterAtBoundaries) utils.cc: 982 -- Found parameter p0 at boundary (within ~1sigma): 2.53553+/-20858
+INFO: (function: anyParameterAtBoundaries) utils.cc: 982 -- Found parameter p1 at boundary (within ~1sigma): -212.458+/-21058.4
+INFO: (function: anyParameterAtBoundaries) utils.cc: 982 -- Found parameter p2 at boundary (within ~1sigma): 2036.93+/-18803.6
+INFO: (function: minimize) CascadeMinimizer.cc: 478 -- After fit, some parameters are found at the boundary (within ~1sigma)

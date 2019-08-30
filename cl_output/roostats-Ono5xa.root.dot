@@ -1,0 +1,38 @@
+digraph model_s{
+"model_s" [ color=red, label="RooSimultaneousOpt\nmodel_s"];
+"pdf_binqstar" [ color=red, label="RooAddPdf\npdf_binqstar"];
+"shapeSig_signal_qstar" [ color=red, label="RooDoubleCB\nshapeSig_signal_qstar"];
+"m0" [ color=blue, label="RooRealVar\nm0"];
+"sigma" [ color=blue, label="RooRealVar\nsigma"];
+"alpha1" [ color=blue, label="RooRealVar\nalpha1"];
+"n1" [ color=blue, label="RooRealVar\nn1"];
+"alpha2" [ color=blue, label="RooRealVar\nalpha2"];
+"n2" [ color=blue, label="RooRealVar\nn2"];
+"mjj" [ color=blue, label="RooRealVar\nmjj"];
+"shapeBkg_background_qstar" [ color=red, label="RooGenericPdf\nshapeBkg_background_qstar"];
+"p0" [ color=blue, label="RooRealVar\np0"];
+"p1" [ color=blue, label="RooRealVar\np1"];
+"p2" [ color=blue, label="RooRealVar\np2"];
+"n_exp_binqstar_proc_signal" [ color=red, label="ProcessNormalization\nn_exp_binqstar_proc_signal"];
+"r" [ color=blue, label="RooRealVar\nr"];
+"n_exp_binqstar_proc_background" [ color=blue, label="RooRealVar\nn_exp_binqstar_proc_background"];
+"CMS_channel" [ color=blue, label="RooCategory\nCMS_channel"];
+"n_exp_binqstar_proc_signal" -> "r";
+"model_s" -> "CMS_channel";
+"model_s" -> "pdf_binqstar";
+"pdf_binqstar" -> "n_exp_binqstar_proc_background";
+"pdf_binqstar" -> "n_exp_binqstar_proc_signal";
+"pdf_binqstar" -> "shapeSig_signal_qstar";
+"pdf_binqstar" -> "shapeBkg_background_qstar";
+"shapeSig_signal_qstar" -> "mjj";
+"shapeSig_signal_qstar" -> "m0";
+"shapeSig_signal_qstar" -> "sigma";
+"shapeSig_signal_qstar" -> "alpha1";
+"shapeSig_signal_qstar" -> "n1";
+"shapeSig_signal_qstar" -> "alpha2";
+"shapeSig_signal_qstar" -> "n2";
+"shapeBkg_background_qstar" -> "mjj";
+"shapeBkg_background_qstar" -> "p0";
+"shapeBkg_background_qstar" -> "p1";
+"shapeBkg_background_qstar" -> "p2";
+}
