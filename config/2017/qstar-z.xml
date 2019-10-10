@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE JobConfiguration PUBLIC "" "JobConfig.dtd"[
+
+<!ENTITY QstarToQZ_M1000 SYSTEM "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2017/QstarToQZ/QstarToQZ_M-1000.xml">
+<!ENTITY QstarToQZ_M1200 SYSTEM "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2017/QstarToQZ/QstarToQZ_M-1200.xml">
+<!ENTITY QstarToQZ_M1400 SYSTEM "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2017/QstarToQZ/QstarToQZ_M-1400.xml">
+<!ENTITY QstarToQZ_M1600 SYSTEM "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2017/QstarToQZ/QstarToQZ_M-1600.xml">
+<!ENTITY QstarToQZ_M1800 SYSTEM "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2017/QstarToQZ/QstarToQZ_M-1800.xml">
+<!ENTITY QstarToQZ_M2000 SYSTEM "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2017/QstarToQZ/QstarToQZ_M-2000.xml">
+<!ENTITY QstarToQZ_M2500 SYSTEM "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2017/QstarToQZ/QstarToQZ_M-2500.xml">
+<!ENTITY QstarToQZ_M3000 SYSTEM "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2017/QstarToQZ/QstarToQZ_M-3000.xml">
+<!ENTITY QstarToQZ_M3500 SYSTEM "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2017/QstarToQZ/QstarToQZ_M-3500.xml">
+<!ENTITY QstarToQZ_M4000 SYSTEM "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2017/QstarToQZ/QstarToQZ_M-4000.xml">
+<!ENTITY QstarToQZ_M4500 SYSTEM "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2017/QstarToQZ/QstarToQZ_M-4500.xml">
+<!ENTITY QstarToQZ_M5000 SYSTEM "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2017/QstarToQZ/QstarToQZ_M-5000.xml">
+<!ENTITY QstarToQZ_M5500 SYSTEM "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2017/QstarToQZ/QstarToQZ_M-5500.xml">
+<!ENTITY QstarToQZ_M6000 SYSTEM "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2017/QstarToQZ/QstarToQZ_M-6000.xml">
+<!ENTITY QstarToQZ_M6500 SYSTEM "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2017/QstarToQZ/QstarToQZ_M-6500.xml">
+<!ENTITY QstarToQZ_M7000 SYSTEM "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2017/QstarToQZ/QstarToQZ_M-7000.xml">
+<!ENTITY QstarToQZ_M7500 SYSTEM "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/common/datasets/RunII_102X_v1/2017/QstarToQZ/QstarToQZ_M-7500.xml">
+
+]>
+<!--
+<ConfigParse NEventsBreak="0" FileSplit="80" />
+<ConfigSGE RAM ="2" DISK ="2" Mail="david.leppla-weber@desy.de" Notification="as" Workdir="workdir_qstar_z_2017"/>
+-->
+<!-- OutputLevel controls which messages are printed; set to VERBOSE or DEBUG for more verbosity, to WARNING or ERROR for less -->
+<JobConfiguration JobName="ExampleCycleJob" OutputLevel="INFO">
+    <Library Name="libSUHH2qstar"/>
+    <Package Name="SUHH2qstar.par" />
+
+    <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="./output/2017/" PostFix="" TargetLumi="41530" >
+   <!-- <Cycle Name="uhh2::AnalysisModuleRunner"  RunMode="PROOF" ProofServer="lite://"  ProofWorkDir="/nfs/dust/cms/user/ottjoc/proof-wd/" ProofNodes="2" OutputDirectory="./" PostFix="" TargetLumi="1" >  -->
+
+        <!-- Verion attribute must have year in it, same as used in ntuple config, e.g. 2017, 2016v3, etc -->
+        <InputData Lumi="50000" NEventsMax="-1" Type="MC" Version="qstar-Z-12TeV_2017v2" Cacheable="False">
+            &QstarToQZ_M1200;
+            <InputTree Name="AnalysisTree" />
+            <OutputTree Name="AnalysisTree" />
+        </InputData>
+        <InputData Lumi="50000" NEventsMax="-1" Type="MC" Version="qstar-Z-14TeV_2017v2" Cacheable="False">
+            &QstarToQZ_M1400;
+            <InputTree Name="AnalysisTree" />
+            <OutputTree Name="AnalysisTree" />
+        </InputData>
+        <InputData Lumi="50000" NEventsMax="-1" Type="MC" Version="qstar-Z-16TeV_2017v2" Cacheable="False">
+            &QstarToQZ_M1600;
+            <InputTree Name="AnalysisTree" />
+            <OutputTree Name="AnalysisTree" />
+        </InputData>
+        <InputData Lumi="50000" NEventsMax="-1" Type="MC" Version="qstar-Z-18TeV_2017v2" Cacheable="False">
+            &QstarToQZ_M1800;
+            <InputTree Name="AnalysisTree" />
+            <OutputTree Name="AnalysisTree" />
+        </InputData>
+        <InputData Lumi="48000" NEventsMax="-1" Type="MC" Version="qstar-Z-2TeV_2017v2" Cacheable="False">
+            &QstarToQZ_M2000;
+            <InputTree Name="AnalysisTree" />
+            <OutputTree Name="AnalysisTree" />
+        </InputData>
+        <InputData Lumi="47000" NEventsMax="-1" Type="MC" Version="qstar-Z-25TeV_2017v2" Cacheable="False">
+            &QstarToQZ_M2500;
+            <InputTree Name="AnalysisTree" />
+            <OutputTree Name="AnalysisTree" />
+        </InputData>
+        <InputData Lumi="48000" NEventsMax="-1" Type="MC" Version="qstar-Z-3TeV_2017v2" Cacheable="False">
+            &QstarToQZ_M3000;
+            <InputTree Name="AnalysisTree" />
+            <OutputTree Name="AnalysisTree" />
+        </InputData>
+        <InputData Lumi="50000" NEventsMax="-1" Type="MC" Version="qstar-Z-35TeV_2017v2" Cacheable="False">
+            &QstarToQZ_M3500;
+            <InputTree Name="AnalysisTree" />
+            <OutputTree Name="AnalysisTree" />
+        </InputData>
+        <InputData Lumi="50000" NEventsMax="-1" Type="MC" Version="qstar-Z-4TeV_2017v2" Cacheable="False">
+            &QstarToQZ_M4000;
+            <InputTree Name="AnalysisTree" />
+            <OutputTree Name="AnalysisTree" />
+        </InputData>
+        <InputData Lumi="50000" NEventsMax="-1" Type="MC" Version="qstar-Z-45TeV_2017v2" Cacheable="False">
+            &QstarToQZ_M4500;
+            <InputTree Name="AnalysisTree" />
+            <OutputTree Name="AnalysisTree" />
+        </InputData>
+        <InputData Lumi="50000" NEventsMax="-1" Type="MC" Version="qstar-Z-5TeV_2017v2" Cacheable="False">
+            &QstarToQZ_M5000;
+            <InputTree Name="AnalysisTree" />
+            <OutputTree Name="AnalysisTree" />
+        </InputData>
+        <InputData Lumi="50000" NEventsMax="-1" Type="MC" Version="qstar-Z-55TeV_2017v2" Cacheable="False">
+            &QstarToQZ_M5500;
+            <InputTree Name="AnalysisTree" />
+            <OutputTree Name="AnalysisTree" />
+        </InputData>
+        <InputData Lumi="50000" NEventsMax="-1" Type="MC" Version="qstar-Z-6TeV_2017v2" Cacheable="False">
+            &QstarToQZ_M6000;
+            <InputTree Name="AnalysisTree" />
+            <OutputTree Name="AnalysisTree" />
+        </InputData>
+        <InputData Lumi="50000" NEventsMax="-1" Type="MC" Version="qstar-Z-65TeV_2017v2" Cacheable="False">
+            &QstarToQZ_M6500;
+            <InputTree Name="AnalysisTree" />
+            <OutputTree Name="AnalysisTree" />
+        </InputData>
+        <InputData Lumi="50000" NEventsMax="-1" Type="MC" Version="qstar-Z-7TeV_2017v2" Cacheable="False">
+            &QstarToQZ_M7000;
+            <InputTree Name="AnalysisTree" />
+            <OutputTree Name="AnalysisTree" />
+        </InputData>
+        <InputData Lumi="49002.68729" NEventsMax="-1" Type="MC" Version="qstar-Z-75TeV_2017v2" Cacheable="False">
+            &QstarToQZ_M7500;
+            <InputTree Name="AnalysisTree" />
+            <OutputTree Name="AnalysisTree" />
+        </InputData>
+
+        <UserConfig>
+            <!-- define which collections to read from the input. Only specify what you need to save I/O time -->
+            <Item Name="PrimaryVertexCollection" Value="offlineSlimmedPrimaryVertices" />
+            <Item Name="ElectronCollection" Value="slimmedElectronsUSER" />
+            <Item Name="MuonCollection" Value="slimmedMuonsUSER" />
+            <Item Name="JetCollection" Value="jetsAk8Puppi" />
+            <Item Name="TopJetCollection" Value="jetsAk8PuppiSubstructure_SoftDropPuppi" />
+            <Item Name="GenJetCollection" Value="slimmedGenJets" />
+            <Item Name="GenTopJetCollection" Value="genjetsAk8SubstructureSoftDrop" />
+            <Item Name="GenParticleCollection" Value="GenParticles" />
+            <Item Name="METName" Value="slimmedMETs" />
+
+            <!-- the class name of the AnalysisModule subclasses to run: -->
+            <Item Name="AnalysisModule" Value="qstarModule" />
+
+            <!-- tell AnalysisModuleRunner NOT to use the MC event weight from SFrame; rather let
+                 MCLumiWeight (called via CommonModules) calculate the MC event weight. The MC
+                 event weight assigned by MCLumiWeight is InputData.Lumi / Cycle.TargetLumi. -->
+            <Item Name="use_sframe_weight" Value="false" />
+
+            <!-- configuration for MCPileupReweight (run as part of CommonModules): -->
+            <Item Name="pileup_directory" Value="common/data/2017/MyMCPileupHistogram.root" />
+            <Item Name="pileup_directory_data" Value="common/data/2017/MyDataPileupHistogram.root" />
+
+            <!-- Some test configuration; see qstarModule.cxx for how to access it: -->
+            <Item Name="TestKey" Value="TestKeyValue" />
+        </UserConfig>
+    </Cycle>
+</JobConfiguration>

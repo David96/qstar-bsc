@@ -56,8 +56,9 @@ qstarPostSelection::qstarPostSelection(Context &ctx) {
 
     if (deepBoostedTagger) {
         float vvsqcd_min = stof(ctx.get("vvsqcd_min", "0.3"));
+	bool use_z = ctx.get("use_z", "false").compare("true") == 0;
         cout << "Using deep boosted with vvsqcd_min = " << vvsqcd_min<< endl;
-        vvsqcd_sel.reset(new VvsQCDSelection(vvsqcd_min, (SdmSelection*)sdm_sel.get()));
+        vvsqcd_sel.reset(new VvsQCDSelection(vvsqcd_min, (SdmSelection*)sdm_sel.get(), use_z));
         h_deep_boosted.reset(new qstarHists(ctx, "deep_boosted"));
     } else {
 

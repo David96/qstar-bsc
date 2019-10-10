@@ -1,15 +1,15 @@
 SteerPlotter(){
   
   // steering for the plotter
-  fCycleName     =  "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/analysis"; // name of the cycle (first part of the name of the root files)
-  fInputFiles    = "MC.QCD_PS.root, MC.QstarToQW2TeV_PS_2018.root, MC.QstarToQW5TeV_PS_2018.root"; //, MC.qstar-Z-2TeV_2018.root, MC.qstar-Z-5TeV_2018.root";
-  fSampleNames   = "            QCD_bg,             qstarW2TeV,             qstarW5TeV"; //,             qstarZ2TeV,             qstarZ5TeV";
-  fSamplesWeight = "               1.0,                    1.0,                    1.0"; //,                    1.0,                    1.0";
-  fSamplesUnc  = "                0.05,                   0.05,                   0.05"; //,                   0.05,                   0.05";
-  fHistColors =  "                 867,                    810,                    414"; //,                    810,                    414";
-  fHistMarkers = "                   0,                      0,                      0"; //,                      0,                      0";
+  fCycleName     =  "/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/"; // name of the cycle (first part of the name of the root files)
+  fInputFiles    = "./analysis.MC.QCD_PS.root, ./current_signal/OPT089/uhh2.AnalysisModuleRunner.MC.QstarToQW3TeV_PS_2018.root, ./current_signal/OPT089/uhh2.AnalysisModuleRunner.MC.QstarToQW6TeV_PS_2018.root"; //, MC.qstar-Z-2TeV_2018.root, MC.qstar-Z-5TeV_2018.root";
+  fSampleNames   = "            QCD_bg,             qstarW3TeV,             qstarW6TeV";
+  fSamplesWeight = "               1.0,                    1.0,                    1.0";
+  fSamplesUnc  = "                0.05,                   0.05,                   0.05";
+  fHistColors =  "                 867,                    810,                    414";
+  fHistMarkers = "                   0,                      0,                      0";
 
-  fSamplesToStack = "QCD_bg, qstarW2TeV, qstarW5TeV";
+  fSamplesToStack = "QCD_bg, qstarW3TeV, qstarW6TeV";
 
   fOutputPsFile = "/nfs/dust/cms/user/lepplada/plots/W2W5-log/post.ps";
   

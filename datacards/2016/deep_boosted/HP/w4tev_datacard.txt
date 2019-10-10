@@ -1,0 +1,29 @@
+# Datacard example for H->gg like bias study
+imax 1
+jmax 1
+kmax *
+---------------
+shapes data_obs   * ../../../models/2016//DB083W4TeV.root model:data_hist
+shapes signal      * ../../../models/2016/DB083W4TeV.root model:sig
+shapes background * ../../../models/2016/DB083W4TeV.root model:bg
+---------------
+# take event count from dataset (use -1)
+bin          qstar
+observation -1
+---------------
+# 51 expected events from H->gg in the signal (just a simple gaussian)
+# background normalisation freely floating, taken from _norm, so leave rate    50.010412 1
+
+bin     qstar    qstar
+process signal   background
+process 0        1
+rate    50.010412 1
+
+---------------
+# usual systematics .... note, we advertise the pdf changing parameter as a discrete nuisance
+lumi lnN 1.025   -
+CMS_deep_boosted_PtDependence  lnN 1.06 -
+CMS_scale_j                    lnN 1.02 -
+# CMS_VV_JJ_deep_boosted_eff     lnN   0.144259 -
+# pdf_index discrete
+bg_norm           flatParam

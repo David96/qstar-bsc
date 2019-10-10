@@ -22,7 +22,7 @@ void init_masspoints(map<string, masspoint_data> &masspoints) {
         "uhh2.AnalysisModuleRunner.MC.QstarToQW_OLD_TAGGER_12TeV_PS_", // old tagger
         "uhh2.AnalysisModuleRunner.MC.qstar12TeV_", // original
         1000, 3500, // sig min/max
-        1000, 5800, // model min/max
+        1100, 5800, // model min/max
         1200, 1100, 1400 // mean, mean min/max
     };
     masspoints["W14TeV"] = {
@@ -66,8 +66,8 @@ void init_masspoints(map<string, masspoint_data> &masspoints) {
         "uhh2.AnalysisModuleRunner.MC.QstarToQW25TeV_PS_", // post
         "uhh2.AnalysisModuleRunner.MC.QstarToQW_OLD_TAGGER_25TeV_PS_", // old tagger
         "uhh2.AnalysisModuleRunner.MC.qstar25TeV_", // original
-        1200, 5000, // sig min/max
-        1400, 6200, // model min/max
+        1000, 5500, // sig min/max
+        1400, 6000, // model min/max
         2500, 2400, 2700 // mean, mean min/max
     };
     masspoints["W3TeV"] = {
@@ -75,7 +75,7 @@ void init_masspoints(map<string, masspoint_data> &masspoints) {
         "uhh2.AnalysisModuleRunner.MC.QstarToQW3TeV_PS_", // post
         "uhh2.AnalysisModuleRunner.MC.QstarToQW_OLD_TAGGER_3TeV_PS_", // old tagger
         "uhh2.AnalysisModuleRunner.MC.qstar3TeV_", // original
-        1800, 5000, // sig min/max
+        1500, 4600, // sig min/max
         1400, 6200, // model min/max
         3000, 2900, 3200 // mean, mean min/max
     };
@@ -147,7 +147,7 @@ void init_masspoints(map<string, masspoint_data> &masspoints) {
         "uhh2.AnalysisModuleRunner.MC.QstarToQW7TeV_PS_", // post
         "uhh2.AnalysisModuleRunner.MC.QstarToQW_OLD_TAGGER_7TeV_PS_", // old tagger
         "uhh2.AnalysisModuleRunner.MC.qstar7TeV_", // original
-        4500, 8000, // sig min/max
+        5500, 8000, // sig min/max
         1400, 8000, // model min/max
         7000, 6800, 7200 // mean, mean min/max
     };

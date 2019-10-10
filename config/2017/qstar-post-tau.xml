@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE JobConfiguration PUBLIC "" "JobConfig.dtd">
+
+<!--
+<ConfigParse NEventsBreak="0" FileSplit="40" />
+<ConfigSGE RAM ="8" DISK ="2" Mail="david.leppla-weber@desy.de" Notification="as" Workdir="workdir_qstar_post_2017"/>
+-->
+
+<!-- OutputLevel controls which messages are printed; set to VERBOSE or DEBUG for more verbosity, to WARNING or ERROR for less -->
+<JobConfiguration JobName="ExampleCycleJob" OutputLevel="INFO">
+   <Library Name="libSUHH2qstar"/>
+   <Package Name="SUHH2qstar.par" />
+
+   <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2017/TAU035/" PostFix="" TargetLumi="35920.0" >
+      <!-- <Cycle Name="uhh2::AnalysisModuleRunner"  RunMode="PROOF" ProofServer="lite://"  ProofWorkDir="/nfs/dust/cms/user/ottjoc/proof-wd/" ProofNodes="2" OutputDirectory="./" PostFix="" TargetLumi="1" >  -->
+
+      <!-- Verion attribute must have year in it, same as used in ntuple config, e.g. 2017, 2016v3, etc -->
+      <InputData Lumi="50000" NEventsMax="-1" Type="MC" Version="QstarToQW12TeV_PS_2017v2" Cacheable="False">
+         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2017/uhh2.AnalysisModuleRunner.MC.qstar12TeV_2017v2.root" Lumi="" />
+         <InputTree Name="AnalysisTree" />
+      </InputData>
+      <InputData Lumi="50000" NEventsMax="-1" Type="MC" Version="QstarToQW14TeV_PS_2017v2" Cacheable="False">
+         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2017/uhh2.AnalysisModuleRunner.MC.qstar14TeV_2017v2.root" Lumi="" />
+         <InputTree Name="AnalysisTree" />
+      </InputData>
+      <InputData Lumi="50000" NEventsMax="-1" Type="MC" Version="QstarToQW16TeV_PS_2017v2" Cacheable="False">
+         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2017/uhh2.AnalysisModuleRunner.MC.qstar16TeV_2017v2.root" Lumi="" />
+         <InputTree Name="AnalysisTree" />
+      </InputData>
+      <InputData Lumi="50000" NEventsMax="-1" Type="MC" Version="QstarToQW18TeV_PS_2017v2" Cacheable="False">
+         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2017/uhh2.AnalysisModuleRunner.MC.qstar18TeV_2017v2.root" Lumi="" />
+         <InputTree Name="AnalysisTree" />
+      </InputData>
+      <InputData Lumi="50000" NEventsMax="-1" Type="MC" Version="QstarToQW2TeV_PS_2017v2" Cacheable="False">
+         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2017/uhh2.AnalysisModuleRunner.MC.qstar2TeV_2017v2.root" Lumi="" />
+         <InputTree Name="AnalysisTree" />
+      </InputData>
+      <InputData Lumi="50000" NEventsMax="-1" Type="MC" Version="QstarToQW25TeV_PS_2017v2" Cacheable="False">
+         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2017/uhh2.AnalysisModuleRunner.MC.qstar25TeV_2017v2.root" Lumi="" />
+         <InputTree Name="AnalysisTree" />
+      </InputData>
+      <InputData Lumi="50000" NEventsMax="-1" Type="MC" Version="QstarToQW3TeV_PS_2017v2" Cacheable="False">
+         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2017/uhh2.AnalysisModuleRunner.MC.qstar3TeV_2017v2.root" Lumi="" />
+         <InputTree Name="AnalysisTree" />
+      </InputData>
+      <InputData Lumi="50000" NEventsMax="-1" Type="MC" Version="QstarToQW35TeV_PS_2017v2" Cacheable="False">
+         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2017/uhh2.AnalysisModuleRunner.MC.qstar35TeV_2017v2.root" Lumi="" />
+         <InputTree Name="AnalysisTree" />
+      </InputData>
+      <InputData Lumi="50000" NEventsMax="-1" Type="MC" Version="QstarToQW4TeV_PS_2017v2" Cacheable="False">
+         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2017/uhh2.AnalysisModuleRunner.MC.qstar4TeV_2017v2.root" Lumi="" />
+         <InputTree Name="AnalysisTree" />
+      </InputData>
+      <InputData Lumi="50000" NEventsMax="-1" Type="MC" Version="QstarToQW45TeV_PS_2017v2" Cacheable="False">
+         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2017/uhh2.AnalysisModuleRunner.MC.qstar45TeV_2017v2.root" Lumi="" />
+         <InputTree Name="AnalysisTree" />
+      </InputData>
+      <InputData Lumi="50000" NEventsMax="-1" Type="MC" Version="QstarToQW5TeV_PS_2017v2" Cacheable="False">
+         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2017/uhh2.AnalysisModuleRunner.MC.qstar5TeV_2017v2.root" Lumi="" />
+         <InputTree Name="AnalysisTree" />
+      </InputData>
+      <InputData Lumi="50000" NEventsMax="-1" Type="MC" Version="QstarToQW55TeV_PS_2017v2" Cacheable="False">
+         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2017/uhh2.AnalysisModuleRunner.MC.qstar55TeV_2017v2.root" Lumi="" />
+         <InputTree Name="AnalysisTree" />
+      </InputData>
+      <InputData Lumi="50000" NEventsMax="-1" Type="MC" Version="QstarToQW6TeV_PS_2017v2" Cacheable="False">
+         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2017/uhh2.AnalysisModuleRunner.MC.qstar6TeV_2017v2.root" Lumi="" />
+         <InputTree Name="AnalysisTree" />
+      </InputData>
+      <InputData Lumi="50000" NEventsMax="-1" Type="MC" Version="QstarToQW65TeV_PS_2017v2" Cacheable="False">
+         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2017/uhh2.AnalysisModuleRunner.MC.qstar65TeV_2017v2.root" Lumi="" />
+         <InputTree Name="AnalysisTree" />
+      </InputData>
+      <InputData Lumi="50000" NEventsMax="-1" Type="MC" Version="QstarToQW7TeV_PS_2017v2" Cacheable="False">
+         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2017/uhh2.AnalysisModuleRunner.MC.qstar7TeV_2017v2.root" Lumi="" />
+         <InputTree Name="AnalysisTree" />
+      </InputData>
+      <InputData Lumi="47002.01251" NEventsMax="-1" Type="MC" Version="QstarToQW75TeV_PS_2017v2" Cacheable="False">
+         <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2017/uhh2.AnalysisModuleRunner.MC.qstar75TeV_2017v2.root" Lumi="" />
+         <InputTree Name="AnalysisTree" />
+      </InputData>
+
+      <UserConfig>
+         <!-- define which collections to read from the input. Only specify what you need to save I/O time -->
+         <Item Name="PrimaryVertexCollection" Value="offlineSlimmedPrimaryVertices" />
+         <Item Name="ElectronCollection" Value="slimmedElectronsUSER" />
+         <Item Name="MuonCollection" Value="slimmedMuonsUSER" />
+         <Item Name="JetCollection" Value="jetsAk8Puppi" />
+         <Item Name="TopJetCollection" Value="jetsAk8PuppiSubstructure_SoftDropPuppi" />
+         <Item Name="GenJetCollection" Value="slimmedGenJets" />
+         <Item Name="GenTopJetCollection" Value="genjetsAk8SubstructureSoftDrop" />
+         <Item Name="GenParticleCollection" Value="GenParticles" />
+         <Item Name="METName" Value="slimmedMETs" />
+         <Item Name="additionalBranches" Value="weight_pu" />
+
+         <!-- the class name of the AnalysisModule subclasses to run: -->
+         <Item Name="AnalysisModule" Value="qstarPostSelection" />
+
+         <!-- tell AnalysisModuleRunner NOT to use the MC event weight from SFrame; rather let
+         MCLumiWeight (called via CommonModules) calculate the MC event weight. The MC
+         event weight assigned by MCLumiWeight is InputData.Lumi / Cycle.TargetLumi. -->
+         <Item Name="use_sframe_weight" Value="false" />
+
+         <!-- configuration for MCPileupReweight (run as part of CommonModules): -->
+         <Item Name="pileup_directory" Value="common/data/2017/MyMCPileupHistogram.root" />
+         <Item Name="pileup_directory_data" Value="common/data/2017/MyDataPileupHistogram.root" />
+
+         <!-- Some test configuration; see qstarModule.cxx for how to access it: -->
+         <Item Name="TestKey" Value="TestKeyValue" />
+         <Item Name="use_deep_boosted" Value="false" />
+         <Item Name="vvsqcd_min" Value="0.83" />
+         <Item Name="tau21_sel" Value="0.35" />
+      </UserConfig>
+   </Cycle>
+</JobConfiguration>

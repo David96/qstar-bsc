@@ -1,0 +1,24 @@
+Combination of w25tev_datacard.txt  w25tev_datacard.txt
+imax 2 number of bins
+jmax 1 number of processes minus 1
+kmax 3 number of nuisance parameters
+----------------------------------------------------------------------------------------------------------------------------------
+shapes background  ch1         ../../models/2018/TAU035W25TeV.root model:bg
+shapes data_obs    ch1         ../../models/2018//DB083W25TeV.root model:data_hist
+shapes signal      ch1         ../../models/2018/TAU035W25TeV.root model:sig
+shapes background  ch2         ../../models/2018/LPtauW25TeV.root model:bg
+shapes data_obs    ch2         ../../models/2018/LPtauW25TeV.root model:data_hist
+shapes signal      ch2         ../../models/2018/LPtauW25TeV.root model:sig
+----------------------------------------------------------------------------------------------------------------------------------
+bin          ch1    ch2  
+observation  -1     -1   
+----------------------------------------------------------------------------------------------------------------------------------
+bin                                       ch1          ch1          ch2          ch2        
+process                                   signal       background   signal       background 
+process                                   0            1            0            1          
+rate                                      7231.810381  1            7306.417968  1          
+----------------------------------------------------------------------------------------------------------------------------------
+CMS_scale_j             lnN               1.02         -            1.02         -          
+CMS_tau21_PtDependence   lnN              1.06         -            1.06         -          
+lumi                    lnN               1.025        -            1.025        -          
+bg_norm       flatParam

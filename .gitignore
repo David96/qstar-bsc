@@ -3,6 +3,8 @@
 *.d
 *.o
 *.root
+*.png
+*.dot
 .*
 plots
 workdir*

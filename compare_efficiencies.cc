@@ -37,12 +37,13 @@ void compare_efficiencies(const char *signal1, const char *cut1, bool post1, con
 
 
     for(auto &mp : masspoints) {
-        TFile *t1 = new TFile(( "output/signal/" + string(signal1) + "/" +
-                    (post1?string(mp.second.filename):string(mp.second.preselection)) ).c_str());
-        TFile *t2 = signal2 == NULL ? NULL : new TFile(( "output/signal/" + string(signal2) + "/" +
-                    (post2?string(mp.second.filename):string(mp.second.preselection)) ).c_str());
-        TFile *orig1 = new TFile(("output/current_signal/" + string(mp.second.orig)).c_str());
-        TFile *orig2 = new TFile(("output/current_signal/" + string(mp.second.orig)).c_str());
+        TFile *t1 = new TFile(( "output/" + string(signal1) + "/" +
+                    (post1?string(mp.second.filename):string(mp.second.preselection)) + "2016v2.root").c_str());
+        TFile *t2 = signal2 == NULL ? NULL : new TFile(( "output/" + string(signal2) + "/" +
+                    (post2?string(mp.second.filename):string(mp.second.preselection))+"2016v2.root" ).c_str());
+        TFile *orig1 = new TFile(("output/2016/" + string(mp.second.orig) + "2016v2.root").c_str());
+        TFile *orig2 = new TFile(("output/2016/" + string(mp.second.orig) + "2016v2.root").c_str());
+	if (t1->IsZombie() && t2->IsZombie()) continue;
 
         TH1F *njet1, *njet2, *njet1_orig, *njet2_orig;
         t1->GetObject(cut1, njet1);

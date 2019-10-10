@@ -47,6 +47,7 @@ qstarHists::qstarHists(Context & ctx, const string & dirname): Hists(ctx, dirnam
   Tau21_2 = book<TH1F>("Tau21_2", "#tau_{2_{2}}/#tau_{1_{2}}", 20,0,1);
 
   invMass = book<TH1F>("invMass","M_{jj}-AK8 [GeV/c^{2}]",38,1000,8600);
+  invMass_1GeV = book<TH1F>("invMass_1GeV","M_{jj}-AK8 [GeV/c^{2}]",7600,1000,8600);
 
   HADcharged_vs_eta_jet1 = book<TH2D>("HADcharged_vs_eta_jet1","HADcharged vs #eta; #eta; HADcharged",100,-6,6,100,0.0,1.0);
   HADneutral_vs_eta_jet1 = book<TH2D>("HADneutral_vs_eta_jet1","HADneutral vs #eta; #eta; HADneutral",100,-6,6,100,0.0,1.0);
@@ -215,6 +216,11 @@ void qstarHists::fill(const Event & event){
 
     invMass->SetXTitle(invMass->GetTitle());
     invMass->SetYTitle("#events");
+
+    invMass_1GeV->Fill(mass, weight);
+
+    invMass_1GeV->SetXTitle(invMass_1GeV->GetTitle());
+    invMass_1GeV->SetYTitle("#events");
 
     tagger_1->Fill(jets[0].btag_MassDecorrelatedDeepBoosted_WvsQCD(), weight);
     tagger_2->Fill(jets[1].btag_MassDecorrelatedDeepBoosted_WvsQCD(), weight);

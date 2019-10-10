@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE JobConfiguration PUBLIC "" "JobConfig.dtd"[
+
+
+]>
+
+<!--
+<ConfigParse NEventsBreak="0" FileSplit="100" />
+<ConfigSGE RAM ="2" DISK ="2" Mail="david.leppla-weber@desy.de" Notification="as" Workdir="workdir_data_post_2017v2"/>
+-->
+
+<!-- OutputLevel controls which messages are printed; set to VERBOSE or DEBUG for more verbosity, to WARNING or ERROR for less -->
+<JobConfiguration JobName="ExampleCycleJob" OutputLevel="INFO">
+   <Library Name="libSUHH2qstar"/>
+   <Package Name="SUHH2qstar.par" />
+
+   <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="./output/2017/TAU035/" PostFix="" TargetLumi="41530" >
+      <!-- <Cycle Name="uhh2::AnalysisModuleRunner"  RunMode="PROOF" ProofServer="lite://"  ProofWorkDir="/nfs/dust/cms/user/ottjoc/proof-wd/" ProofNodes="2" OutputDirectory="./" PostFix="" TargetLumi="1" >  -->
+
+      <!-- Verion attribute must have year in it, same as used in ntuple config, e.g. 2017v2, 2017v2, etc -->
+      <InputData Lumi="1" NEventsMax="-1" Type="data" Version="DATA_PS_JetHT_Run2017v2B" Cacheable="False">
+	      <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2017/uhh2.AnalysisModuleRunner.data.DATA_JetHT_Run2017v2B.root" Lumi="" />
+         <InputTree Name="AnalysisTree" />
+      </InputData>
+      <InputData Lumi="1" NEventsMax="-1" Type="data" Version="DATA_PS_JetHT_Run2017v2C" Cacheable="False">
+	      <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2017/uhh2.AnalysisModuleRunner.data.DATA_JetHT_Run2017v2C.root" Lumi="" />
+         <InputTree Name="AnalysisTree" />
+      </InputData>
+      <InputData Lumi="1" NEventsMax="-1" Type="data" Version="DATA_PS_JetHT_Run2017v2D" Cacheable="False">
+	      <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2017/uhh2.AnalysisModuleRunner.data.DATA_JetHT_Run2017v2D.root" Lumi="" />
+         <InputTree Name="AnalysisTree" />
+      </InputData>
+      <InputData Lumi="1" NEventsMax="-1" Type="data" Version="DATA_PS_JetHT_Run2017v2E" Cacheable="False">
+	      <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2017/uhh2.AnalysisModuleRunner.data.DATA_JetHT_Run2017v2E.root" Lumi="" />
+         <InputTree Name="AnalysisTree" />
+      </InputData>
+      <InputData Lumi="1" NEventsMax="-1" Type="data" Version="DATA_PS_JetHT_Run2017v2F" Cacheable="False">
+	      <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2017/uhh2.AnalysisModuleRunner.data.DATA_JetHT_Run2017v2F.root" Lumi="" />
+         <InputTree Name="AnalysisTree" />
+      </InputData>
+
+      <UserConfig>
+         <!-- define which collections to read from the input. Only specify what you need to save I/O time -->
+         <Item Name="PrimaryVertexCollection" Value="offlineSlimmedPrimaryVertices" />
+         <Item Name="ElectronCollection" Value="slimmedElectronsUSER" />
+         <Item Name="MuonCollection" Value="slimmedMuonsUSER" />
+         <Item Name="JetCollection" Value="jetsAk8Puppi" />
+         <Item Name="TopJetCollection" Value="jetsAk8PuppiSubstructure_SoftDropPuppi" />
+         <Item Name="GenJetCollection" Value="slimmedGenJets" />
+         <Item Name="GenTopJetCollection" Value="genjetsAk8SubstructureSoftDrop" />
+         <Item Name="METName" Value="slimmedMETs" />
+
+         <!-- the class name of the AnalysisModule subclasses to run: -->
+         <Item Name="AnalysisModule" Value="qstarPostSelection" />
+
+         <!-- tell AnalysisModuleRunner NOT to use the MC event weight from SFrame; rather let
+         MCLumiWeight (called via CommonModules) calculate the MC event weight. The MC
+         event weight assigned by MCLumiWeight is InputData.Lumi / Cycle.TargetLumi. -->
+         <Item Name="use_sframe_weight" Value="false" />
+
+         <!-- configuration for MCPileupReweight (run as part of CommonModules): -->
+         <Item Name="pileup_directory" Value="common/data/2017/MyMCPileupHistogram.root" />
+         <Item Name="pileup_directory_data" Value="common/data/2017/MyDataPileupHistogram2017.root" />
+
+	 <Item Name="lumi_file" Value="common/data/2017/Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON_v1.root" />
+
+         <Item Name="use_deep_boosted" Value="false" />
+         <Item Name="vvsqcd_min" Value="0.83" />
+         <Item Name="tau21_sel" Value="0.35" />
+      </UserConfig>
+   </Cycle>
+</JobConfiguration>

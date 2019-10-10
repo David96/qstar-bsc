@@ -10,7 +10,7 @@
 
 <!--
 <ConfigParse NEventsBreak="0" FileSplit="100" />
-<ConfigSGE RAM ="2" DISK ="2" Mail="david.leppla-weber@desy.de" Notification="as" Workdir="workdir_sideband_2018"/>
+<ConfigSGE RAM ="2" DISK ="2" Mail="david.leppla-weber@desy.de" Notification="as" Workdir="workdir_data_post_2018"/>
 -->
 
 <!-- OutputLevel controls which messages are printed; set to VERBOSE or DEBUG for more verbosity, to WARNING or ERROR for less -->
@@ -18,24 +18,24 @@
    <Library Name="libSUHH2qstar"/>
    <Package Name="SUHH2qstar.par" />
 
-   <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="./output/2018/OPT083/" PostFix="" TargetLumi="59740.0" >
+   <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="./output/2018/DB070/" PostFix="" TargetLumi="59740.0" >
       <!-- <Cycle Name="uhh2::AnalysisModuleRunner"  RunMode="PROOF" ProofServer="lite://"  ProofWorkDir="/nfs/dust/cms/user/ottjoc/proof-wd/" ProofNodes="2" OutputDirectory="./" PostFix="" TargetLumi="1" >  -->
 
       <!-- Verion attribute must have year in it, same as used in ntuple config, e.g. 2018, 2016v3, etc -->
-      <InputData Lumi="1" NEventsMax="-1" Type="data" Version="DATA_sideband_JetHT_Run2018A" Cacheable="False">
-	      <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2018/data/uhh2.AnalysisModuleRunner.data.DATA_JetHT_Run2018A.root" Lumi="" />
+      <InputData Lumi="1" NEventsMax="-1" Type="data" Version="DATA_PS_JetHT_Run2018A" Cacheable="False">
+	      <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2018/uhh2.AnalysisModuleRunner.data.DATA_JetHT_Run2018A.root" Lumi="" />
          <InputTree Name="AnalysisTree" />
       </InputData>
-      <InputData Lumi="1" NEventsMax="-1" Type="data" Version="DATA_sideband_JetHT_Run2018B" Cacheable="False">
-	      <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2018/data/uhh2.AnalysisModuleRunner.data.DATA_JetHT_Run2018B.root" Lumi="" />
+      <InputData Lumi="1" NEventsMax="-1" Type="data" Version="DATA_PS_JetHT_Run2018B" Cacheable="False">
+	      <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2018/uhh2.AnalysisModuleRunner.data.DATA_JetHT_Run2018B.root" Lumi="" />
          <InputTree Name="AnalysisTree" />
       </InputData>
-      <InputData Lumi="1" NEventsMax="-1" Type="data" Version="DATA_sideband_JetHT_Run2018C" Cacheable="False">
-	      <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2018/data/uhh2.AnalysisModuleRunner.data.DATA_JetHT_Run2018C.root" Lumi="" />
+      <InputData Lumi="1" NEventsMax="-1" Type="data" Version="DATA_PS_JetHT_Run2018C" Cacheable="False">
+	      <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2018/uhh2.AnalysisModuleRunner.data.DATA_JetHT_Run2018C.root" Lumi="" />
          <InputTree Name="AnalysisTree" />
       </InputData>
-      <InputData Lumi="1" NEventsMax="-1" Type="data" Version="DATA_sideband_JetHT_Run2018D" Cacheable="False">
-	      <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2018/data/uhh2.AnalysisModuleRunner.data.DATA_JetHT_Run2018D.root" Lumi="" />
+      <InputData Lumi="1" NEventsMax="-1" Type="data" Version="DATA_PS_JetHT_Run2018D" Cacheable="False">
+	      <In FileName="/nfs/dust/cms/user/lepplada/UHH2/CMSSW_10_2_10/src/UHH2/qstar/output/2018/uhh2.AnalysisModuleRunner.data.DATA_JetHT_Run2018D.root" Lumi="" />
          <InputTree Name="AnalysisTree" />
       </InputData>
 
@@ -65,7 +65,7 @@
          <Item Name="lumi_file" Value="common/data/2018/Cert_314472-325175_13TeV_PromptReco_Collisions18_JSON.root" />
 
          <Item Name="use_deep_boosted" Value="true" />
-         <Item Name="vvsqcd_min" Value="0.83" />
+         <Item Name="vvsqcd_min" Value="0.70" />
          <Item Name="tau21_sel" Value="0.35" />
       </UserConfig>
    </Cycle>
