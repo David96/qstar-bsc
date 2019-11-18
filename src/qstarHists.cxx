@@ -34,13 +34,13 @@ qstarHists::qstarHists(Context & ctx, const string & dirname): Hists(ctx, dirnam
   cb_e = book<TH1F>("cb_e", "E [GeV]", 100, 0, 3500);
 
   // Substructure
-  SoftDropMass_1 = book<TH1F>("SoftDropMass_1", "M_{1}^{SD} [GeV/c^{2}]", 50,0,150);
+  SoftDropMass_1 = book<TH1F>("SoftDropMass_1", "M_{1}^{SD} [GeV/c^{2}]", 60,0,210);
   CHF_1 = book<TH1F>("CHF_1","CHF_{1}",100,0,1);
   TAU1_1 = book<TH1F>("TAU1_1","#tau_{1_{1}}",20,0,1);
   TAU2_1 = book<TH1F>("TAU2_1","#tau_{2_{1}}",20,0,1);
   Tau21_1 = book<TH1F>("Tau21_1", "#tau_{2_{1}}/#tau_{1_{1}}", 20,0,1);
 
-  SoftDropMass_2 = book<TH1F>("SoftDropMass_2", "M_{2}^{SD} [GeV/c^{2}]", 50,0,150);
+  SoftDropMass_2 = book<TH1F>("SoftDropMass_2", "M_{2}^{SD} [GeV/c^{2}]", 60,0,210);
   CHF_2 = book<TH1F>("CHF_2","CHF_{2}",100,0,1);
   TAU1_2 = book<TH1F>("TAU1_2","#tau_{1_{2}}",20,0,1);
   TAU2_2 = book<TH1F>("TAU2_2","#tau_{2_{2}}",20,0,1);

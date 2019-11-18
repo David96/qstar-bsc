@@ -6,7 +6,7 @@ combine -n qW -m 2500 ../../datacards/2016/tau21/w25tev_datacard.txt
 combine -n qW -m 3000 ../../datacards/2016/tau21/w3tev_datacard.txt
 combine -n qW -m 3500 ../../datacards/2016/tau21/w35tev_datacard.txt
 combine -n qW -m 4000 ../../datacards/2016/tau21/w4tev_datacard.txt
-combine -n qW -m 4500 --rMax 000.5 --rMin 000.08 ../../datacards/2016/tau21/w45tev_datacard.txt
-combine -n qW -m 5000 --rMax 000.5 --rMin 000.08 ../../datacards/2016/tau21/w5tev_datacard.txt
+combine -n qW -m 4500 ../../datacards/2016/tau21/w45tev_datacard.txt
+combine -n qW -m 5000 ../../datacards/2016/tau21/w5tev_datacard.txt
 combine -n qW -m 6000 ../../datacards/2016/tau21/w6tev_datacard.txt
 combine -n qW -m 7000 ../../datacards/2016/tau21/w7tev_datacard.txt

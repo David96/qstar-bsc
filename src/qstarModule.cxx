@@ -7,6 +7,7 @@
 #include "UHH2/common/include/ElectronIds.h"
 #include "UHH2/common/include/JetCorrections.h"
 #include "UHH2/common/include/JetHists.h"
+#include "UHH2/common/include/MCLargeWeightKiller.h"
 #include "UHH2/common/include/MCWeight.h"
 #include "UHH2/common/include/MuonHists.h"
 #include "UHH2/common/include/MuonIds.h"
@@ -39,6 +40,8 @@ public:
 
 private:
     bool isMC;
+
+    unique_ptr<MCLargeWeightKiller> weightKiller;
 
     unique_ptr<CommonModules> common;
 
@@ -183,6 +186,18 @@ qstarModule::qstarModule(Context & ctx){
         jet_corrector.reset(new TopJetCorrector(ctx, JERFiles::Autumn18_V8_L123_AK8PFPuppi_MC));
         jet_EResSmearer.reset(new GenericJetResolutionSmearer(ctx,"topjets","gentopjets", smearing, ResolutionFileName));
 
+
+        weightKiller.reset(new MCLargeWeightKiller(ctx,
+                                     2,  // maximum allowed ratio of leading reco jet pT / generator HT
+                                     2,  // maximum allowed ratio of leading gen jet pT / generator HT
+                                     2,  // maximum allowed ratio of leading reco jet pT / Q scale
+                                     2,  // maximum allowed ratio of PU maximum pTHat / gen HT
+                                         // (ensures scale of PU < scale of hard interaction)
+                                     2,  // maximum allowed ratio of leading reco jet pT / pTHat
+                                     2,  // maximum allowed ratio of leading gen jet pT / pTHat
+                                     "topjets", // name of jet collection to be used
+                                     "gentopjets" // name of genjet collection to be used
+                    ));
         // Needed to save weight_pu branch in root file
         MCWeightModule.reset(new MCLumiWeight(ctx));
         MCPileupReweightModule.reset(new MCPileupReweight(ctx));
@@ -266,6 +281,8 @@ bool qstarModule::process(Event & event) {
          << event.run << ", " << event.event << "); weight = " << event.weight << endl;
     //printer->process(event);
 #endif
+    if (isMC && !weightKiller->passes(event))
+        return false;
 
     h_nocuts->fill(event);
 

@@ -125,7 +125,7 @@ void significance(const char *masspoint_name, const int mass, const string opt, 
         }
     }
     TGraph *g = new TGraph(files.size() - skipped_i, x, y);
-    g->SetTitle(("Significance of " + string(masspoint_name) + " at " + to_string(mass) + " GeV;WvsQCD;Significance").c_str());
+    g->SetTitle(string(/*"Significance of " + string(masspoint_name) + " at " + to_string(mass) + " GeV*/";\\tau_{21};Significance").c_str());
     g->Sort();
     g->Draw("AL*");
 }

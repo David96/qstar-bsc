@@ -14,7 +14,7 @@
    <Library Name="libSUHH2qstar"/>
    <Package Name="SUHH2qstar.par" />
 
-   <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="./output/2017/DB070/" PostFix="" TargetLumi="41530" >
+   <Cycle Name="uhh2::AnalysisModuleRunner" OutputDirectory="./output/2017/DB095/" PostFix="" TargetLumi="41530" >
       <!-- <Cycle Name="uhh2::AnalysisModuleRunner"  RunMode="PROOF" ProofServer="lite://"  ProofWorkDir="/nfs/dust/cms/user/ottjoc/proof-wd/" ProofNodes="2" OutputDirectory="./" PostFix="" TargetLumi="1" >  -->
 
       <!-- Verion attribute must have year in it, same as used in ntuple config, e.g. 2017v2, 2017v2, etc -->
@@ -65,7 +65,8 @@
 	 <Item Name="lumi_file" Value="common/data/2017/Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON_v1.root" />
 
          <Item Name="use_deep_boosted" Value="true" />
-         <Item Name="vvsqcd_min" Value="0.70" />
+	 <Item Name="use_z" Value="true" />
+         <Item Name="vvsqcd_min" Value="0.95" />
          <Item Name="tau21_sel" Value="0.35" />
       </UserConfig>
    </Cycle>

@@ -7,6 +7,6 @@ combine -n qW -m 3000 ../../../datacards/combined/deep_boosted/HP/w3tev_datacard
 combine -n qW -m 3500 ../../../datacards/combined/deep_boosted/HP/w35tev_datacard.txt
 combine -n qW -m 4000 ../../../datacards/combined/deep_boosted/HP/w4tev_datacard.txt
 combine -n qW -m 4500 ../../../datacards/combined/deep_boosted/HP/w45tev_datacard.txt
-combine -n qW -m 5000 --rMin 0.0005 ../../../datacards/combined/deep_boosted/HP/w5tev_datacard.txt
-combine -n qW -m 6000 --rMin 0.0005 ../../../datacards/combined/deep_boosted/HP/w6tev_datacard.txt
-combine -n qW -m 7000 --rMin 0.0005 ../../../datacards/combined/deep_boosted/HP/w7tev_datacard.txt
+combine -n qW -m 5000 ../../../datacards/combined/deep_boosted/HP/w5tev_datacard.txt
+combine -n qW -m 6000 ../../../datacards/combined/deep_boosted/HP/w6tev_datacard.txt
+combine -n qW -m 7000 ../../../datacards/combined/deep_boosted/HP/w7tev_datacard.txt

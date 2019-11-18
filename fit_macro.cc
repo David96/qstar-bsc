@@ -101,6 +101,8 @@ void fit_macro(const char *hist, string masspoint_name, string version,
     //ROOT::Math::MinimizerOptions::SetDefaultMaxFunctionCalls(9999999);
     TF1 *bg = new TF1("bg", "[0] * ( (1-x/13000)^[2]) / (x/13000)^[1]", 1400, 6200);
     bg->SetParameters(0.05, 6.5, 6.8);
+    bg->SetParLimits(1, 0, 100);
+    bg->SetParLimits(2, 0, 100);
     bgh->SetLineColor(kBlue);
     bgh->Fit(bg, "VRWLM", "", 1400, 6200);
     if (debug_bg/* && false*/) {
@@ -210,7 +212,7 @@ void fit_macro(const char *hist, string masspoint_name, string version,
         if (/*masspoint.mean >= 7000 || */masspoint.mean < 2000) {
             nsig_initial = 0;
         }
-        RooRealVar nsig(LP?"nsig_lp":"nsig","#signal events", nsig_initial, 0., 10000000);
+        RooRealVar nsig(LP?"nsig_lp":"nsig","#signal events", nsig_initial, 0, 10000000);
         RooRealVar nbkg(LP?"nbkg_lp":"nbkg","#background events",2000000, 0.,50000000);
         //nsig.setConstant();
         RooAddPdf model("model", "bg+sig", RooArgList(bg_pdf, sig_pdf), RooArgList(nbkg, nsig));
@@ -323,7 +325,10 @@ void fit_macro(const char *hist, string masspoint_name, string version,
             w.import(model_h);
             w.Print();
             std::replace(opt.begin(), opt.end(), '/', '_');
-            w.writeToFile(("models/" + version + "/" + opt + masspoint_name + ".root").c_str());
+            if (!exclude_data) {
+                cout << "writing to file" << endl;
+                w.writeToFile(("models/" + version + "/" + opt + masspoint_name + ".root").c_str());
+            }
 
             cout << "Nsig integral: " << sigh->Integral() / (bgh->Integral() + sigh->Integral()) << endl
                 << "Nsig fit: " << nsig.getVal() / (nsig.getVal() + nbkg.getVal()) << endl;
@@ -335,7 +340,7 @@ void fit_macro(const char *hist, string masspoint_name, string version,
             transform(masspoint_name.begin(), masspoint_name.end(), masspoint_name.begin(),
                     [](unsigned char c){ return std::tolower(c); });
 
-            if (opt == "DB083") {
+            if (opt == "DB095") {
                 cout << "Writing rate for deep boosted HP category" << endl;
                 datacard = "datacards/" + version + "/deep_boosted/HP/" + masspoint_name + "_datacard.txt";
             } else if (opt == "LP") {
@@ -348,7 +353,7 @@ void fit_macro(const char *hist, string masspoint_name, string version,
                 cout << "Writing rate for tau LP category" << endl;
                 datacard = "datacards/" + version + "/tau21/LP/" + masspoint_name + "_datacard.txt";
             }
-            if (datacard != "") {
+            if (datacard != "" && !exclude_data) {
                 cout << "Creating sed string" << endl;
                 string sed = string("sed -i 's/rate .*/rate    ") + to_string(sigh->Integral() / 100.) + " " +
                     to_string(/*bgh->Integral()*/1/*data_hist->Integral()*/) + "/g' " + datacard;

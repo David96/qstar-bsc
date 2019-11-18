@@ -65,7 +65,7 @@
 	 <Item Name="lumi_file" Value="common/data/2017/Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON_v1.root" />
 
          <Item Name="use_deep_boosted" Value="true" />
-         <Item Name="vvsqcd_min" Value="0.83" />
+         <Item Name="vvsqcd_min" Value="0.95" />
          <Item Name="tau21_sel" Value="0.35" />
       </UserConfig>
    </Cycle>

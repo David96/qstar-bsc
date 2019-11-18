@@ -28,6 +28,7 @@ SteerPlotter(){
   bLogy = true;
   fScalingHistogram = "invMass";
   bSingleEPS = true;
+  bScaleToWidth = true;
 }
 
 

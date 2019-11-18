@@ -8,8 +8,5 @@ combine -n qW -m 3500 ../../../datacards/combined/tau21/HP/w35tev_datacard.txt
 combine -n qW -m 4000 ../../../datacards/combined/tau21/HP/w4tev_datacard.txt
 combine -n qW -m 4500 ../../../datacards/combined/tau21/HP/w45tev_datacard.txt
 combine -n qW -m 5000 ../../../datacards/combined/tau21/HP/w5tev_datacard.txt
-combine -n qW -m 5500 ../../../datacards/combined/tau21/HP/w55tev_datacard.txt
 combine -n qW -m 6000 ../../../datacards/combined/tau21/HP/w6tev_datacard.txt
-combine -n qW -m 6500 ../../../datacards/combined/tau21/HP/w65tev_datacard.txt
 combine -n qW -m 7000 ../../../datacards/combined/tau21/HP/w7tev_datacard.txt
-combine -n qW -m 7500 ../../../datacards/combined/tau21/HP/w75tev_datacard.txt

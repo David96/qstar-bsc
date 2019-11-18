@@ -1,8 +1,8 @@
 void brazilianFlag_QtoqW_2016db_13TeV()
 {
 //=========Macro generated from canvas: c1/c1
-//=========  (Wed Sep 25 12:03:40 2019) by ROOT version 6.12/07
-   TCanvas *c1 = new TCanvas("c1", "c1",560,312,800,600);
+//=========  (Mon Oct 14 14:17:29 2019) by ROOT version 6.12/07
+   TCanvas *c1 = new TCanvas("c1", "c1",2480,372,800,600);
    c1->SetHighLightColor(2);
    c1->Range(0.9,-6.004845,6.733333,2.368867);
    c1->SetFillColor(0);
@@ -69,28 +69,28 @@ void brazilianFlag_QtoqW_2016db_13TeV()
    1.8,
    1.6};
    Double_t Graph0_fy1[22] = {
-   0.08473145,
-   0.05545166,
-   0.0403418,
-   0.01680725,
-   0.008570862,
-   0.004482422,
-   0.002463837,
-   0.001448804,
-   0.0008828614,
-   0.0004633203,
-   0.0002546484,
-   0.001611692,
-   0.002443178,
-   0.003861542,
-   0.005826709,
-   0.009321782,
-   0.01629995,
-   0.03064846,
-   0.05952581,
-   0.1443514,
-   0.204655,
-   0.3127176};
+   0.09360352,
+   0.05779785,
+   0.04317627,
+   0.01781067,
+   0.008821716,
+   0.004396057,
+   0.002366638,
+   0.00138125,
+   0.0008360107,
+   0.0004872021,
+   0.0002712109,
+   0.001670501,
+   0.002614117,
+   0.003990287,
+   0.005890524,
+   0.009309106,
+   0.01645974,
+   0.03184528,
+   0.06329257,
+   0.1566809,
+   0.2169273,
+   0.340653};
    TGraph *graph = new TGraph(22,Graph0_fx1,Graph0_fy1);
    graph->SetName("Graph0");
    graph->SetTitle("Graph");
@@ -102,8 +102,8 @@ void brazilianFlag_QtoqW_2016db_13TeV()
    graph->SetLineColor(ci);
    
    TH1F *Graph_Graph1 = new TH1F("Graph_Graph1","Graph",100,1.06,7.54);
-   Graph_Graph1->SetMinimum(0.0002291836);
-   Graph_Graph1->SetMaximum(0.3439639);
+   Graph_Graph1->SetMinimum(0.0002440898);
+   Graph_Graph1->SetMaximum(0.3746912);
    Graph_Graph1->SetDirectory(0);
    Graph_Graph1->SetStats(0);
 
@@ -150,28 +150,28 @@ void brazilianFlag_QtoqW_2016db_13TeV()
    1.8,
    1.6};
    Double_t Graph1_fy2[22] = {
-   0.1148656,
-   0.07477827,
-   0.05424637,
-   0.02239593,
-   0.01147897,
-   0.005996475,
-   0.00332256,
-   0.001978022,
-   0.001224445,
-   0.0006642754,
-   0.0003785193,
-   0.001021935,
-   0.001613481,
-   0.002680346,
-   0.004129081,
-   0.006752136,
-   0.01196888,
-   0.02259104,
-   0.0440501,
-   0.1071146,
-   0.150276,
-   0.2296253};
+   0.1257201,
+   0.07826,
+   0.05799063,
+   0.023733,
+   0.01181494,
+   0.005928218,
+   0.003217709,
+   0.001899219,
+   0.001178501,
+   0.000708774,
+   0.0004061368,
+   0.001077959,
+   0.001746091,
+   0.002706442,
+   0.004116908,
+   0.006657214,
+   0.01194695,
+   0.02338366,
+   0.04667996,
+   0.1154898,
+   0.1586989,
+   0.2517899};
    graph = new TGraph(22,Graph1_fx2,Graph1_fy2);
    graph->SetName("Graph1");
    graph->SetTitle("Graph");
@@ -183,8 +183,8 @@ void brazilianFlag_QtoqW_2016db_13TeV()
    graph->SetLineColor(ci);
    
    TH1F *Graph_Graph2 = new TH1F("Graph_Graph2","Graph",100,1.06,7.54);
-   Graph_Graph2->SetMinimum(0.0003406673);
-   Graph_Graph2->SetMaximum(0.2525499);
+   Graph_Graph2->SetMinimum(0.0003655231);
+   Graph_Graph2->SetMaximum(0.2769282);
    Graph_Graph2->SetDirectory(0);
    Graph_Graph2->SetStats(0);
 
@@ -220,17 +220,17 @@ void brazilianFlag_QtoqW_2016db_13TeV()
    6,
    7};
    Double_t Graph2_fy1001[11] = {
-   0.161875,
-   0.1059375,
-   0.0759375,
-   0.03140625,
-   0.01601562,
-   0.0084375,
-   0.004707031,
-   0.00283125,
-   0.00179375,
-   0.0010225,
-   0.000615};
+   0.1775,
+   0.11125,
+   0.081875,
+   0.03328125,
+   0.01648437,
+   0.008398437,
+   0.004589844,
+   0.0027625,
+   0.00176875,
+   0.00110375,
+   0.000655};
    Double_t Graph2_fex1001[11] = {
    0,
    0,
@@ -264,8 +264,8 @@ void brazilianFlag_QtoqW_2016db_13TeV()
    gre->SetMarkerStyle(20);
    
    TH1F *Graph_Graph1001 = new TH1F("Graph_Graph1001","Graph",100,1.06,7.54);
-   Graph_Graph1001->SetMinimum(0.0005535);
-   Graph_Graph1001->SetMaximum(0.178001);
+   Graph_Graph1001->SetMinimum(0.0005895);
+   Graph_Graph1001->SetMaximum(0.1951845);
    Graph_Graph1001->SetDirectory(0);
    Graph_Graph1001->SetStats(0);
 
@@ -301,17 +301,17 @@ void brazilianFlag_QtoqW_2016db_13TeV()
    6,
    7};
    Double_t Graph3_fy1002[11] = {
-   0.331305,
-   0.09688104,
-   0.07504678,
-   0.02700829,
-   0.01759977,
-   0.006255682,
-   0.00278777,
-   0.003062222,
-   0.003824962,
-   0.00124687,
-   0.0008819728};
+   0.3824209,
+   0.1169179,
+   0.0952823,
+   0.03652525,
+   0.01108112,
+   0.006831466,
+   0.003422596,
+   0.003662335,
+   0.004006649,
+   0.001552618,
+   0.001081327};
    Double_t Graph3_fex1002[11] = {
    0,
    0,
@@ -345,8 +345,8 @@ void brazilianFlag_QtoqW_2016db_13TeV()
    gre->SetMarkerSize(0.8);
    
    TH1F *Graph_Graph1002 = new TH1F("Graph_Graph1002","Graph",100,1.06,7.54);
-   Graph_Graph1002->SetMinimum(0.0007937755);
-   Graph_Graph1002->SetMaximum(0.3643473);
+   Graph_Graph1002->SetMinimum(0.0009731947);
+   Graph_Graph1002->SetMaximum(0.4205549);
    Graph_Graph1002->SetDirectory(0);
    Graph_Graph1002->SetStats(0);
 

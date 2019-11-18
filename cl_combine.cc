@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <sstream>
 #include <glob.h>
+#include <iomanip>
 
 #include "TROOT.h"
 #include "TCanvas.h"
@@ -46,7 +47,7 @@ std::vector<std::string> glob(const std::string& pattern) {
 int get_limits(vector<string>& files, double *limits, double *lupper, double *llower, double *lobserved, double *masses) {
     int skipped = 0;
     for (unsigned int i = 0; i < files.size(); ++i) {
-        cout << "Using file " << files[i] << endl;
+        //cout << "Using file " << files[i] << endl;
         TFile f(files[i].c_str());
         TTree *tree = (TTree*)f.Get("limit");
         if (tree != NULL) {
@@ -76,9 +77,12 @@ int get_limits(vector<string>& files, double *limits, double *lupper, double *ll
                 cout << "Ignored entry: mass = " << masses[i - skipped] << "; limit = " << limits[i - skipped] << endl;
                 skipped++;
             } else {
-                cout << "Got entry: mass = " << masses[i - skipped] << "; limit = " << limits[i - skipped] << endl
-                    << "Lower: " << llower[i - skipped] << " Upper: " << lupper[i - skipped] << endl
-                    << "lobserved: " << lobserved[i -  skipped] << endl << endl;
+                //cout << "Got entry: mass = " << masses[i - skipped] << "; limit = " << limits[i - skipped] << endl
+                //    << "Lower: " << llower[i - skipped] << " Upper: " << lupper[i - skipped] << endl
+                //    << "lobserved: " << lobserved[i -  skipped] << endl << endl;
+                cout << "| " << fixed << setprecision(1) << masses[i-skipped] / 1000. << " | " << 
+			defaultfloat << setprecision(2) << limits[i-skipped] << " | " << lupper[i-skipped] << " | " <<
+                    llower[i-skipped] << " | " << lobserved[i-skipped] << " |" << endl;
             }
             delete tree;
         } else {
@@ -88,9 +92,10 @@ int get_limits(vector<string>& files, double *limits, double *lupper, double *ll
     return skipped;
 }
 
-void plot(string output_dir, string name, TLegend *legend, int line_color = kBlack, bool first = true) {
+void plot(string output_dir, string name, TLegend *legend, int line_color = kBlack, int line_style = 1, bool first = true) {
     vector<string> files = glob("cl_output/" + string(output_dir) + "/higgsCombine" + name + ".AsymptoticLimits.mH*.root");
-    cout << "Got " << files.size() << " files " << endl << endl;
+    cout << "Got " << files.size() << " files " << endl <<
+        "Output dir: " << output_dir << endl;
     double limits[files.size()];
     double lupper[files.size()];
     double llower[files.size()];
@@ -112,6 +117,8 @@ void plot(string output_dir, string name, TLegend *legend, int line_color = kBla
     //observed->Draw("AL*");
     g->GetXaxis()->SetLimits(1600, 7000);
     g->GetYaxis()->SetRangeUser(0.0001, 1);
+    g->SetLineStyle(line_style);
+    g->SetLineWidth(2);
     if (first) g->Draw("AL");
     else g->Draw("same");
     legend->AddEntry(g, string("q \\rightarrow " + name + ", " + output_dir).c_str());
@@ -123,10 +130,12 @@ void cl_combine(const char *output_dir, string name) {
     TCanvas *c = new TCanvas();
     auto legend = new TLegend(0.5,0.7,0.9,0.9);
     c->SetLogy();
-    plot("2016tau", "qZ", legend, kBlue);
-    plot("2016db", "qZ", legend, kBlue + 2, false);
-    plot("Combinedtau", "qZ", legend, kRed, false);
-    plot("Combineddb", "qZ", legend, kRed + 2, false);
+    plot("2016tau", name, legend, kGreen, 4);
+    plot("2016db", name, legend, kRed + 2, 4, false);
+    //plot("2018tau/HP", name, legend, kGreen, 1, true);
+    //plot("2018db/HP", name, legend, kRed+ 2, 1, false);
+    plot("Combinedtau", name, legend, kGreen, 1, false);
+    plot("Combineddb", name, legend, kRed+ 2, 1, false);
 
     legend->Draw();
     //plot(output_dir, name);

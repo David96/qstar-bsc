@@ -60,7 +60,8 @@
          <!-- Some test configuration; see qstarModule.cxx for how to access it: -->
          <Item Name="TestKey" Value="TestKeyValue" />
          <Item Name="use_deep_boosted" Value="true" />
-         <Item Name="vvsqcd_min" Value="0.70" />
+	 <Item Name="use_z" Value="true" />
+         <Item Name="vvsqcd_min" Value="0.95" />
          <Item Name="tau21_sel" Value="0.35" />
       </UserConfig>
    </Cycle>
